@@ -106,6 +106,7 @@
         getEarthPos: function() {
             return this._ePos;
         },
+
         //将每个moduleItem的HTML信息刷到sideBar中.
         //被各sideBar的实现类中的onPageQueryResult或onListQueryResult调用
         getSidebarElement: function() {
@@ -124,7 +125,11 @@
             //给content设置单击事件
             this._$Content.click(
                     function() {
+                        event.preventDefault();
+                        event.stopPropagation();
                         self.doFocus();
+                        var $trackDiv = $(self._$Content).find('>.popuplist-main');
+                        $trackDiv.toggle("slow");
                     }
             );
             return this._$Content.get(0);
@@ -261,8 +266,8 @@
                 +'<div class="title ellipsis multiline" >' + this.getName() + '</div>'
                 +'</div>'
                 +'<ul class="meta-three-block">'
-                +'<li class="price">5000 元/月</li>'
-                +'<li class="timeago">1 小时前</li>'
+                +'<li class="price">最近动态</li>'
+                +'<li class="timeago">' + this.getDescribe() + '</li>'
                 +'</ul>'
                 +'</div>'
 
@@ -272,14 +277,14 @@
                 +'</div>'
                 +'<div class="span3 list-footer-right">'
                 +'<span class="qiuorchu label label-chuzu">出</span>'
-                +'<div class="left span2"><img alt="weibo_logo" class="weibo_logo pull-left set_icon" src="img/weibologo_16x16.png"></div>'
+                +'<span class="qiuorchu label label-ru">入</span>'
                 +'<div class="right pull-right span2"></div>'
                 +'</div>'
                 +'</div> '
 
                 +'</div>'
 
-                +' <div class="popuplist-main hide"  style="display: block;">'
+                +' <div class="popuplist-main hide">'
                 +'<div class="modal-header">  '
                 +'    <div class="row">    '
                 +'       <span class="verification"><a href="#" >行踪记录 <i class="icon-ok icon-large"></i></a></span>'
@@ -306,6 +311,10 @@
 
                 +'</div>'
         },
+
+
+
+
         setHoverImage: function() {
             if (this._$ContentImage) {
                 this._$ContentImage.attr("src", this._hoverIcon);

@@ -1815,7 +1815,7 @@ div#users-contain table td,div#users-contain table th {
 .map-tool .btn-group button.btn {
 	border: 1px solid #ccc;
 	border-radius: 2px;
-	padding: 5px 25px;
+	padding: 5px 8px;
 	background: #FDFDFD;
 	height: 30px;
 }
@@ -2296,6 +2296,12 @@ input#searchSubmit {
 .label-chuzu {
 	border: 1px solid #719b28;
 	background-color: #85B62E;
+}
+
+
+.label-ru {
+    border: 1px solid #9b0e36;
+    background-color: #b61851;
 }
 
 .list_footer {
