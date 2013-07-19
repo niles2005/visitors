@@ -258,7 +258,7 @@
 //                    + "	 </div>"
 //                    + "</div>"
 
-            return '<div ' + id + ' class="click_id listing clearfix postbyuser"> '
+            return '<div ' + id + ' class="listing"> '
                 +' <div class="main viewed on">'
                 +'<div class="row">'
                 +'<div class="info span4">'

@@ -2181,6 +2181,9 @@ input#searchSubmit {
 	-webkit-overflow-scrolling: touch;
 }
 
+
+
+
 .nodata p {
 	font-size: 18px;
 	font-weight: bold;
@@ -2298,7 +2301,6 @@ input#searchSubmit {
 	background-color: #85B62E;
 }
 
-
 .label-ru {
     border: 1px solid #9b0e36;
     background-color: #b61851;
@@ -2414,6 +2416,7 @@ position: relative;
 	height: 50px;
 	margin-left: 72px;
 }
+
 
 /*End of search form*/
 /*Begin of chatbox*/
