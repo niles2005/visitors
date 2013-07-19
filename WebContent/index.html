@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <link type="text/css" href="css/map.css" rel="stylesheet" />
+        <link type="text/css" href="css/bootstrap.css" rel="stylesheet" />
+        <link type="text/css" href="css/my.css" rel="stylesheet" />
+
+        <script type="text/javascript" src="scripts/jquery-1.7.js"></script>
+        <script type="text/javascript" src="scripts/jquery.mousewheel.min.js" ></script>
+        
+        <script type="text/javascript" src="scripts/jquery.scrollintoview.min.js" ></script>
+        <script type="text/javascript" src="scripts/jquery-ui-1.8.21.custom.min.js"></script>
+        <script type="text/javascript" src="scripts/flyjsonp.min.js"></script>
+
+        <script type="text/javascript" src="js/jsall.js"></script> 
+
+        <script type="text/javascript">
+            var visitorPage = null;
+            mapwork.ajaxtype = 1;  //use jsonp
+            mapwork.resizeListener = function() {
+                $("#indexbox").height($("#w").height());
+            };
+            $(document).ready(function() {
+                visitorPage = new mapwork.VisitorPage("cc");
+                var c = document.getElementById("c");
+                var s = document.getElementById("s");
+                
+                var newHeight = mapwork.utils.getWindowHeight() - c.offsetTop - s.offsetHeight;
+                $("#indexbox").height(newHeight);
+//                $("#indexbox").mCustomScrollbar({
+//                    scrollButtons:{
+//                        enable:true
+//                    }
+//                });
+
+                mapSearch("路");
+            });
+
+            function mapSearch(searchName) {
+                visitorPage.doSearch(searchName);
+            }
+
+        </script>
+    </head>
+    <body>
+        <div id="container" style="position: relative;">
+            <div id="n">
+                <div class="map_link">
+                    <span><a href="#" title="">意见反馈</a></span>
+                </div>                
+                <div class="mh_main">
+                    <div class="map_logo"><a href="#" title=""><img src="images/logo.gif"></a></div>
+                </div>
+            </div>
+            <div id="w" style="left:0;width: 1px;height:500px;position: absolute;">
+            </div>
+            <div id="w_hsp" class="hsplit" style="width:0px;height:500px;position: absolute;">
+            </div>
+            <div id="e" style="right:0;width: 380px;height:500px;position: absolute;display: block;border:1px solid blue;">
+                <div class="indexbox" id="indexbox" name="indexDiv" style="height:400px;overflow: auto;border-right: 1px solid #E3E5F4;">
+                    <!--<div class="ib_weather"><iframe src="http://m.weather.com.cn/m/pn4/weather.htm?id=101020100T " width="160" height="20" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe></div>-->
+                    <div class="recommend">
+                        <div class="rm_top">热门推荐</div>
+                        <div id="pic_recommend" class="rm_bott">
+                            <div class="buttons prev"><img src="images/map/icon_left.gif"></div>
+                            <div class="viewport">
+                                <ul class="overview">
+                                    <li class="tianqi"><a href="#" title=""><img src="images/map/pic_recomm_01.gif"><p>天气</p></a></li>
+                                    <li><a href="#" title=""><img src="images/map/pic_recomm_02.gif"><p>地铁</p></a></li>
+
+                                </ul>
+                            </div>
+                            <div class="buttons next"><img src="images/map/icon_right.gif"></div>
+                        </div>
+                    </div>
+                    <div class="recomm_icon">
+                        <ul class="ul_reicon">
+                            <li class="icon_01 type_01"><a href="#" title=""><b></b>道路事件</a></li>
+                            <li class="icon_01 type_02"><a href="#" title=""><b></b>阻断查询</a></li>
+                            <li class="icon_03 type_01"><a href="#" title=""><b></b>交通实况</a></li>
+                            <li class="icon_02 type_02"><a href="#" title=""><b></b>交通诱导牌</a></li>
+                            <li class="icon_05 type_01"><a href="javascript:void(0);" onclick="mapSearch('服务区');" title=""><b></b>服务区</a></li>
+                            <li class="icon_04 type_02"><a href="javascript:void(0);" onclick="mapSearch('加油站');" title="搜索加油站"><b></b>加油站</a></li>
+                            <li class="icon_07 type_01"><a href="#" title=""><b></b>天气</a></li>
+                            <li class="icon_08 type_02"><a href="#" title=""><b></b>旅游景点</a></li>
+                            <li class="icon_09 type_01"><a href="javascript:void(0);" onclick="mapSearch('立交桥');" title=""><b></b>立交桥</a></li>
+                            <li class="icon_10 type_02"><a href="#" title=""><b></b>高架封路</a></li>
+                            <li class="icon_11 type_01"><a href="#" title=""><b></b>夜间施工</a></li>
+                            <li class="icon_12 type_02"><a href="#" title=""><b></b>交通直播</a></li>
+                            <li class="icon_13 type_01"><a href="javascript:void(0);" onclick="mapSearch('交叉路口');" title=""><b></b>交叉路口</a></li>
+                            <li class="icon_14 type_02"><a href="#" title=""><b></b>可变信息板</a></li>
+                            <li class="icon_15 type_01"><a href="javascript:void(0);" onclick="mapSearch('汽车站');" title=""><b></b>汽车站</a></li>
+                            <li class="icon_16 type_02"><a href="#" title=""><b></b>火车站</a></li>
+                            <li class="icon_17 type_01"><a href="javascript:void(0);" onclick="mapSearch('轮渡');" title=""><b></b>轮渡</a></li>
+                            <li class="icon_18 type_02"><a href="javascript:void(0);" onclick="mapSearch('飞机场');" title=""><b></b>飞机场</a></li>
+                        </ul>
+                    </div>
+                </div>            
+
+                <div id="sidebar" class="sidebar" style="display:none;border-right: 1px solid #E3E5F4;">
+                </div>
+            </div>
+            <div id="e_hsp" class="hsplit" style="width:0px;height:400px;position: absolute;">
+            </div>
+            <div id="c" style="height:500px;margin-right:385px;margin-left: 0px;">
+
+                <div id="cn">
+                    <div class="side_left">
+                    </div>
+                    <div class="side_right">
+                    </div>
+                </div>
+                <div id="cc"  style="height:500px;margin-right: 0px;border:1px solid red;">
+                </div>
+            </div>
+            <div id="s" style="width: 100%;height: 0px;">
+            </div>
+
+            <div id="dd" style="position:absolute;display: none;background: #000; z-index: 10000;">
+            </div>
+        </div>
+    </body>
+</html>
