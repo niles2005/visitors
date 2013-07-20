@@ -92,6 +92,7 @@
             return param;
         },
         buildModuleItem: function(json, index) {
+            console.dir(json)
             var moduleId = json.type;
             var module = this._map.getModule(moduleId);
             var moduleItem = module._setting.newModuleItem(module, index);
