@@ -3,7 +3,7 @@
 	mapwork.version = 3.1;
 
         mapwork.LIMIT_MAX_ZOOM = 17;
-        mapwork.LIMIT_MIN_ZOOM = 15;
+        mapwork.LIMIT_MIN_ZOOM = 16;
 
 	mapwork.mapStyle1 = "sd";
 	mapwork.mapStyle2 = "sh2";

@@ -26,7 +26,7 @@
             }
         },
         resetElement: function(mapElement) {
-            if (mapElement && mapElement.isDisplayAtZoom(zoom)) {
+            if (mapElement) {
                 var mapLocation = this._map.getMapLocation();
                 var mapCenterGPos = mapLocation.getMapCenterGlobalPos();
                 var edgeLen = mapLocation.getEdgeLen();
@@ -35,8 +35,7 @@
                 var zoom = mapLocation.getZoom();
 
                 mapElement.updateMapPos(size, edgeLen, mapCenterGPos, layerOffsetPos);
-            } else {
-                mapElement.hide();
+                mapElement.updateMapZoom(zoom);
             }
         },
         resetLayer: function() {
@@ -48,11 +47,13 @@
             var zoom = mapLocation.getZoom();
             for (var k in this._elementStore) {
                 var mapElement = this._elementStore[k];
-                if (mapElement.isDisplayAtZoom(zoom)) {
-                    mapElement.updateMapPos(size, edgeLen, mapCenterGPos, layerOffsetPos);
-                } else {
-                    mapElement.hide();
-                }
+                mapElement.updateMapPos(size, edgeLen, mapCenterGPos, layerOffsetPos);
+                mapElement.updateMapZoom(zoom);
+//                if (mapElement.isDisplayAtZoom(zoom)) {
+//                    mapElement.show();
+//                } else {
+//                    mapElement.hide();
+//                }
             }
       },
         initLayer: function() {

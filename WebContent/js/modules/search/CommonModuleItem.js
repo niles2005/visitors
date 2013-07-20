@@ -38,7 +38,16 @@
         },
         isNeedItemQuery: function() {
             return false;
-        }
+        },
+        createMapIcon: function() {
+            var id = this._id;
+            var icon = this._icon;
+            var hoverIcon = this._hoverIcon;
+            var iconOffset = this._offsetPos;
+            var moduleLabel = new mapwork.CommonModuleLabel(id, icon,hoverIcon,iconOffset,this._zIndex,this);
+            moduleLabel.setLabel(this._json.name);
+            return moduleLabel;
+        }   
     }
 
     if (EXTEND) {

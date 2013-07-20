@@ -122,6 +122,7 @@ var modules= [
     "modules/search/Search",
     "modules/search/SearchModule",
     "modules/search/CommonModuleItem",
+    "modules/search/CommonModuleLabel",
     
     "VisitorPage"
 ];
