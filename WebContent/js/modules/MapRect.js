@@ -1,19 +1,20 @@
 (function() {
-    mapwork.newjavascript = newjavascript;
+    mapwork.MapRect = MapRect;
 
     var EXTEND = null;
 
-    function newjavascript() {
+    function MapRect() {
         if(EXTEND) {
             EXTEND.apply(this,arguments);
         }
+        var lat1 = 
     }
 
-    newjavascript.prototype = {
+    MapRect.prototype = {
         
     };
 
     if(EXTEND) {
-        mapwork.utils.inherits(newjavascript, EXTEND);
+        mapwork.utils.inherits(MapRect, EXTEND);
     }    
 })();
