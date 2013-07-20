@@ -32,6 +32,9 @@ var modules= [
     "utils/MapRulerBuilder",
     
     "utils/SHPosMapping",
+    "utils/MapRect",
+    "utils/MapRectManager",
+    
     
     "layers/Layer",
 

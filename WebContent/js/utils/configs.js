@@ -18,7 +18,6 @@
 //		setCookie("mapStyle",mapStyle,999999);
 //	}
 	mapwork.mapStyle = mapwork.mapStyle1;
-        console.log("mapstyle:" + mapwork.mapStyle)
 	
 	mapwork.serviceAddress0 = "http://127.0.0.1:8080/";
 	mapwork.serviceAddress1 = "http://172.16.0.119:8080/";
