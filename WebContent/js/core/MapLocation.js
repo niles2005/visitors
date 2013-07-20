@@ -1,7 +1,5 @@
 (function() {
     mapwork.MapLocation = MapLocation;
-    MapLocation.LIMIT_MAX_ZOOM = 18;
-    MapLocation.LIMIT_MIN_ZOOM = 7;
     
     var EXTEND = null;
 
@@ -16,17 +14,17 @@
         lon = lon || mapwork.configs.defaultLon;
         zoom = zoom || mapwork.configs.defaultZoom;
         
-        this._maxZoom = MapLocation.LIMIT_MAX_ZOOM;
-        this._minZoom = MapLocation.LIMIT_MIN_ZOOM;
+        this._maxZoom = mapwork.LIMIT_MAX_ZOOM;
+        this._minZoom = mapwork.LIMIT_MIN_ZOOM;
 
         this._map = map;
         this._mapCenterEPos = new mapwork.EarthPos(lat,lon); 
         this._mapCenterGPos = this._mapCenterEPos.convert2GlobalPos();
         this._zoom = zoom;
-        if(zoom > MapLocation.LIMIT_MAX_ZOOM) {
-            this._zoom = MapLocation.LIMIT_MAX_ZOOM;
-        } else if(zoom < MapLocation.LIMIT_MIN_ZOOM) {
-            this._zoom = MapLocation.LIMIT_MIN_ZOOM;
+        if(zoom > mapwork.LIMIT_MAX_ZOOM) {
+            this._zoom = mapwork.LIMIT_MAX_ZOOM;
+        } else if(zoom < mapwork.LIMIT_MIN_ZOOM) {
+            this._zoom = mapwork.LIMIT_MIN_ZOOM;
         }
         
         this._edgeNum = Math.pow(2, this._zoom);

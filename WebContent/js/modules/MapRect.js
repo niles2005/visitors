@@ -7,7 +7,6 @@
         if(EXTEND) {
             EXTEND.apply(this,arguments);
         }
-        var lat1 = 
     }
 
     MapRect.prototype = {
