@@ -23,7 +23,8 @@
             this._$Element = $(this._htmlObj);
             this._$Element.append(labelHtml);
             this._$IconNameDiv = this._$Element.find(".iconname");
-            this._image = this._$Element.find("img").get(0);
+            this._$Image = this._$Element.find("img");
+            this._image = this._$Image.get(0);
 
             this.setIcon(this._defaultIcon);
             if (this._zIndex) {
@@ -41,26 +42,40 @@
             this._$IconNameDiv.html(name);
         },
         setHoverImage: function() {
-            this.setIcon(this._hoverIcon);
+//            this.setIcon(this._hoverIcon);
             if (this._zIndex != undefined) {
                 this._htmlObj.style["zIndex"] = 101;
             }
             this._$IconNameDiv.css("fontWeight", "bold");
         },
         setDefaultImage: function() {
-            this.setIcon(this._defaultIcon);
+//            this.setIcon(this._defaultIcon);
             if (this._zIndex != undefined) {
                 this._htmlObj.style["zIndex"] = this._zIndex;
             }
             this._$IconNameDiv.css("fontWeight", "normal");
         },
         updateMapZoom: function(zoom) {
+            
+//            this.setHoverIcon("images/" + this._moduleItem._json.authority + "1.png");
+
             if(zoom <= 16) {
+                this.setIcon("images/" + this._moduleItem._json.authority + "1.png");
                 this._$IconNameDiv.hide();
             } else {
+                this.setIcon("images/" + this._moduleItem._json.authority + "2.png");
                 this._$IconNameDiv.show();
             }
+        },
+        doFocus: function() {
+            this._$Image.addClass("imageSelect");
+        },
+        clearFocus: function() {
+            console.log("ssssss")
+            this._$Image.removeClass("imageSelect");
+//            this._image.style["background"] = "";
         }
+                
     }
 
     if (EXTEND) {

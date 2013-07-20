@@ -410,14 +410,16 @@
                     if (selectedObject._$Content) {
                         selectedObject._$Content.removeClass("clicked");
                     }
-                    selectedObject.getMapIcon().setDefaultImage();
+//                    selectedObject.getMapIcon().setDefaultImage();
+                    selectedObject.getMapIcon().clearFocus();
                 }
                 ModuleItem.selectItem = this;
                 if (this._$Content) {
                     this._$Content.addClass("clicked");
                 }
-                this.setHoverImage();
-                this.getMapIcon().setHoverImage();
+//                this.setHoverImage();
+//                this.getMapIcon().setHoverImage();
+                this.getMapIcon().doFocus();
                 if(this._$Content){
                 	this._$Content.scrollintoview();
                 }

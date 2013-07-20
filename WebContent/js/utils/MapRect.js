@@ -24,10 +24,8 @@
         addMoudleItem: function(moduleItem) {
             var indexX = this.moduleItemArray.length % this._lonNum + 1;
             var indexY = parseInt(this.moduleItemArray.length / this._lonNum) + 1;
-            console.log(indexX + "  " + indexY)
             var lon = this._lon1 + this._lonOffset * indexX;
             var lat = this._lat1 - this._latOffset * indexY;
-            console.log(lat + "," + lon)
             var ePos = new mapwork.EarthPos(lat,lon, true);
             moduleItem.setEarthPos(ePos);
             this.moduleItemArray.push(moduleItem);

@@ -34,14 +34,14 @@
             }
         },
         setHoverImage: function() {
-            this.setIcon(this._hoverIcon);
+//            this.setIcon(this._hoverIcon);
             if (this._zIndex != undefined) {
                 this._htmlObj.style["zIndex"] = 101;
             }
 
         },
         setDefaultImage: function() {
-            this.setIcon(this._defaultIcon);
+//            this.setIcon(this._defaultIcon);
             if (this._zIndex != undefined) {
                 this._htmlObj.style["zIndex"] = this._zIndex;
             }
@@ -104,6 +104,7 @@
             this.setDefaultImage();
         },
         doClickFocus: function() {//used for inherits
+            console.log('cccc')
 //            if(this._layer && this._layer.focusPOI) {
 //                this._layer.focusPOI(this._id,'layer');
 //            }
