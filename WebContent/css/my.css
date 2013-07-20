@@ -1815,7 +1815,7 @@ div#users-contain table td,div#users-contain table th {
 .map-tool .btn-group button.btn {
 	border: 1px solid #ccc;
 	border-radius: 2px;
-	padding: 5px 25px;
+	padding: 5px 8px;
 	background: #FDFDFD;
 	height: 30px;
 }
@@ -2181,6 +2181,9 @@ input#searchSubmit {
 	-webkit-overflow-scrolling: touch;
 }
 
+
+
+
 .nodata p {
 	font-size: 18px;
 	font-weight: bold;
@@ -2298,6 +2301,11 @@ input#searchSubmit {
 	background-color: #85B62E;
 }
 
+.label-ru {
+    border: 1px solid #9b0e36;
+    background-color: #b61851;
+}
+
 .list_footer {
 	position: absolute;
 	bottom: 0px;
@@ -2408,6 +2416,7 @@ position: relative;
 	height: 50px;
 	margin-left: 72px;
 }
+
 
 /*End of search form*/
 /*Begin of chatbox*/

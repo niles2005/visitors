@@ -4,15 +4,41 @@
     var EXTEND = mapwork.BaseSideBar;
 
     var pageHtml =
-            '<div>' +
-            '<div class="search_title" style="background:red;height:40px;">' +
-            '<span id="btnReturn" class="left back"><a href="javascript:void(0);">返回</a></span>' +
-            '<div class="right">共有<span class="padlr5"></span>条搜索记录</div>' +
-            '</div>' +
-//            '<div class="result_search"></div>' +
-            '<div class="public-listings stretch scroll">'+
-            '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>' +
-            '</div>';
+//            '<div>' +
+//            '<div class="search_title" style="background:red;height:40px;">' +
+//            '<span id="btnReturn" class="left back"><a href="javascript:void(0);">返回</a></span>' +
+//            '<div class="right">共有<span class="padlr5"></span>条搜索记录</div>' +
+//            '</div>' +
+//            '<div class="public-listings stretch scroll">'+
+//            '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>' +
+//            '</div>';
+
+         '<div class="map-tool">'
+            +'<div class="row">'
+            +'          <div class="span5">     '
+            +'            <div class="btn-group pull-left">'
+            +'              <button id="polygon_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">A</i> </button> '
+            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">S</i></button>'
+            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">W</i></button>'
+            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">G</i></button>'
+            +'            </div>'
+            +'            <div class="map-search pull-left">'
+            +'              <form name="searchMap" action="" class="searchMap" method="post" onsubmit="return false;"> '
+            +'                <div class="input-append"> '
+            +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="在这里输入你要查找的人" autocomplete="off"> '
+            +'                  <button type="submit" class="btn btn-primary searchInputBtn pull-left"><i class="icon-search icon-large"></i></button>'
+            +'                </div> '
+            +'              </form> '
+            +'            </div>   '
+            +'          </div>   '
+            +'        </div>   '
+            +'        </div>   '
+            +'<div class="public-listings stretch scroll">'
+            +    '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>'
+            +'</div>';
+
+
+
 
     function SideBarPage(module) {
         if (EXTEND) {
