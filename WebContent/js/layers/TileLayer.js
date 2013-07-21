@@ -79,7 +79,6 @@
         var viewTileY2 = Math.floor((mapCenter.posY * edgeLen + size.height / 2) / 256);
             
         var rowA = grid[0];   
-        
         while(viewTileY1 < rowA[0]._tileY) {
             row = grid.pop();
             grid.unshift(row);
