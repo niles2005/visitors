@@ -108,7 +108,8 @@
                         for (var i in jsonResult.rows) {
                             var row = jsonResult.rows[i];
                             if (row._moduleItem) {
-                                this._$Content.append(row._moduleItem.getSidebarElement());
+                                this._$Content.prepend(row._moduleItem.getSidebarElement());
+//                                this._$Content.append(row._moduleItem.getSidebarElement());
                             }
                         }
 

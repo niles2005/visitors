@@ -25,6 +25,8 @@
             };
             $(document).ready(function() {
                 visitorPage = new mapwork.VisitorPage("cc");
+
+
                 var c = document.getElementById("c");
                 var s = document.getElementById("s");
                 
@@ -40,9 +42,11 @@
             });
 
             function mapSearch(searchName) {
-                visitorPage.doSearch(searchName);
-            }
+//                visitorPage.doSearch(searchName);
+                 var wsMessage = new mapwork.WSMessage(visitorPage);
+                 wsMessage.initialize();
 
+            }
 
         </script>
     </head>

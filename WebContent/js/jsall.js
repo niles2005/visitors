@@ -120,7 +120,8 @@ var modules= [
     "modules/search/SearchModule",
     "modules/search/CommonModuleItem",
     
-    "VisitorPage"
+    "VisitorPage",
+    "WSMessage"
 ];
 var scriptLocation = getScriptLocatiion();
 if(modules.length > 0) {
