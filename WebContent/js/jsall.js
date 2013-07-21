@@ -32,6 +32,9 @@ var modules= [
     "utils/MapRulerBuilder",
     
     "utils/SHPosMapping",
+    "utils/MapRect",
+    "utils/MapRectManager",
+    
     
     "layers/Layer",
 
@@ -119,6 +122,7 @@ var modules= [
     "modules/search/Search",
     "modules/search/SearchModule",
     "modules/search/CommonModuleItem",
+    "modules/search/CommonModuleLabel",
     
     "VisitorPage",
     "WSMessage"

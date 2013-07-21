@@ -11,7 +11,7 @@
 
     newjavascript.prototype = {
         
-    }
+    };
 
     if(EXTEND) {
         mapwork.utils.inherits(newjavascript, EXTEND);

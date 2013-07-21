@@ -10,6 +10,7 @@ public class Visitor {
 	private String info;
 	private Pos pos;
 	private String type;
+	private String locate;
 
 	public String getName() {
 		return name;
@@ -81,5 +82,13 @@ public class Visitor {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getLocate() {
+		return locate;
+	}
+
+	public void setLocate(String locate) {
+		this.locate = locate;
 	}
 }

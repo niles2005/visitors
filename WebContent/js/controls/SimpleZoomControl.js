@@ -20,8 +20,10 @@
     SimpleZoomControl.prototype = {
         setMap: function(map) {
             this._map = map;
-            this.createImage(this._div,"zoomdown","images/zoomrulerup.png",20,20,this.onClick);
-            this.createImage(this._div,"zoomup","images/zoomrulerdown.png",50,20,this.onClick);
+            var zoomUpImage = this.createImage(this._div,"zoomdown","images/zoomrulerup.png",20,20,this.onClick);
+            zoomUpImage.title = "放大";
+            var zoomDownImage = this.createImage(this._div,"zoomup","images/zoomrulerdown.png",50,20,this.onClick);
+            zoomDownImage.title = "缩小";
         },
         onClick: function(event) {
             var target = event.target;
