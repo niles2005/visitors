@@ -1,6 +1,5 @@
 package com.inesazt.visitors;
 
-import java.util.Date;
 import java.util.Random;
 
 import com.alibaba.fastjson.JSON;
@@ -52,6 +51,7 @@ public class WorkManager {
 					
 					String locate = simpleLocates[j];
 					role.setId(roleName.substring(0,1) + "_" + locate);
+					role.setLocate(locates[i]);
 					role.setName(roleName);
 					role.setLabel(roleLabel);
 					role.setCount(0);

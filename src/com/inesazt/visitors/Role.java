@@ -4,6 +4,7 @@ public class Role {
 	private String id;
 	private String name;
 	private String label;
+	private String locate;
 	private Pos pos;
 	private int count;
 	public String getId() {
@@ -35,5 +36,11 @@ public class Role {
 	}
 	public void setLabel(String label) {
 		this.label = label;
+	}
+	public String getLocate() {
+		return locate;
+	}
+	public void setLocate(String locate) {
+		this.locate = locate;
 	}
 }
