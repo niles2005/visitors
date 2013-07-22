@@ -10,6 +10,7 @@
         this._mapWrapDiv = mapWrapDiv;
         this.initFrame();
         this.buildFrame();
+        this.onPageLoad();
     }
 
     VisitorPage.prototype = {
@@ -21,15 +22,16 @@
             });
 
 
-            this._map.addHandler(new mapwork.KeyHandler());
-            this._map.addHandler(new mapwork.DragHandler());
-            this._map.addHandler(new mapwork.WheelHandler());
-            this._map.addControl(new mapwork.SimpleZoomControl());
+//            this._map.addHandler(new mapwork.KeyHandler());
+//            this._map.addHandler(new mapwork.DragHandler());
+//            this._map.addHandler(new mapwork.WheelHandler());
+//            this._map.addControl(new mapwork.SimpleZoomControl());
 
             this._map.addModule(new mapwork.SearchModule(mapwork.Search.setting));
             this._map.addModule(new mapwork.Module(mapwork.CommonModuleItem.setting));
-
-
+            this._map.addModule(new mapwork.Module(mapwork.CommonModuleItem.setting));
+    
+//            this._map.addModule(new mapwork.SDRoleModule(mapwork.SDRoleItem.setting));
         },
         buildFrame: function() {
             this.createMap();
@@ -111,8 +113,13 @@
             searchModule.init();
             searchModule.doPageQuery(null, null, name);
             this._map._currentModule = searchModule;
+        },
+        onPageLoad: function() {
+            var module = this._map.getModule(mapwork.SDRoleModule.ID);
+            if(module) {
+                console.log("sss")
+            }
         }
-
     };
 
     if (EXTEND) {
