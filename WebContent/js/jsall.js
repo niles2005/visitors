@@ -124,6 +124,10 @@ var modules= [
     "modules/search/CommonModuleItem",
     "modules/search/CommonModuleLabel",
     
+    "modules/SDRoleModule",
+    "modules/SDRoleItem",
+    "modules/SDRoleLabel",
+    
     "VisitorPage",
     "WSMessage"
 ];

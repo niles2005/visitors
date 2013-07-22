@@ -1,14 +1,13 @@
 (function() {
-    mapwork.CommonModuleLabel = CommonModuleLabel;
+    mapwork.SDRoleLabel = SDRoleLabel;
 
     var EXTEND = mapwork.MapIcon;
 
     var labelHtml = '<div style="padding:0;margin:0;border:0;overflow:hidden;width:0px;height:0px;cursor:pointer;">' +
-            '<div class="iconLabel" style="position: absolute;width:40px;left:-13px;top:30px;font-size:14px;color:#000;"></div>' +
-            '<div class="roleCount" style="position: absolute;left:-16px;top:-30px;text-align:center;width:30px;color:#000;font-size:11px;font-weight:bold;font-family:">55</div>' +
+            '<div class="iconname" style="position: absolute;left:-30px;top:40px;font-size:14px;color:#000;"></div>' +
             '<img  style="right:-10px; top:-10px; position:absolute;"> ' +
             '</div>';
-    function CommonModuleLabel(id, defaultIcon, hoverIcon, imageOffset, zIndex, moduleItem) {
+    function SDRoleLabel(id, defaultIcon, hoverIcon, imageOffset, zIndex, moduleItem) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
@@ -16,15 +15,14 @@
         this.init();
     }
 
-    CommonModuleLabel.prototype = {
+    SDRoleLabel.prototype = {
         init: function() {
             this._htmlObj = document.createElement("div");
             this._htmlObj.style.position = "absolute";
 
             this._$Element = $(this._htmlObj);
             this._$Element.append(labelHtml);
-            this._$IconNameDiv = this._$Element.find(".iconLabel");
-            this._$RoleCountDiv = this._$Element.find(".roleCount");
+            this._$IconNameDiv = this._$Element.find(".iconname");
             this._$Image = this._$Element.find("img");
             this._image = this._$Image.get(0);
 
@@ -40,9 +38,8 @@
                 icon.wrapImage(this._image);
             }
         },
-        setLabel: function(name,count) {
+        setLabel: function(name) {
             this._$IconNameDiv.html(name);
-            this._$RoleCountDiv.html(count);
         },
         setHoverImage: function() {
 //            this.setIcon(this._hoverIcon);
@@ -63,17 +60,18 @@
 //            this.setHoverIcon("images/" + this._moduleItem._json.authority + "1.png");
 
             if(zoom <= 16) {
-                this.setIcon("images/" + this._moduleItem._json.name + "1.png");
-//                this._$IconNameDiv.hide();
+                this.setIcon("images/" + this._moduleItem._json.authority + "1.png");
+                this._$IconNameDiv.hide();
             } else {
-                this.setIcon("images/" + this._moduleItem._json.name + "2.png");
-//                this._$IconNameDiv.show();
+                this.setIcon("images/" + this._moduleItem._json.authority + "2.png");
+                this._$IconNameDiv.show();
             }
         },
         doFocus: function() {
             this._$Image.addClass("imageSelect");
         },
         clearFocus: function() {
+            console.log("ssssss")
             this._$Image.removeClass("imageSelect");
 //            this._image.style["background"] = "";
         }
@@ -81,6 +79,6 @@
     }
 
     if (EXTEND) {
-        mapwork.utils.inherits(CommonModuleLabel, EXTEND);
+        mapwork.utils.inherits(SDRoleLabel, EXTEND);
     }
 })();

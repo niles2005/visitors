@@ -47,6 +47,9 @@ public class WorkServlet extends HttpServlet {
 		if(action.equals("list")) {
 			return WorkManager.getInstance().listVisitors();
 		}
+		if(action.equals("listroles")) {
+			return WorkManager.getInstance().listRoles();
+		}
 		return null;
 	}
 }
