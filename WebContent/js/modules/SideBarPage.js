@@ -99,6 +99,7 @@
         //由各个业务类实现此方法
         //被module的onPageQueryResult调用
         onPageQueryResult: function(jsonResult) {
+            this.reset();
             var data = jsonResult;
             if (data) {
                 if (!data.m_detail) {

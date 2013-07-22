@@ -72,7 +72,6 @@
         },
         doFocus: function() {
             this._$Image.addClass("imageSelect");
-            console.log("fffff")
         },
         clearFocus: function() {
             this._$Image.removeClass("imageSelect");
