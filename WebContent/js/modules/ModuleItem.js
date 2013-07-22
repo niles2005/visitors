@@ -157,7 +157,15 @@
                         } else {
                             jQrow.append(jQdatepicker);
                         }
-                        jQdatepicker.datepicker('update');
+                        jQdatepicker.datepicker({
+                            format: 'yyyy-mm-dd',
+                            setDate:new Date(),
+                            autoclose:true,
+                            todayBtn:true,
+                            todayHighlight:true,
+                            clearBtn:true,
+                            language:"zh-CN"
+                        });
 
                 }
             );
@@ -309,7 +317,10 @@
                 +'<div class="span3 list-footer-right">'
                 +'<span class="qiuorchu label label-chuzu">出</span>'
                 +'<span class="qiuorchu label label-ru">入</span>'
-                +'<div class="right pull-right span2"><span class="expand">查看详细记录</span></div>'
+                +'<div class="right pull-right span2">'
+                +'<a type="button" class="expand yuantie btn btn-link btn-block" href="#">查看详细记录 <i class="icon-share"></i></a>'
+//                +'<span class="expand">查看详细记录</span>'
+                +'</div>'
                 +'</div>'
                 +'</div> '
 
@@ -341,7 +352,7 @@
                 '<h5>联系方式</h5>' +
                 '<p><span class="metadata">beshop@139.com</span></p>' +
                 '<h5>其他补充</h5>' +
-                '<p><span class="metadata">中介勿扰，已经挂了，希望租户是附近上学的一家三口，价格可以再商量</span></p>'
+                '<p><span class="metadata">中介勿扰，希望租户是附近上学的一家三口，价格可以再商量</span></p>'
                 +'</div>'
                 +'        </div>'
                 +'        <a type="button" class="yuantie btn btn-link btn-block" href="#">查看完整内容 <i class="icon-share"></i></a>'
