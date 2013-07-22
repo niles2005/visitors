@@ -12,6 +12,10 @@
     }
 
     SearchModule.prototype = {
+        initRoles: function() {
+            var roles = {"rows":{"Ab1":{"count":0,"id":"Ab1","label":"VIP","name":"admin","pos":{"lat":312717660,"lon":1218251390}},"Ab2":{"count":0,"id":"Ab2","label":"VIP","name":"admin","pos":{"lat":312717660,"lon":1218310620}},"Af":{"count":0,"id":"Af","label":"VIP","name":"admin","pos":{"lat":312678600,"lon":1218309970}},"Ao":{"count":0,"id":"Ao","label":"VIP","name":"admin","pos":{"lat":312655300,"lon":1218324350}},"Gb1":{"count":0,"id":"Gb1","label":"保安","name":"guard","pos":{"lat":312717660,"lon":1218241390}},"Gb2":{"count":0,"id":"Gb2","label":"保安","name":"guard","pos":{"lat":312717660,"lon":1218300620}},"Gf":{"count":0,"id":"Gf","label":"保安","name":"guard","pos":{"lat":312678600,"lon":1218299970}},"Go":{"count":0,"id":"Go","label":"保安","name":"guard","pos":{"lat":312655300,"lon":1218314350}},"Sb1":{"count":0,"id":"Sb1","label":"职员","name":"staff","pos":{"lat":312717660,"lon":1218231390}},"Sb2":{"count":0,"id":"Sb2","label":"职员","name":"staff","pos":{"lat":312717660,"lon":1218290620}},"Sf":{"count":0,"id":"Sf","label":"职员","name":"staff","pos":{"lat":312678600,"lon":1218289970}},"So":{"count":0,"id":"So","label":"职员","name":"staff","pos":{"lat":312655300,"lon":1218304350}},"Wb1":{"count":0,"id":"Wb1","label":"工人","name":"worker","pos":{"lat":312717660,"lon":1218221390}},"Wb2":{"count":0,"id":"Wb2","label":"工人","name":"worker","pos":{"lat":312717660,"lon":1218280620}},"Wf":{"count":0,"id":"Wf","label":"工人","name":"worker","pos":{"lat":312678600,"lon":1218279970}},"Wo":{"count":0,"id":"Wo","label":"工人","name":"worker","pos":{"lat":312655300,"lon":1218294350}}}};
+            this.onPageQueryResult(roles);
+        },
         //searchType: a: all   b: bounds   r:range
         setSearchType: function(searchType) {
             this._searchType = searchType;
@@ -95,6 +99,7 @@
 
             moduleItem._id = json.id;
             moduleItem._name = json.name;
+            moduleItem.setDescribe("");
             moduleItem.setZIndex(100 - parseInt(index));
             moduleItem.setOffsetPos([11, 31]);
             console.dir(json.pos)

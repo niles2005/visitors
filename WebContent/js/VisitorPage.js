@@ -115,9 +115,9 @@
             this._map._currentModule = searchModule;
         },
         onPageLoad: function() {
-            var module = this._map.getModule(mapwork.SDRoleModule.ID);
-            if(module) {
-                console.log("sss")
+            var searchModule = this._map.getModule(mapwork.Search.ID);
+            if(searchModule) {
+                searchModule.initRoles();
             }
         }
     };

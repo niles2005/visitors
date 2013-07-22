@@ -181,12 +181,12 @@
             }
 
             //填充边栏
-            this._sideBar.onPageQueryResult(jsonResult);
+//            this._sideBar.onPageQueryResult(jsonResult);
 
             mapPopLayer.initLayer();
-            if (this._isPageFitBounds) {
-                this._map.fitBounds(bounds);
-            }
+//            if (this._isPageFitBounds) {
+//                this._map.fitBounds(bounds);
+//            }
         },
         onListQueryResult: function(jsonResult) {
             var listLayer = this._map.getLayer("moduleListLayer");
