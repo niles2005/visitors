@@ -1,32 +1,32 @@
 (function() {
-    mapwork.CommonModuleItem = CommonModuleItem;
+    mapwork.UserItem = UserItem;
 
     var EXTEND = mapwork.ModuleItem;
-    CommonModuleItem.ID = "CommonModuleItem";
+    UserItem.ID = "UserItem";
 
-    CommonModuleItem.setting = {
-        ID: CommonModuleItem.ID,
+    UserItem.setting = {
+        ID: UserItem.ID,
         pageUrl: null,
         listUrl: null,
         detailUrl: null,
         newModuleItem: function(module, index) {
-            return new CommonModuleItem(module, index);
+            return new UserItem(module, index);
         }
-    }
+    };
 
-    function CommonModuleItem(module, index) {
+    function UserItem(module, index,roles) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
+        this._roles = roles;
     }
 
-    CommonModuleItem.prototype = {
+    UserItem.prototype = {
         setJsonData: function(json) {
-            var ePos;
             this._json = json;
 
             this.setZIndex(100 - parseInt(this._index));
-            this.setIcon("images/" + this._json.name + "2.png");
+//            this.setIcon("images/" + this._json.authority + "2.png");
 //            this.setHoverIcon("images/" + this._json.authority + "1.png");
             this.setOffsetPos([11, 31]);
         },
@@ -44,13 +44,23 @@
             var icon = this._icon;
             var hoverIcon = null;//this._hoverIcon;
             var iconOffset = this._offsetPos;
-            var moduleLabel = new mapwork.CommonModuleLabel(id, icon,hoverIcon,iconOffset,this._zIndex,this);
+            var moduleLabel = new mapwork.CommonItemLabel(id, icon,hoverIcon,iconOffset,this._zIndex,this);
             moduleLabel.setLabel(this._json.label,this._json.count);
             return moduleLabel;
-        }   
-    }
+        },
+        setRole: function(role) {
+            if(this._role && this._role !== role) {
+                this._role.removeUser(this);
+            }
+            this._role = role;
+            this._role.addUser(this);
+        },
+        getRole: function() {
+            return this._role;
+        }
+    };
 
     if (EXTEND) {
-        mapwork.utils.inherits(CommonModuleItem, EXTEND);
+        mapwork.utils.inherits(UserItem, EXTEND);
     }
 })();

@@ -44,8 +44,8 @@ public class WorkServlet extends HttpServlet {
 		if(action == null) {
 			return WebUtil.error("unknown action!");
 		}
-		if(action.equals("list")) {
-			return WorkManager.getInstance().listVisitors();
+		if(action.equals("listusers")) {
+			return WorkManager.getInstance().listUsers();
 		}
 		if(action.equals("listroles")) {
 			return WorkManager.getInstance().listRoles();

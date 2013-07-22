@@ -8,13 +8,50 @@
             EXTEND.apply(this, arguments);
         }
         this._searchType = "all";
-//        this._mapRectManager = new mapwork.MapRectManager();
+        this._roles = {};
+        this._users = {};
     }
 
     SearchModule.prototype = {
         initRoles: function() {
-            var roles = {"rows":{"Ab1":{"count":0,"id":"Ab1","label":"VIP","name":"admin","pos":{"lat":312717660,"lon":1218251390}},"Ab2":{"count":0,"id":"Ab2","label":"VIP","name":"admin","pos":{"lat":312717660,"lon":1218310620}},"Af":{"count":0,"id":"Af","label":"VIP","name":"admin","pos":{"lat":312678600,"lon":1218309970}},"Ao":{"count":0,"id":"Ao","label":"VIP","name":"admin","pos":{"lat":312655300,"lon":1218324350}},"Gb1":{"count":0,"id":"Gb1","label":"保安","name":"guard","pos":{"lat":312717660,"lon":1218241390}},"Gb2":{"count":0,"id":"Gb2","label":"保安","name":"guard","pos":{"lat":312717660,"lon":1218300620}},"Gf":{"count":0,"id":"Gf","label":"保安","name":"guard","pos":{"lat":312678600,"lon":1218299970}},"Go":{"count":0,"id":"Go","label":"保安","name":"guard","pos":{"lat":312655300,"lon":1218314350}},"Sb1":{"count":0,"id":"Sb1","label":"职员","name":"staff","pos":{"lat":312717660,"lon":1218231390}},"Sb2":{"count":0,"id":"Sb2","label":"职员","name":"staff","pos":{"lat":312717660,"lon":1218290620}},"Sf":{"count":0,"id":"Sf","label":"职员","name":"staff","pos":{"lat":312678600,"lon":1218289970}},"So":{"count":0,"id":"So","label":"职员","name":"staff","pos":{"lat":312655300,"lon":1218304350}},"Wb1":{"count":0,"id":"Wb1","label":"工人","name":"worker","pos":{"lat":312717660,"lon":1218221390}},"Wb2":{"count":0,"id":"Wb2","label":"工人","name":"worker","pos":{"lat":312717660,"lon":1218280620}},"Wf":{"count":0,"id":"Wf","label":"工人","name":"worker","pos":{"lat":312678600,"lon":1218279970}},"Wo":{"count":0,"id":"Wo","label":"工人","name":"worker","pos":{"lat":312655300,"lon":1218294350}}}};
-            this.onPageQueryResult(roles);
+            this.init();
+            var roles = {"rows":{"a_b1":{"count":0,"id":"a_b1","label":"VIP","name":"admin","pos":{"lat":312717660,"lon":1218251390}},"a_b2":{"count":0,"id":"a_b2","label":"VIP","name":"admin","pos":{"lat":312717660,"lon":1218310620}},"a_f":{"count":0,"id":"a_f","label":"VIP","name":"admin","pos":{"lat":312678600,"lon":1218309970}},"a_o":{"count":0,"id":"a_o","label":"VIP","name":"admin","pos":{"lat":312655300,"lon":1218324350}},"g_b1":{"count":0,"id":"g_b1","label":"保安","name":"guard","pos":{"lat":312717660,"lon":1218241390}},"g_b2":{"count":0,"id":"g_b2","label":"保安","name":"guard","pos":{"lat":312717660,"lon":1218300620}},"g_f":{"count":0,"id":"g_f","label":"保安","name":"guard","pos":{"lat":312678600,"lon":1218299970}},"g_o":{"count":0,"id":"g_o","label":"保安","name":"guard","pos":{"lat":312655300,"lon":1218314350}},"s_b1":{"count":0,"id":"s_b1","label":"职员","name":"staff","pos":{"lat":312717660,"lon":1218231390}},"s_b2":{"count":0,"id":"s_b2","label":"职员","name":"staff","pos":{"lat":312717660,"lon":1218290620}},"s_f":{"count":0,"id":"s_f","label":"职员","name":"staff","pos":{"lat":312678600,"lon":1218289970}},"s_o":{"count":0,"id":"s_o","label":"职员","name":"staff","pos":{"lat":312655300,"lon":1218304350}},"w_b1":{"count":0,"id":"w_b1","label":"工人","name":"worker","pos":{"lat":312717660,"lon":1218221390}},"w_b2":{"count":0,"id":"w_b2","label":"工人","name":"worker","pos":{"lat":312717660,"lon":1218280620}},"w_f":{"count":0,"id":"w_f","label":"工人","name":"worker","pos":{"lat":312678600,"lon":1218279970}},"w_o":{"count":0,"id":"w_o","label":"工人","name":"worker","pos":{"lat":312655300,"lon":1218294350}}}};
+            var listLayer = this._map.getLayer("moduleListLayer");
+            if (!listLayer) {
+                listLayer = new mapwork.MapIconLayer("moduleListLayer");
+                this._map.addLayer(listLayer);
+            } else {
+                listLayer.empty();
+            }
+            if (roles.rows) {
+                for (var i in roles.rows) {
+                    var row = roles.rows[i];
+                    //封装moduleItem
+                    var roleItem = this.buildRoleItem(row);
+                    roleItem.setMap(this._map);
+                    listLayer.addElement(roleItem.getMapIcon());
+                }
+            }
+            listLayer.initLayer();
+            this.doUserQuery();
+        },
+        buildRoleItem: function(json, index) {
+            var roleItem = new mapwork.RoleItem(this, index);
+            roleItem.setJsonData(json);
+            roleItem.setSidebar(this._sideBar);
+            roleItem.setIcon("images/" + json.name + "1.png");
+            roleItem._id = json.id;
+            roleItem._name = json.name;
+            roleItem.setZIndex(100 - parseInt(index));
+            roleItem.setOffsetPos([11, 31]);
+            if (json.pos) {
+                var ePos = new mapwork.EarthPos(json.pos.lat, json.pos.lon, true);
+                roleItem.setEarthPos(ePos);
+            }
+            roleItem.setMap(this._map);
+            this._roles[roleItem._id] = roleItem;
+//            this._mapRectManager.addModuleItem(moduleItem);
+            return roleItem;
         },
         //searchType: a: all   b: bounds   r:range
         setSearchType: function(searchType) {
@@ -26,6 +63,18 @@
         setSearchRadius: function(searchRadius) {
             this._searchRadius = searchRadius;
         },
+        doUserQuery: function() {
+            var url = "work?action=listusers";
+            var self = this;
+
+            mapwork.utils.loadJsonData(url, function(data) {
+                if (!data) {
+                    return;
+                }
+                self.onUserQueryResult(data);
+            });
+        },
+                
         doPageQuery: function(pageIndex, pageSize, name) {
             if (name) {
                 this._searchName = name;
@@ -36,59 +85,16 @@
             //清空tip层
             this.doHideTip();
 
-//    		var url =  mapwork.configs["searchLayer_url"] + "?b1=" + b1 + "&b2=" + b2 + "&b3=" + b3 + "&b4=" + b4 + "&n=" + name + "&p=0&t=b";
             var p = pageIndex ? (pageIndex - 1) : 0;
-            var param = this.getSearchParam(p);
-            var url = "work?action=listroles";//mapwork.configs["searchLayer_url"];// + "?b1=" + b1 + "&b2=" + b2 + "&b3=" + b3 + "&b4=" + b4 + "&n=" + this._searchName + "&g=" + p + "&t=" + this._searchType;
+            var url = "work?action=listusers";
             var self = this;
 
             mapwork.utils.loadJsonData(url, function(data) {
-                
                 if (!data) {
                     return;
                 }
-                //fit window bounds 
-                self._isPageFitBounds = self._searchType == 'all';
-
-//                if (data.total > 0) {
-                    self.onPageQueryResult(data);
-//                } else {
-//                    //					alert("当前范围内搜索不到此信息");
-//                }
-            }, param);
-        },
-        getSearchParam: function(pageIndex) {
-            var param = {};
-            param["name"] = this._searchName;
-            param["type"] = this._searchType;
-            param["page"] = pageIndex;
-            if (this._searchType == 'all') {
-
-            } else if (this._searchType == 'bounds') {
-                var ltGlobalPos = this._map._mapLocation.getWindowLeftTopGlobalPos();
-                var rbGlobalPos = this._map._mapLocation.getWindowRightBottomGlobalPos();
-                var ltEpos = ltGlobalPos.convert2EarthPos();
-                var rbEpos = rbGlobalPos.convert2EarthPos();
-
-                var b1 = ltEpos.getILat();
-                var b2 = ltEpos.getILon();
-                var b3 = rbEpos.getILat();
-                var b4 = rbEpos.getILon();
-
-                param["blat1"] = b1;
-                param["blon1"] = b2;
-                param["blat2"] = b3;
-                param["blon2"] = b4;
-            } else if (this._searchType == 'range') {
-                var centerEPos = this._searchEPos;
-                if (!centerEPos) {
-                    centerEPos = this._map._mapLocation.getMapCenterEarthPos();
-                }
-                param["rlat"] = centerEPos.getILat();
-                param["rlon"] = centerEPos.getILon();
-                param["rlen"] = this._searchRadius;
-            }
-            return param;
+                self.onUserQueryResult(data);
+            });
         },
         buildModuleItem: function(json, index) {
             var moduleId = json.type;
@@ -102,7 +108,6 @@
             moduleItem.setDescribe("");
             moduleItem.setZIndex(100 - parseInt(index));
             moduleItem.setOffsetPos([11, 31]);
-            console.dir(json.pos)
             if (json.pos) {
                 var ePos = new mapwork.EarthPos(json.pos.lat, json.pos.lon, true);
                 moduleItem.setEarthPos(ePos);
@@ -129,7 +134,72 @@
         },
         setSearchHandler: function(searchHandler) {
             this._searchHandler = searchHandler;
-        }
+        },
+        onUserQueryResult: function(jsonResult) {
+            if (!jsonResult) {
+                return;
+            }
+            if (jsonResult.rows) {
+                for (var i in jsonResult.rows) {
+                    var row = jsonResult.rows[i];
+                    var userItem = this.buildUserItem(row, i);
+                    this._users[userItem._id] = userItem;
+                }
+            }
+            this.doEventQuery();
+        },
+        buildUserItem: function(json, index) {
+            var userItem = new mapwork.UserItem(this, index,this._roles);
+            userItem.setJsonData(json);
+            userItem.setSidebar(this._sideBar);
+
+            userItem._id = json.id;
+            userItem._name = json.name;
+            userItem.setIcon("images/" + json.role + "2.png");
+            userItem.setDescribe("");
+            userItem.setZIndex(100 - parseInt(index));
+            userItem.setOffsetPos([11, 31]);
+            userItem.setMap(this._map);
+            return userItem;
+        },
+        doEventQuery: function() {
+//            this._sideBar.reset();
+            //清空大图标
+//            this.doRemoveIconList();
+            //清空tip层
+//            this.doHideTip();
+            var json = [{"user":"g2","locate":"b1","time":124234235},{"user":"g3","locate":"b1","time":124234235},{"user":"g5","locate":"b1","time":124234235}];
+            console.dir(json);
+            this.onEventQueryResult(json);
+//            var url = "work?action=listusers";
+//            var self = this;
+//
+//            mapwork.utils.loadJsonData(url, function(data) {
+//                if (!data) {
+//                    return;
+//                }
+//                self.onEventQueryResult(data);
+//            });
+        },
+        onEventQueryResult: function(jsonResult) {
+            if (!jsonResult) {
+                return;
+            }
+            for (var i in jsonResult) {
+                var event = jsonResult[i];
+                var user = this._users[event.user];
+                if(user) {
+                    var strRole = user._json.role;
+                    var roleId = strRole.substring(0,1) + "_" + event.locate;
+                    console.log(roleId)
+                    var role = this._roles[roleId];
+                    if(role) {
+                        user.setRole(role);
+                    }
+                }
+            }
+        },                
+                
     }
 
     if (EXTEND) {

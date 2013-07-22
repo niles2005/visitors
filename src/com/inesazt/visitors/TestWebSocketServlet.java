@@ -29,7 +29,7 @@ public class TestWebSocketServlet extends WebSocketServlet {
 
     private static final String GUEST_PREFIX = "Guest";
     private Random rand = new Random();
-    private String[] autoritys = new String[]{"worker","staff","guard","admin"};
+	private String[] roleNames = new String[]{"worker","staff","guard","admin"};
 	private String[] genders = new String[]{"mail","femail"};
 	private int baseLat = 312605060;
 	private int baseLon = 1218334470;
@@ -108,22 +108,17 @@ public class TestWebSocketServlet extends WebSocketServlet {
     		for(int i=0;i<2;i++) {
     			Visitor visitor = new Visitor();
     			int r = rand.nextInt(100);
-    			String theAutority = autoritys[r % 4];
+    			String theRole = roleNames[r % 4];
     			
-    			visitor.setId(theAutority.substring(0,1) + i);
-    			visitor.setName(theAutority + i);
+    			visitor.setId(theRole.substring(0,1) + i);
+    			visitor.setName(theRole + i);
     			
     			visitor.setGender(genders[r % 2]);
     			visitor.setAge(rand.nextInt(30) + 20);
-    			visitor.setAuthority(theAutority);
+    			visitor.setRole(theRole);
     			visitor.setCreateTime(new Date().getTime());
-    			visitor.setInfo("Test role for " + theAutority);
+    			visitor.setInfo("Test role for " + theRole);
     			
-    			visitor.setType("road");
-    		
-    			int lat = baseLat + offsetLat * (r / 5);
-    			int lon = baseLon + offsetLon * (r % 5);
-    			visitor.setPos(new Pos(lat,lon));
     			visitors.addVisitor(visitor);
     		}
     		

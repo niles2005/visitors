@@ -14,6 +14,7 @@
     Module.prototype = {
         init: function() {
             this._sideBar = this.buildSideBar();
+            console.log(this._sideBar)
             this._sideBar.init();
         },
         getModuleId: function() {
@@ -107,7 +108,7 @@
 //        	this.doRemoveIconList();
             this.workAllPageItem(function(moduleItem) {
                 moduleItem.doRemove();
-            })
+            });
             //清空tip层
             this.doHideTip();
 

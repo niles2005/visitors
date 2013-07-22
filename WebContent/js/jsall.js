@@ -121,8 +121,9 @@ var modules= [
     
     "modules/search/Search",
     "modules/search/SearchModule",
-    "modules/search/CommonModuleItem",
-    "modules/search/CommonModuleLabel",
+    "modules/search/RoleItem",
+    "modules/search/UserItem",
+    "modules/search/CommonItemLabel",
     
     "modules/SDRoleModule",
     "modules/SDRoleItem",

@@ -234,7 +234,7 @@
 		getModule: function(moduleId){
 			var module = this._modules[moduleId];
 			if(!module){
-				return this._modules[mapwork.CommonModuleItem.ID];
+				return this._modules[mapwork.UserItem.ID];
 			}
 			return module;
 		},

@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSON;
 public class WorkManager {
 	Random rand = new Random();
 	
-	private String[] autoritys = new String[]{"worker","staff","guard","admin"};
 	
 	private String[] roleNames = new String[]{"worker","staff","guard","admin"};
 	private String[] roleLabels = new String[]{"工人","职员","保安","VIP"};
@@ -25,10 +24,7 @@ public class WorkManager {
 	
 	private int roleOffsetLon = 10000;
 	
-	private int baseLat = 312605060;
-	private int baseLon = 1218334470;
-	private int offsetLat = -2500;
-	private int offsetLon = 10000;	private static WorkManager m_instance = null;
+	private static WorkManager m_instance = null;
 	
 	private WorkManager() {
 		
@@ -55,7 +51,7 @@ public class WorkManager {
 					int roleLon = rolePoses[j * 2 + 1];
 					
 					String locate = simpleLocates[j];
-					role.setId(roleName.substring(0,1).toUpperCase() + locate);
+					role.setId(roleName.substring(0,1) + "_" + locate);
 					role.setName(roleName);
 					role.setLabel(roleLabel);
 					role.setCount(0);
@@ -76,27 +72,46 @@ public class WorkManager {
 		for(int i=0;i<50;i++) {
 			Visitor visitor = new Visitor();
 			int r = rand.nextInt(100);
-			String theAutority = autoritys[r % 4];
+			String theRole = roleNames[r % 4];
 			
-			visitor.setId(theAutority.substring(0,1) + i);
-			visitor.setName(theAutority + i);
+			visitor.setId(theRole.substring(0,1) + i);
+			visitor.setName(theRole + i);
 			
 			visitor.setGender(genders[r % 2]);
 			visitor.setAge(rand.nextInt(30) + 20);
-			visitor.setAuthority(theAutority);
-			visitor.setCreateTime(new Date().getTime());
-			visitor.setInfo("Test role for " + theAutority);
+			visitor.setRole(theRole);
+//			visitor.setCreateTime(new Date().getTime());
+//			visitor.setInfo("Test role for " + theRole);
 			
-			visitor.setType("road");
-		
 			r = rand.nextInt(999);
 			String theLocate = locates[r % 4];
 			visitor.setLocate(theLocate);
 			
-			int lat = baseLat + offsetLat * (r / 5);
-			int lon = baseLon + offsetLon * (r % 5);
-			visitor.setPos(new Pos(lat,lon));
 			visitors.addVisitor(visitor);
+		}
+		
+		String str = JSON.toJSONString(visitors);
+		
+		return str;
+	}
+	
+	public String listUsers() {
+		Visitors visitors = new Visitors();
+		for(int i=0;i<roleNames.length;i++) {
+			String theRole = roleNames[i];
+			for(int j=0;j<10;j++) {
+				Visitor visitor = new Visitor();
+				int r = rand.nextInt(100);
+				
+				visitor.setId(theRole.substring(0,1) + j);
+				visitor.setName(theRole + j);
+				
+				visitor.setGender(genders[r % 2]);
+				visitor.setAge(rand.nextInt(30) + 20);
+				visitor.setRole(theRole);
+				
+				visitors.addVisitor(visitor);
+			}
 		}
 		
 		String str = JSON.toJSONString(visitors);

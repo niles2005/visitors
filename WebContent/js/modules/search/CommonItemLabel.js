@@ -1,5 +1,5 @@
 (function() {
-    mapwork.CommonModuleLabel = CommonModuleLabel;
+    mapwork.CommonItemLabel = CommonItemLabel;
 
     var EXTEND = mapwork.MapIcon;
 
@@ -8,7 +8,7 @@
             '<div class="roleCount" style="position: absolute;left:-16px;top:-30px;text-align:center;width:30px;color:#000;font-size:11px;font-weight:bold;font-family:">55</div>' +
             '<img  style="right:-10px; top:-10px; position:absolute;"> ' +
             '</div>';
-    function CommonModuleLabel(id, defaultIcon, hoverIcon, imageOffset, zIndex, moduleItem) {
+    function CommonItemLabel(id, defaultIcon, hoverIcon, imageOffset, zIndex, moduleItem) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
@@ -16,7 +16,7 @@
         this.init();
     }
 
-    CommonModuleLabel.prototype = {
+    CommonItemLabel.prototype = {
         init: function() {
             this._htmlObj = document.createElement("div");
             this._htmlObj.style.position = "absolute";
@@ -62,16 +62,17 @@
             
 //            this.setHoverIcon("images/" + this._moduleItem._json.authority + "1.png");
 
-            if(zoom <= 16) {
-                this.setIcon("images/" + this._moduleItem._json.name + "1.png");
-//                this._$IconNameDiv.hide();
-            } else {
-                this.setIcon("images/" + this._moduleItem._json.name + "2.png");
-//                this._$IconNameDiv.show();
-            }
+//            if(zoom <= 16) {
+//                this.setIcon("images/" + this._moduleItem._json.name + "1.png");
+////                this._$IconNameDiv.hide();
+//            } else {
+//                this.setIcon("images/" + this._moduleItem._json.name + "2.png");
+////                this._$IconNameDiv.show();
+//            }
         },
         doFocus: function() {
             this._$Image.addClass("imageSelect");
+            console.log("fffff")
         },
         clearFocus: function() {
             this._$Image.removeClass("imageSelect");
@@ -81,6 +82,6 @@
     }
 
     if (EXTEND) {
-        mapwork.utils.inherits(CommonModuleLabel, EXTEND);
+        mapwork.utils.inherits(CommonItemLabel, EXTEND);
     }
 })();

@@ -102,15 +102,17 @@
             var data = jsonResult;
             if (data) {
                 if (!data.m_detail) {
-                    if (jsonResult.rows) {
+                    if (jsonResult) {
                         this._$Right.show();
                         this._$RecordCount.html(data.total);
-                        for (var i in jsonResult.rows) {
-                            var row = jsonResult.rows[i];
-                            if (row._moduleItem) {
-                                this._$Content.prepend(row._moduleItem.getSidebarElement());
+                        for (var i in jsonResult) {
+                            var row = jsonResult[i];
+                            console.dir(row)
+//                            if (row._moduleItem) {
+                                
+                                this._$Content.prepend(row.getSidebarElement());
 //                                this._$Content.append(row._moduleItem.getSidebarElement());
-                            }
+//                            }
                         }
 
 //                        this.doPage(data.page, data.pageSize, data.total);
