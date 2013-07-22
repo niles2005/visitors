@@ -112,6 +112,14 @@
         getSidebarElement: function() {
             this._$Content = $(this.getSidebarContent(this._id));
             this._$ContentImage = this._$Content.find("img");
+
+            this._$Datepicker = $('<span  class=" "> '
+                    +' <div class="input-append date" id="dp3" data-date-format="yyyy-mm-dd"> '
+                    +'<input class="span2" size="12" type="text" readonly/> '
+                    +'    <span class="add-on"><i class="icon-th"></i></span>    '
+                    +' </div> '
+                    +'</span>');
+
             var self = this;
             //给content设置鼠标徘徊事件
             this._$Content.hover(
@@ -125,13 +133,36 @@
             //给content设置单击事件
             this._$Content.click(
                     function() {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        self.doFocus();
-                        var $trackDiv = $(self._$Content).find('>.popuplist-main');
-                        $trackDiv.toggle("slow");
+//                        event.preventDefault();
+//                        event.stopPropagation();
+//                        console.dir(self._$Content);
+//                        self.doFocus();
+//                        var $trackDiv = $(self._$Content).find('>.popuplist-main');
+//                        $trackDiv.toggle("slow");
                     }
             );
+
+            this._$Content.find('.expand').click(
+                function() {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        var $trackDiv = $(self._$Content).find('>.popuplist-main');
+                        $trackDiv.toggle("slow");
+
+                        var jQrow = self._$Content.find('.modal-header>.row');
+                        var jQdatepicker = $('#dp3');
+                        if (jQdatepicker.length == 0) {
+                            jQrow.append(self._$Datepicker);
+                            jQdatepicker = $('#dp3');
+                        } else {
+                            jQrow.append(jQdatepicker);
+                        }
+                        jQdatepicker.datepicker('update');
+
+                }
+            );
+
+
             return this._$Content.get(0);
         },
         //创建并获得mapIcon对象
@@ -278,7 +309,7 @@
                 +'<div class="span3 list-footer-right">'
                 +'<span class="qiuorchu label label-chuzu">出</span>'
                 +'<span class="qiuorchu label label-ru">入</span>'
-                +'<div class="right pull-right span2"></div>'
+                +'<div class="right pull-right span2"><span class="expand">查看详细记录</span></div>'
                 +'</div>'
                 +'</div> '
 
@@ -287,7 +318,15 @@
                 +' <div class="popuplist-main hide">'
                 +'<div class="modal-header">  '
                 +'    <div class="row">    '
-                +'       <span class="verification"><a href="#" >行踪记录 <i class="icon-ok icon-large"></i></a></span>'
+
+//                +'   <span  class=" "> '
+//                +' <div class="input-append date" id="datepicker" data-date-format="dd-mm-yyyy"> '
+//                +'<input class="span2" size="12" type="text" value >  '
+//                +'    <span class="add-on"><i class="icon-th"></i></span>    '
+//                +' </div> '
+//                +'</span>'
+
+//                +'       <span class="verification"><a href="#" >行踪记录 <i class="icon-ok icon-large"></i></a></span>'
                 +'        </div>                '
                 +'    </div>                      '
                 +'     <div class="popuplist-main-body modal-body">   '
