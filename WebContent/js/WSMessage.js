@@ -39,8 +39,18 @@
 
            this.socket.onopen = function () {
                console.log('Info: WebSocket connection opened.');
+
+//               if (self.module._map._currentModule) {
+//                   self.module._map._currentModule.clean();
+//               }
+//               var searchModule = self.visitorPage._map.getModule(mapwork.Search.ID);
+
+
                self.module = self.visitorPage._map.getModule(mapwork.Search.ID);
                self.module.init();
+               self.module.setSearchType('all');
+
+
            };
 
            this.socket.onclose = function () {
@@ -48,6 +58,7 @@
            };
 
            this.socket.onmessage = function (message) {
+               self.module._isPageFitBounds = self.module._searchType == 'all';
                self.module.onPageQueryResult(JSON.parse(message.data));
            };
        }
