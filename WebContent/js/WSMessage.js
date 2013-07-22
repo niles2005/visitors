@@ -38,7 +38,6 @@
            }
 
            this.socket.onopen = function () {
-               console.dir(self.visitorPage);
                console.log('Info: WebSocket connection opened.');
                self.module = self.visitorPage._map.getModule(mapwork.Search.ID);
                self.module.init();
