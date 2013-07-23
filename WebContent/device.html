@@ -36,13 +36,9 @@
     <body>
 
         <div class="container">
-
-
             <div ng-controller="BindState">
-
                 <form ng-submit="setParam()" >
                     Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input disabled="true" ng-model="selectDevice.id" /><br>
-                    <!--locate:<input ng-model="selectDevice.locate"><br>-->
                     locate:<select ng-model="selectDevice.locate">
                                 <option ng-repeat> </option>
                     </select> <br>
