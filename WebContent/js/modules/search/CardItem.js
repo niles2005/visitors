@@ -86,7 +86,7 @@
                     return;
                 }
                var htmlContent = '<table class="table table-bordered">'
-                   +'<tbody><tr><th>Index</th><th>日期</th><th>日间</th><th>方位</th>';
+                   +'<tbody><tr><th>Index</th><th>日期</th><th>时间</th><th>方位</th>';
                for(var i=0 ; i < data.length ;i++){
                     htmlContent = htmlContent
                                   +'<tr><td>'
