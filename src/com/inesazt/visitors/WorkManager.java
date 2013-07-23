@@ -282,4 +282,12 @@ public class WorkManager {
 		String str = JSON.toJSONString(list);
 		return str;
 	}
+	
+	public String loadLocations(){
+		return JSON.toJSONString(locates);
+	}
+	
+	public String loadRoles(){
+		return JSON.toJSONString(roleLabels);
+	}
 }

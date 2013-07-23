@@ -64,7 +64,12 @@
                 <form ng-submit="setParam()" >
                     Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input disabled="true" ng-model="selectCard.id" /><br>
                     name:<input ng-model="selectCard.name" /><br>
-                    role&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.role"><br>
+                    role&nbsp;&nbsp;&nbsp;:<select ng-model="selectCard.role">
+                    <option value='worker'>worker</option>
+                    <option value='staff'>staff</option>
+                    <option value='guard'>guard</option>
+                    <option value='admin'>VIP</option>
+                    </select><br>
                     info&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.info"><br>
                     <input type="submit" value="设置"/>
                 </form>

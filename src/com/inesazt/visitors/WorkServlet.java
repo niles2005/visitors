@@ -69,6 +69,10 @@ public class WorkServlet extends HttpServlet {
 			return WorkManager.getInstance().loadEvents(cardId,strDate);
 		} else if(action.equals("loadallevents")) {
 			return WorkManager.getInstance().loadAllEvents();
+		} else if(action.equals("enumlocations")) {
+			return WorkManager.getInstance().loadLocations();
+		}else if(action.equals("enumroles")) {
+			return WorkManager.getInstance().loadRoles();
 		}
 		return null;
 	}
