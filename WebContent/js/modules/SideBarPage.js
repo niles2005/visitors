@@ -108,7 +108,6 @@
                         this._$RecordCount.html(data.total);
                         for (var i in jsonResult) {
                             var row = jsonResult[i];
-                            console.dir(row)
 //                            if (row._moduleItem) {
                                 
                                 this._$Content.prepend(row.getSidebarElement());

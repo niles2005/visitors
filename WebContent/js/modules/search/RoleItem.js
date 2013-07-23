@@ -37,6 +37,7 @@
             var iconOffset = this._offsetPos;
             if(!this._moduleLabel) {
                 this._moduleLabel = new mapwork.CommonItemLabel(id, icon,hoverIcon,iconOffset,this._zIndex,this);
+                this._moduleLabel.setWarn(this._json.warn);
                 this._moduleLabel.setLabel(this._json.label,this._json.count);
             }
             return this._moduleLabel;

@@ -59,6 +59,14 @@ public class WorkManager {
 					role.setCount(0);
 					
 					role.setPos(new Pos(roleLat,roleLon + roleOffsetLon * i));
+					
+					if(i == 0 && j == 1) {
+						role.setWarn(true);
+					} else if(i == 1 && j == 0) {
+						role.setWarn(true);
+					} else if(i == 2 && (j == 0 || j == 1)) {
+						role.setWarn(true);
+					}
 					roles.addRole(role);
 				}
 			}

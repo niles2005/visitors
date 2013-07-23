@@ -14,7 +14,6 @@
     Module.prototype = {
         init: function() {
             this._sideBar = this.buildSideBar();
-            console.log(this._sideBar)
             this._sideBar.init();
         },
         getModuleId: function() {

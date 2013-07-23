@@ -40,6 +40,11 @@
                 icon.wrapImage(this._image);
             }
         },
+        setWarn: function(warn) {
+            if(warn) {
+                this._$RoleCountDiv.css("color","red");
+            }
+        },
         setLabel: function(name,count) {
             this._$IconNameDiv.html(name);
             this._$RoleCountDiv.html(count);
