@@ -60,14 +60,20 @@
         getRole: function() {
             return this._role;
         },
-        formatDate: function(now) {
+        formatDate: function(now,form) {
             var year = now.getYear()-100+2000;
             var month = now.getMonth()+1;
             var date = now.getDate();
             var hour = now.getHours();
             var minute = now.getMinutes();
             var second = now.getSeconds();
-            return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second +"  ";
+            if(form === 'day'){
+                return year+"-"+month+"-"+date ;
+            }else if(form === 'time'){
+                return hour+":"+minute+":"+second ;
+            }else{
+                return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second ;
+            }
          } ,
 
     afterExpandDetail: function() {
@@ -79,15 +85,25 @@
                 if (!data) {
                     return;
                 }
-               var htmlContent = '<h5>行踪详情</h5>';
+               var htmlContent = '<table class="table table-bordered">'
+                   +'<tbody><tr><th>Index</th><th>日期</th><th>日间</th><th>方位</th>';
                for(var i=0 ; i < data.length ;i++){
                     htmlContent = htmlContent
-                                  +'<p>'
-                                  + self.formatDate(new Date(data[i]['time']))
+                                  +'<tr><td>'
+                                  + (i+1)
+                                  +'</td>'
+                                  +'<td>'
+                                  + self.formatDate(new Date(data[i]['time']),'day')
+                                  +'</td>'
+                                +'<td>'
+                                + self.formatDate(new Date(data[i]['time']),'time')
+                                +'</td>'
+                                  +'<td>'
                                   +'<span class="metadata">'
                                   + data[i]['deviceLocate']
-                                  +'</span></p>';
+                                  +'</span></td></tr>';
                }
+                htmlContent = htmlContent + '</tbody></table>';
                 $cardDetail.html(htmlContent);
 //                self.onEventQueryResult(data);
             });            

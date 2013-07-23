@@ -348,6 +348,7 @@
                 +'    </div>                      '
                 +'     <div class="popuplist-main-body modal-body">   '
                 +'        <div class="popuplist-descr">           '
+                +'<h5>行踪详情</h5>'
                 +'            <div class="cardDetail row infobox descrbox chu_descr ellipsis multiline">'
 //                '<h5>关于房子</h5>' +
 //                '<p>房子具体位置在<span class="metadata">中国北京市北京西城区黄寺大街双旗杆东里</span>。户型两居。要出租的房间是<span class="metadata">整套</span>。出租的屋子面积<span class="metadata">60</span>。</p>' +
