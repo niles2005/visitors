@@ -1,27 +1,27 @@
 (function() {
-    mapwork.UserItem = UserItem;
+    mapwork.CardItem = CardItem;
 
     var EXTEND = mapwork.ModuleItem;
-    UserItem.ID = "UserItem";
+    CardItem.ID = "CardItem";
 
-    UserItem.setting = {
-        ID: UserItem.ID,
+    CardItem.setting = {
+        ID: CardItem.ID,
         pageUrl: null,
         listUrl: null,
         detailUrl: null,
         newModuleItem: function(module, index) {
-            return new UserItem(module, index);
+            return new CardItem(module, index);
         }
     };
 
-    function UserItem(module, index,roles) {
+    function CardItem(module, index,roles) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
         this._roles = roles;
     }
 
-    UserItem.prototype = {
+    CardItem.prototype = {
         setJsonData: function(json) {
             this._json = json;
 
@@ -50,17 +50,30 @@
         },
         setRole: function(role) {
             if(this._role && this._role !== role) {
-                this._role.removeUser(this);
+                this._role.removeCard(this);
             }
             this._role = role;
-            this._role.addUser(this);
+            this._role.addCard(this);
         },
         getRole: function() {
             return this._role;
+        },
+        afterExpandDetail: function() {
+            var $cardDetail = this._$Content.find(".cardDetail");
+            var url = "work?action=loadevents&cardId=aa";
+            var self = this;
+
+            mapwork.utils.loadJsonData(url, function(data) {
+                if (!data) {
+                    return;
+                }
+                $cardDetail.html(JSON.stringify(data));
+//                self.onEventQueryResult(data);
+            });            
         }
     };
 
     if (EXTEND) {
-        mapwork.utils.inherits(UserItem, EXTEND);
+        mapwork.utils.inherits(CardItem, EXTEND);
     }
 })();

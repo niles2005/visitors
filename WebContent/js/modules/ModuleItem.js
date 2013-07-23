@@ -166,12 +166,16 @@
                             clearBtn:true,
                             language:"zh-CN"
                         });
-
+                        self.afterExpandDetail();
                 }
             );
 
 
             return this._$Content.get(0);
+        },
+        afterExpandDetail: function() {
+            var $cardDetail = this._$Content.find(".cardDetail");
+            $cardDetail.html("aaaaa");
         },
         //创建并获得mapIcon对象
         //设置图片资源,设置坐标,绑定徘徊及单击事件
@@ -342,17 +346,17 @@
                 +'    </div>                      '
                 +'     <div class="popuplist-main-body modal-body">   '
                 +'        <div class="popuplist-descr">           '
-                +'            <div class="row infobox descrbox chu_descr ellipsis multiline">' +
-                '<h5>关于房子</h5>' +
-                '<p>房子具体位置在<span class="metadata">中国北京市北京西城区黄寺大街双旗杆东里</span>。户型两居。要出租的房间是<span class="metadata">整套</span>。出租的屋子面积<span class="metadata">60</span>。</p>' +
-                '<h5>租金和租期</h5>' +
-                '<p>租金每月<span class="metadata">5000</span>。可入住时间是<span class="metadata">2013/07/19</span>。租期一年。</p>' +
-                '<h5>关于室友和设施</h5>' +
-                '<p><span class="metadata">男女不限</span>。</p>' +
-                '<h5>联系方式</h5>' +
-                '<p><span class="metadata">beshop@139.com</span></p>' +
-                '<h5>其他补充</h5>' +
-                '<p><span class="metadata">中介勿扰，希望租户是附近上学的一家三口，价格可以再商量</span></p>'
+                +'            <div class="cardDetail">'
+//                '<h5>关于房子</h5>' +
+//                '<p>房子具体位置在<span class="metadata">中国北京市北京西城区黄寺大街双旗杆东里</span>。户型两居。要出租的房间是<span class="metadata">整套</span>。出租的屋子面积<span class="metadata">60</span>。</p>' +
+//                '<h5>租金和租期</h5>' +
+//                '<p>租金每月<span class="metadata">5000</span>。可入住时间是<span class="metadata">2013/07/19</span>。租期一年。</p>' +
+//                '<h5>关于室友和设施</h5>' +
+//                '<p><span class="metadata">男女不限</span>。</p>' +
+//                '<h5>联系方式</h5>' +
+//                '<p><span class="metadata">beshop@139.com</span></p>' +
+//                '<h5>其他补充</h5>' +
+//                '<p><span class="metadata">中介勿扰，希望租户是附近上学的一家三口，价格可以再商量</span></p>'
                 +'</div>'
                 +'        </div>'
                 +'        <a type="button" class="yuantie btn btn-link btn-block" href="#">查看完整内容 <i class="icon-share"></i></a>'

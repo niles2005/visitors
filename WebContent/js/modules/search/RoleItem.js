@@ -8,8 +8,8 @@
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
-        this._users = {};
-        this._userCount = 0;
+        this._cards = {};
+        this._cardCount = 0;
     }
 
     RoleItem.prototype = {
@@ -41,22 +41,22 @@
             }
             return this._moduleLabel;
         },
-        addUser: function(user) {
-            this._users[user._id] = user;
-            this._userCount++;
+        addCard: function(card) {
+            this._cards[card._id] = card;
+            this._cardCount++;
             this.updateCount();
         },
-        removeUser: function(user) {
-            delete this._users[user._id];
-            this._userCount--;
+        removeCard: function(card) {
+            delete this._cards[card._id];
+            this._cardCount--;
             this.updateCount();
         },
-        getUserCount: function() {
-            return this._userCount;
+        getCardCount: function() {
+            return this._cardCount;
         },
         updateCount: function() {
             if(this._moduleLabel) {
-                this._moduleLabel.setLabel(this._json.label,this._userCount);
+                this._moduleLabel.setLabel(this._json.label,this._cardCount);
             }
         },
         doFocus: function() {
@@ -64,7 +64,7 @@
                 selectRoleItem.clearFocus();
             }
             this._moduleLabel.doFocus();
-            this._sideBar.onPageQueryResult(this._users);
+            this._sideBar.onPageQueryResult(this._cards);
             selectRoleItem = this;
         },
         clearFocus: function() {

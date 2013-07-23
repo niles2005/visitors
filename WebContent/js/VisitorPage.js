@@ -28,7 +28,7 @@
 //            this._map.addControl(new mapwork.SimpleZoomControl());
 
             this._map.addModule(new mapwork.SearchModule(mapwork.Search.setting));
-            this._map.addModule(new mapwork.Module(mapwork.UserItem.setting));
+            this._map.addModule(new mapwork.Module(mapwork.CardItem.setting));
         },
         buildFrame: function() {
             this.createMap();

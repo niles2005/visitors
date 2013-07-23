@@ -1,5 +1,7 @@
 package com.inesazt.visitors;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import com.alibaba.fastjson.JSON;
@@ -51,7 +53,7 @@ public class WorkManager {
 					
 					String locate = simpleLocates[j];
 					role.setId(roleName.substring(0,1) + "_" + locate);
-					role.setLocate(locates[i]);
+					role.setLocate(locates[j]);
 					role.setName(roleName);
 					role.setLabel(roleLabel);
 					role.setCount(0);
@@ -95,28 +97,101 @@ public class WorkManager {
 		return str;
 	}
 	
-	public String listUsers() {
-		Visitors visitors = new Visitors();
+	public String listCards() {
+		Cards cards = new Cards();
 		for(int i=0;i<roleNames.length;i++) {
 			String theRole = roleNames[i];
 			for(int j=0;j<10;j++) {
-				Visitor visitor = new Visitor();
-				int r = rand.nextInt(100);
+				Card card = new Card();
 				
-				visitor.setId(theRole.substring(0,1) + j);
-				visitor.setName(theRole + j);
+				card.setId(theRole.substring(0,1) + j);
+				card.setName(theRole + j);
 				
-				visitor.setGender(genders[r % 2]);
-				visitor.setAge(rand.nextInt(30) + 20);
-				visitor.setRole(theRole);
+				card.setRole(theRole);
 				
-				visitors.addVisitor(visitor);
+				cards.addCard(card);
 			}
 		}
 		
-		String str = JSON.toJSONString(visitors);
+		String str = JSON.toJSONString(cards);
 		
 		return str;
 	}
 	
+	public String loadEvents(String cardId,String strDate) {
+		ArrayList list = new ArrayList();
+		
+		Event event = new Event();
+		event.setCardId("00000000A");
+		event.setCardName("testCard1");
+		event.setCardRole("admin");
+		event.setDeviceId("d1");
+		event.setDeviceLocate("b1");
+		event.setTime(new Date().getTime());
+		list.add(event);
+		
+		event = new Event();
+		event.setCardId("00000000A");
+		event.setCardName("testCard1");
+		event.setCardRole("admin");
+		event.setDeviceId("d2");
+		event.setDeviceLocate("b2");
+		event.setTime(new Date().getTime());
+		list.add(event);
+		
+		event = new Event();
+		event.setCardId("00000000A");
+		event.setCardName("testCard1");
+		event.setCardRole("admin");
+		event.setDeviceId("d3");
+		event.setDeviceLocate("b2");
+		event.setTime(new Date().getTime());
+		list.add(event);
+		
+		event = new Event();
+		event.setCardId("00000000A");
+		event.setCardName("testCard1");
+		event.setCardRole("admin");
+		event.setDeviceId("d4");
+		event.setDeviceLocate("o");
+		event.setTime(new Date().getTime());
+		list.add(event);
+		
+		String str = JSON.toJSONString(list);
+		return str;
+	}
+	
+	public String loadAllEvents() {
+		ArrayList list = new ArrayList();
+		
+		Event event = new Event();
+		event.setCardId("00000000A");
+		event.setCardName("testCard1");
+		event.setCardRole("admin");
+		event.setDeviceId("d1");
+		event.setDeviceLocate("b1");
+		event.setTime(new Date().getTime());
+		list.add(event);
+		
+		event = new Event();
+		event.setCardId("00000000B");
+		event.setCardName("testCard2");
+		event.setCardRole("staff");
+		event.setDeviceId("d2");
+		event.setDeviceLocate("b2");
+		event.setTime(new Date().getTime());
+		list.add(event);
+		
+		event = new Event();
+		event.setCardId("00000000C");
+		event.setCardName("testCard3");
+		event.setCardRole("worker");
+		event.setDeviceId("d3");
+		event.setDeviceLocate("b2");
+		event.setTime(new Date().getTime());
+		list.add(event);
+		
+		String str = JSON.toJSONString(list);
+		return str;
+	}
 }
