@@ -122,12 +122,8 @@ var modules= [
     "modules/search/Search",
     "modules/search/SearchModule",
     "modules/search/RoleItem",
-    "modules/search/UserItem",
+    "modules/search/CardItem",
     "modules/search/CommonItemLabel",
-    
-    "modules/SDRoleModule",
-    "modules/SDRoleItem",
-    "modules/SDRoleLabel",
     
     "VisitorPage",
     "WSMessage"

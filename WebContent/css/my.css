@@ -2172,7 +2172,6 @@ input#searchSubmit {
 
 .public-listings .listings {
 	font-size: 14px;
-	line-height: 24px;
 	height: 100%;
 	margin: 0;
 	overflow: auto;
@@ -3308,5 +3307,9 @@ you can use the generic selector below, but it's slower:
 }
 .icon-lewoer_logo_text_v:before {
 	content: "\e004";
+}
+
+.calendar {
+   padding-left: 12px;
 }
 

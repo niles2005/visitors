@@ -44,11 +44,16 @@ public class WorkServlet extends HttpServlet {
 		if(action == null) {
 			return WebUtil.error("unknown action!");
 		}
-		if(action.equals("listusers")) {
-			return WorkManager.getInstance().listUsers();
-		}
-		if(action.equals("listroles")) {
+		if(action.equals("listcards")) {
+			return WorkManager.getInstance().listCards();
+		} else if(action.equals("listroles")) {
 			return WorkManager.getInstance().listRoles();
+		} else if(action.equals("loadevents")) {
+			String cardId = request.getParameter("action");
+			String strDate = request.getParameter("date");
+			return WorkManager.getInstance().loadEvents(cardId,strDate);
+		} else if(action.equals("loadallevents")) {
+			return WorkManager.getInstance().loadAllEvents();
 		}
 		return null;
 	}
