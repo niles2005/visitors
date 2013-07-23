@@ -114,8 +114,8 @@
             this._$ContentImage = this._$Content.find("img");
 
             this._$Datepicker = $('<span  class=" "> '
-                    +' <div class="input-append date" id="dp3" data-date-format="yyyy-mm-dd"> '
-                    +'<input class="span2" size="12" type="text" readonly/> '
+                    +' <div  id="dp3" class="input-append date" data-date-format="yyyy-mm-dd"> '
+                    +'<input class="span2" size="12" type="text" readonly /> '
                     +'    <span class="add-on"><i class="icon-th"></i></span>    '
                     +' </div> '
                     +'</span>');
@@ -157,15 +157,20 @@
                         } else {
                             jQrow.append(jQdatepicker);
                         }
-                        jQdatepicker.datepicker({
-                            format: 'yyyy-mm-dd',
-                            setDate:new Date(),
-                            autoclose:true,
-                            todayBtn:true,
-                            todayHighlight:true,
-                            clearBtn:true,
-                            language:"zh-CN"
-                        });
+
+                            jQdatepicker.datepicker({
+                                format: 'yyyy-mm-dd',
+                                setDate:new Date(),
+                                autoclose:true,
+                                todayBtn:true,
+                                todayHighlight:true,
+                                clearBtn:true,
+                                language:"zh-CN"
+                            });
+
+
+
+//                    jQdatepicker.datepicker('setDate',new Date()) ;
 
                 }
             );
@@ -306,19 +311,19 @@
                 +'</div>'
                 +'<ul class="meta-three-block">'
                 +'<li class="price">最新位置</li>'
-                +'<li class="timeago">' + this.getDescribe() + '</li>'
+                +'<li class="timeago">' + this.getLocation() + '</li>'
                 +'</ul>'
                 +'</div>'
 
                 +'<div class="row list_footer">'
                 +'<div class="span list-footer-left">'
-                +'  <span class="follower-count">身份类型</span>'
+                +'  <span class="follower-count">'+this.getType()+'</span>'
                 +'</div>'
                 +'<div class="span3 list-footer-right">'
-                +'<span class="qiuorchu label label-chuzu">出</span>'
-                +'<span class="qiuorchu label label-ru">入</span>'
-                +'<div class="right pull-right span2">'
-                +'<a type="button" class="expand yuantie btn btn-link btn-block" href="#">查看详细记录 <i class="icon-share"></i></a>'
+//                +'<span class="qiuorchu label label-chuzu">出</span>'
+//                +'<span class="qiuorchu label label-ru">入</span>'
+                +'<div class="expand">'
+                +'<a  class="yuantie btn btn-link btn-block" href="#">查看详细记录</a>'
 //                +'<span class="expand">查看详细记录</span>'
                 +'</div>'
                 +'</div>'
@@ -355,7 +360,6 @@
                 '<p><span class="metadata">中介勿扰，希望租户是附近上学的一家三口，价格可以再商量</span></p>'
                 +'</div>'
                 +'        </div>'
-                +'        <a type="button" class="yuantie btn btn-link btn-block" href="#">查看完整内容 <i class="icon-share"></i></a>'
                 +'</div>'
                 +'</div> '
 
@@ -363,8 +367,12 @@
         },
 
 
-
-
+        getType:function(){
+             return '';
+        }   ,
+        getLocation:function(){
+            return '';
+        },
         setHoverImage: function() {
             if (this._$ContentImage) {
                 this._$ContentImage.attr("src", this._hoverIcon);

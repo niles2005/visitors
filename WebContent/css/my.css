@@ -55,7 +55,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 
 .btn {
-	border-radius: 2px;
+    font-size: 8px;
+    line-height: 11px;
 }
 
 .wrap {
@@ -2195,7 +2196,7 @@ input#searchSubmit {
 	background: #FDFDFD;
 	border-bottom: 1px solid #d1cec1;
 	color: #454545;
-	height: 76px;
+	height: 80px;
 	padding: 10px 0 0px 16px;
 	position: relative;
 }

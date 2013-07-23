@@ -4,6 +4,12 @@ package com.inesazt.visitors;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.Set;
@@ -26,8 +32,17 @@ import com.alibaba.fastjson.JSON;
 public class TestWebSocketServlet extends WebSocketServlet {
 
     private static final long serialVersionUID = 1L;
-
     private static final String GUEST_PREFIX = "Guest";
+    
+    private static final String IP = "192.168.1.203";
+    private static final String PORT = "1521";//
+    private static final String SID = "UNPAY";
+    private static final String USERNAME = "gis";
+    private static final String PASSWORD = "gis";
+    private static final String DRIVERNAME = "oracle.jdbc.driver.OracleDriver";// 连接oracle驱动包
+    private static final String DBURL = "jdbc:oracle:thin:@" + IP + ":" + PORT + ":" + SID + "";
+    private static String today ;
+    
     private Random rand = new Random();
 	private String[] roleNames = new String[]{"worker","staff","guard","admin"};
 	private String[] genders = new String[]{"mail","femail"};
@@ -39,6 +54,40 @@ public class TestWebSocketServlet extends WebSocketServlet {
     private final AtomicInteger connectionIds = new AtomicInteger(0);
     private final Set<ChatMessageInbound> connections =
             new CopyOnWriteArraySet<ChatMessageInbound>();
+    
+    private Connection getConnection() {
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    	today = dateFormat.format(new Date());
+		Connection conn = null;
+		try {
+			Class.forName(DRIVERNAME);
+			conn = DriverManager.getConnection(DBURL, USERNAME, PASSWORD);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return conn;
+	}
+    
+    public ResultSet search(String queryStr){
+    	ResultSet rs = null;
+    	try {
+			Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			
+			if(queryStr != null && queryStr.length() > 0){
+				rs = statement.executeQuery(queryStr);
+			} else{
+				rs = statement.executeQuery("select t.card_id,t.up_date,t.up_time,t.mac_address from CARDPOSITIONTRANS t where t.up_date='"+today+"'");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	return rs;
+    }
+    
 
     @Override
     protected StreamInbound createWebSocketInbound(String subProtocol,
@@ -115,7 +164,7 @@ public class TestWebSocketServlet extends WebSocketServlet {
     			
     			visitor.setGender(genders[r % 2]);
     			visitor.setAge(rand.nextInt(30) + 20);
-    			visitor.setRole(theRole);
+//    			visitor.setRole(theRole);
     			visitor.setCreateTime(new Date().getTime());
     			visitor.setInfo("Test role for " + theRole);
     			

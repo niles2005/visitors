@@ -14,6 +14,7 @@
         }
     };
 
+
     function UserItem(module, index,roles) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
@@ -22,6 +23,12 @@
     }
 
     UserItem.prototype = {
+        getType:function(){
+            return   this._role._json.label;
+        },
+        getLocation:function(){
+            return     this._role._json.locate;
+        },
         setJsonData: function(json) {
             this._json = json;
 
