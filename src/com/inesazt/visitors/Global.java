@@ -21,7 +21,7 @@ public class Global {
 	
 	private Roles m_roles = null;
 	
-	private Events m_events = new Events();
+	private Events m_events = null;
 	
 	private boolean m_init = false;
 	private void initGlobal() {
@@ -35,6 +35,7 @@ public class Global {
 			
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
+			m_events = new Events(m_cards,m_devices);
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

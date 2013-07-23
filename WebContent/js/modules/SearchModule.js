@@ -15,7 +15,7 @@
     SearchModule.prototype = {
         initRoles: function() {
             this.init();
-            var roles = {"rows":{"a_building1":{"count":0,"id":"a_building1","label":"VIP","locate":"building1","name":"admin","pos":{"lat":312717660,"lon":1218251390},"warn":false},"a_building2":{"count":0,"id":"a_building2","label":"VIP","locate":"building2","name":"admin","pos":{"lat":312717660,"lon":1218310620},"warn":false},"a_factory":{"count":0,"id":"a_factory","label":"VIP","locate":"factory","name":"admin","pos":{"lat":312678600,"lon":1218309970},"warn":false},"a_outside":{"count":0,"id":"a_outside","label":"VIP","locate":"outside","name":"admin","pos":{"lat":312655300,"lon":1218324350},"warn":false},"g_building1":{"count":0,"id":"g_building1","label":"保安","locate":"building1","name":"guard","pos":{"lat":312717660,"lon":1218241390},"warn":true},"g_building2":{"count":0,"id":"g_building2","label":"保安","locate":"building2","name":"guard","pos":{"lat":312717660,"lon":1218300620},"warn":true},"g_factory":{"count":0,"id":"g_factory","label":"保安","locate":"factory","name":"guard","pos":{"lat":312678600,"lon":1218299970},"warn":false},"g_outside":{"count":0,"id":"g_outside","label":"保安","locate":"outside","name":"guard","pos":{"lat":312655300,"lon":1218314350},"warn":false},"s_building1":{"count":0,"id":"s_building1","label":"职员","locate":"building1","name":"staff","pos":{"lat":312717660,"lon":1218231390},"warn":true},"s_building2":{"count":0,"id":"s_building2","label":"职员","locate":"building2","name":"staff","pos":{"lat":312717660,"lon":1218290620},"warn":false},"s_factory":{"count":0,"id":"s_factory","label":"职员","locate":"factory","name":"staff","pos":{"lat":312678600,"lon":1218289970},"warn":false},"s_outside":{"count":0,"id":"s_outside","label":"职员","locate":"outside","name":"staff","pos":{"lat":312655300,"lon":1218304350},"warn":false},"w_building1":{"count":0,"id":"w_building1","label":"工人","locate":"building1","name":"worker","pos":{"lat":312717660,"lon":1218221390},"warn":false},"w_building2":{"count":0,"id":"w_building2","label":"工人","locate":"building2","name":"worker","pos":{"lat":312717660,"lon":1218280620},"warn":true},"w_factory":{"count":0,"id":"w_factory","label":"工人","locate":"factory","name":"worker","pos":{"lat":312678600,"lon":1218279970},"warn":false},"w_outside":{"count":0,"id":"w_outside","label":"工人","locate":"outside","name":"worker","pos":{"lat":312655300,"lon":1218294350},"warn":false}}};
+            var roles = {"group":{"a_building1":{"count":0,"id":"a_building1","label":"VIP","locate":"building1","name":"admin","pos":{"lat":312717660,"lon":1218251390},"warn":false},"a_building2":{"count":0,"id":"a_building2","label":"VIP","locate":"building2","name":"admin","pos":{"lat":312717660,"lon":1218310620},"warn":false},"a_factory":{"count":0,"id":"a_factory","label":"VIP","locate":"factory","name":"admin","pos":{"lat":312678600,"lon":1218309970},"warn":false},"a_outside":{"count":0,"id":"a_outside","label":"VIP","locate":"outside","name":"admin","pos":{"lat":312655300,"lon":1218324350},"warn":false},"g_building1":{"count":0,"id":"g_building1","label":"保安","locate":"building1","name":"guard","pos":{"lat":312717660,"lon":1218241390},"warn":true},"g_building2":{"count":0,"id":"g_building2","label":"保安","locate":"building2","name":"guard","pos":{"lat":312717660,"lon":1218300620},"warn":true},"g_factory":{"count":0,"id":"g_factory","label":"保安","locate":"factory","name":"guard","pos":{"lat":312678600,"lon":1218299970},"warn":false},"g_outside":{"count":0,"id":"g_outside","label":"保安","locate":"outside","name":"guard","pos":{"lat":312655300,"lon":1218314350},"warn":false},"s_building1":{"count":0,"id":"s_building1","label":"职员","locate":"building1","name":"staff","pos":{"lat":312717660,"lon":1218231390},"warn":true},"s_building2":{"count":0,"id":"s_building2","label":"职员","locate":"building2","name":"staff","pos":{"lat":312717660,"lon":1218290620},"warn":false},"s_factory":{"count":0,"id":"s_factory","label":"职员","locate":"factory","name":"staff","pos":{"lat":312678600,"lon":1218289970},"warn":false},"s_outside":{"count":0,"id":"s_outside","label":"职员","locate":"outside","name":"staff","pos":{"lat":312655300,"lon":1218304350},"warn":false},"w_building1":{"count":0,"id":"w_building1","label":"工人","locate":"building1","name":"worker","pos":{"lat":312717660,"lon":1218221390},"warn":false},"w_building2":{"count":0,"id":"w_building2","label":"工人","locate":"building2","name":"worker","pos":{"lat":312717660,"lon":1218280620},"warn":true},"w_factory":{"count":0,"id":"w_factory","label":"工人","locate":"factory","name":"worker","pos":{"lat":312678600,"lon":1218279970},"warn":false},"w_outside":{"count":0,"id":"w_outside","label":"工人","locate":"outside","name":"worker","pos":{"lat":312655300,"lon":1218294350},"warn":false}}};
             var listLayer = this._map.getLayer("moduleListLayer");
             if (!listLayer) {
                 listLayer = new mapwork.MapIconLayer("moduleListLayer");
@@ -23,9 +23,9 @@
             } else {
                 listLayer.empty();
             }
-            if (roles.rows) {
-                for (var i in roles.rows) {
-                    var row = roles.rows[i];
+            if (roles.group) {
+                for (var i in roles.group) {
+                    var row = roles.group[i];
                     //封装moduleItem
                     var roleItem = this.buildRoleItem(row);
                     roleItem.setMap(this._map);
@@ -119,11 +119,21 @@
             if (!jsonResult) {
                 return;
             }
-            if (jsonResult.rows) {
-                for (var i in jsonResult.rows) {
-                    var row = jsonResult.rows[i];
+            if (jsonResult.group) {
+                for (var i in jsonResult.group) {
+                    var row = jsonResult.group[i];
                     var cardItem = this.buildCardItem(row, i);
-                    this._cards[cardItem._id] = cardItem;
+                    
+                    if(cardItem) {
+                        this._cards[cardItem._id] = cardItem;
+                        var strRole = cardItem._json.role;
+                        var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
+                        var role = this._roles[roleId];
+                        if(role) {
+                            cardItem.setRole(role);
+                        }
+                    }
+                    
                 }
             }
             this.doEventQuery();
@@ -164,9 +174,6 @@
             for (var i in jsonResult) {
                 var event = jsonResult[i];
                 var card = this._cards[event.cardId];
-                if(!card) {
-                    card = this.buildCardByEvent(event);
-                }
                 if(card) {
                     var strRole = card._json.role;
                     var roleId = strRole.substring(0,1) + "_" + event.deviceLocate;
@@ -177,19 +184,19 @@
                 }
             }
         },                
-        buildCardByEvent: function(event) {
-             var cardId = event.cardId;
-             var cardName = event.cardName;
-             var cardRole = event.cardRole;
-             if(!cardId || !cardRole) {
-                 return null;
-             }
-             if(!cardName) {
-                 cardName = cardId;
-             }
-             var cardJson = {"id":cardId,"name":cardName,"role":cardRole,"createTime":-1};
-             return this.buildCardItem(cardJson,-1);
-        }        
+//        buildCardByEvent: function(event) {
+//             var cardId = event.cardId;
+//             var cardName = event.cardName;
+//             var cardRole = event.cardRole;
+//             if(!cardId || !cardRole) {
+//                 return null;
+//             }
+//             if(!cardName) {
+//                 cardName = cardId;
+//             }
+//             var cardJson = {"id":cardId,"name":cardName,"role":cardRole,"createTime":-1};
+//             return this.buildCardItem(cardJson,-1);
+//        }        
     };
 
     if (EXTEND) {

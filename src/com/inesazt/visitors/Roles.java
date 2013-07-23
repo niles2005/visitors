@@ -17,8 +17,8 @@ public class Roles {
 	
     private Map<String,Role> roles = new Hashtable<String,Role>(); 
     
-    public Map<String,Role> getRows() { return roles; }
-    public void setRows(Map<String,Role> roles) { this.roles = roles; }
+    public Map<String,Role> getGroup() { return roles; }
+    public void setGroup(Map<String,Role> roles) { this.roles = roles; }
 
     public void addRole(Role role) {
     	roles.put(role.getId(), role);

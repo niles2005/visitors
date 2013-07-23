@@ -2,6 +2,7 @@ package com.inesazt.visitors;
 
 import java.io.IOException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -9,8 +10,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/work")
+@WebServlet(name = "WorkServlet", urlPatterns = { "/work" })
 public class WorkServlet extends HttpServlet {
+//	public void init(ServletConfig servletConfig) throws ServletException {
+//        try {
+//        	String realPath = servletConfig.getServletContext().getRealPath("");
+//        	ServerConfig.initInstance(realPath);
+//        	Global.getInstance();
+//        }
+//        catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//	}
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		this.doPage(request, response);
@@ -46,7 +58,6 @@ public class WorkServlet extends HttpServlet {
 		}
 		if(action.equals("listcards")) {
 			return Global.getInstance().getCards().doList();
-//			return WorkManager.getInstance().listCards();
 		} else if(action.equals("setcard")) {
 			String cardId = request.getParameter("id");
 			String strName = request.getParameter("name");
@@ -56,7 +67,6 @@ public class WorkServlet extends HttpServlet {
 			return Global.getInstance().getCards().setCard(cardId,strName,strRole,strInfo);
 		} else if(action.equals("listdevices")) {
 			return Global.getInstance().getDevices().doList();
-//			return WorkManager.getInstance().listDevices();
 		} else if(action.equals("setdevice")) {
 			String cardId = request.getParameter("id");
 			String strLocate = request.getParameter("locate");
@@ -65,14 +75,12 @@ public class WorkServlet extends HttpServlet {
 			return Global.getInstance().getDevices().setDevice(cardId,strLocate,strInfo);
 		} else if(action.equals("listroles")) {
 			return Global.getInstance().getRoles().doList();
-//			return WorkManager.getInstance().listRoles();
 		} else if(action.equals("loadevents")) {
 			String cardId = request.getParameter("action");
 			String strDate = request.getParameter("date");
 			return Global.getInstance().getEvents().loadEvents(cardId,strDate);
 		} else if(action.equals("loadallevents")) {
 			return Global.getInstance().getEvents().doList();
-//			return WorkManager.getInstance().loadAllEvents();
 		} else if(action.equals("enumlocations")) {
 			return DataEnums.loadLocateEnums();
 		}else if(action.equals("enumroles")) {

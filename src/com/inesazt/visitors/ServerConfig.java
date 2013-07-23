@@ -14,6 +14,11 @@ public class ServerConfig {
 		if(m_WEBINFPath.exists()) {
 			m_datasPath = new File(m_WEBINFPath,"datas");
 			m_configPath = new File(m_WEBINFPath,"config");
+			if(!m_configPath.exists()) {
+				m_configPath.mkdir();
+			}
+			m_deviceFile = new File(m_configPath,"device.json");
+			m_cardFile = new File(m_configPath,"card.json");
 		} else {
 			System.err.println("WEB-INF path not found!");
 		}
@@ -39,11 +44,13 @@ public class ServerConfig {
 		return m_configPath;
 	}
 
+	File m_deviceFile = null;
 	public File getDeviceFile() {
-		return null;
+		return m_deviceFile;
 	}
 
+	File m_cardFile = null;
 	public File getCardFile() {
-		return null;
+		return m_cardFile;
 	}
 }

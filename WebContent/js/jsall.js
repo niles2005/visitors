@@ -90,7 +90,6 @@
         "modules/BaseSideBar",
         "modules/SideBarPage",
         "modules/Module",
-        "modules/Block",
         "modules/Search",
         "modules/SearchModule",
         "modules/RoleItem",

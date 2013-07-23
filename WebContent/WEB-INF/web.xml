@@ -17,4 +17,9 @@
         <servlet-name>wsMesssage</servlet-name>
         <url-pattern>/websocket/message</url-pattern>
     </servlet-mapping>
+    
+	<listener> 
+	<listener-class>com.inesazt.visitors.TaskServlet</listener-class> 
+	</listener>   
+    
 </web-app>

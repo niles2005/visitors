@@ -2,6 +2,7 @@ package com.inesazt.visitors;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -17,8 +18,8 @@ public class Cards {
 
     private Map<String,Card> cards = new Hashtable<String,Card>(); 
     
-    public Map<String,Card> getRows() { return cards; }
-    public void setRows(Map<String,Card> cards) { this.cards = cards; }
+    public Map<String,Card> getGroup() { return cards; }
+    public void setGroup(Map<String,Card> cards) { this.cards = cards; }
 
     public void addCard(Card Card) {
     	cards.put(Card.getId(), Card);
@@ -28,15 +29,30 @@ public class Cards {
     	return cards.get(cardId);
     }
 
+    public Card buildCard(String cardId,long time) {
+    	if(cardId == null) {
+    		return null;
+    	}
+    	Card card = cards.get(cardId);
+    	if(card == null) {
+    		card = new Card();
+    		card.setId(cardId);
+    		card.setName(cardId);
+    		card.setCreateTime(time);
+    		addCard(card);
+    	}
+    	return card;
+    }
+
     
 	public static Cards buildCards() {
 		File cardFile = ServerConfig.getInstance().getCardFile();
 		Cards cards = null;
 		try {
 			if(cardFile.exists()) {
-				cards = new Cards();
-			} else {
 				cards = fileData_mapper.readValue(cardFile, Cards.class);
+			} else {
+				cards = new Cards();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,21 +80,45 @@ public class Cards {
 	}
 
 	public String setCard(String id,String name,String role,String info) {
+		if(id == null) {
+			return WebUtil.error("card id is null!");
+		}
+		id = id.trim();
+		if(id.length() == 0) {
+			return WebUtil.error("card id is empty!");
+		}
 		Card card = getCard(id);
-		if(card == null) {
-			return WebUtil.error("Can not find card:" + id);
+		if(card == null) {//insert
+			card = new Card();
+			card.setId(id);
+			if(name != null) {
+				card.setName(name);
+			}
+			if(role != null) {
+				card.setRole(role);
+			}
+			if(info != null) {
+				card.setInfo(info);
+			}
+			card.setCreateTime(new Date().getTime());
+			this.addCard(card);
+		} else {
+			if(name != null) {
+				card.setName(name);
+			}
+			if(role != null) {
+				card.setRole(role);
+			}
+			if(info != null) {
+				card.setInfo(info);
+			}
 		}
-		if(name != null) {
-			card.setName(name);
+		boolean success = saveCards();
+		if(success) {
+			return JSON.toJSONString(card);
+		} else {
+			return WebUtil.failedJSON("update card error!");
 		}
-		if(role != null) {
-			card.setRole(role);
-		}
-		if(info != null) {
-			card.setInfo(info);
-		}
-		String str = JSON.toJSONString(card);
-		return str;
 	}
 	
 	public void initFromDB() {
