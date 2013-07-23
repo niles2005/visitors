@@ -99,31 +99,16 @@ var modules= [
     "core/MenuGroup",
     "core/Menu",
     
-    "modules/router/RouterLine",
-    "modules/router/RouterHandler",
-    "modules/router/RouterSideBar",
-    "modules/router/Router",
-    
     "modules/ModuleItem",
     "modules/BaseSideBar",
     "modules/SideBarPage",
     "modules/Module",
     "modules/Block",
-    "modules/JTSK",
-    "modules/JTZB",
-    "modules/TextBoard",
-    "modules/Travel",
-    "modules/YDP",
-    "modules/WeatherLabel",
-    "modules/WeatherSideBar",
-    "modules/Weather",
-
-    
-    "modules/search/Search",
-    "modules/search/SearchModule",
-    "modules/search/RoleItem",
-    "modules/search/CardItem",
-    "modules/search/CommonItemLabel",
+    "modules/Search",
+    "modules/SearchModule",
+    "modules/RoleItem",
+    "modules/CardItem",
+    "modules/CommonItemLabel",
     
     "VisitorPage",
     "WSMessage"
