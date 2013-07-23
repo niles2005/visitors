@@ -5,11 +5,6 @@
             '</div>' +
             '<div class="tips_show">' +
             '<div class="dis" id="tms1">' +
-            '   <div class="tips_left">' +
-            '        <span><a name="JTSK" href="javascript:void(0);">交通实况</a></span>' +
-            '        <span><a name="JTZB" href="javascript:void(0);">交通直播</a></span>' +
-            '        <span><a name="YDP" href="javascript:void(0);">诱导牌</a></span>' +
-            '    </div>' +
             '    <div class="tips_right">' +
             '		 <form name="rangeSearchForm">' +
             '        <span><input type="text" id="rangeSearchName" class="text_03"></span>' +

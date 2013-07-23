@@ -25,13 +25,6 @@
 	        this._rangeSearchDiv = document.createElement("div");
             $(this._rangeSearchDiv).addClass("rangeSearch");
             $(this._rangeSearchDiv).append(
-            		"<div class = 'searchType'>" +
-            			"<a name='JTSK' href='javascript:void(0);'>交通实况</a>" + 
-            			"<a name='JTZB' href='javascript:void(0);'>交通直播</a>" + 
-            			"<a name='YDP' href='javascript:void(0);'>诱导牌</a>" + 
-            			"<a name='TextBoard' href='javascript:void(0);'>可变信息板</a>" + 
-            			"<a name='Travel' href='javascript:void(0);'>旅游景点</a>" + 
-            		"</div>" +
             		"<div class = 'toolsContainer'>" +
             			"<div class = 'title'>" +
             				"<form name='rangeSearchForm'>" +
