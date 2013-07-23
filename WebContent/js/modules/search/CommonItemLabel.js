@@ -30,7 +30,7 @@
 
             this.setIcon(this._defaultIcon);
             if (this._zIndex) {
-                this._htmlObj.style["zIndex"] = this._zIndex;
+                this._htmlObj.style["z-index"] = this._zIndex;
             }
         },
         setIcon: function(icon) {
@@ -52,14 +52,14 @@
         setHoverImage: function() {
 //            this.setIcon(this._hoverIcon);
             if (this._zIndex != undefined) {
-                this._htmlObj.style["zIndex"] = 101;
+                this._htmlObj.style["z-index"] = 101;
             }
             this._$IconNameDiv.css("fontWeight", "bold");
         },
         setDefaultImage: function() {
 //            this.setIcon(this._defaultIcon);
             if (this._zIndex != undefined) {
-                this._htmlObj.style["zIndex"] = this._zIndex;
+                this._htmlObj.style["z-index"] = this._zIndex;
             }
             this._$IconNameDiv.css("fontWeight", "normal");
         },
