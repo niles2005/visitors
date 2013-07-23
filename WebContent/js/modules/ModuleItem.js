@@ -160,7 +160,7 @@
                             jQrow.append(self._$Datepicker);
                             jQdatepicker = $('#dp3');
                         } else {
-                            jQrow.append(jQdatepicker);
+                            jQrow.append(jQdatepicker.parent());
                         }
 
                         jQdatepicker.datepicker({
