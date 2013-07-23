@@ -39,4 +39,11 @@ public class ServerConfig {
 		return m_configPath;
 	}
 
+	public File getDeviceFile() {
+		return null;
+	}
+
+	public File getCardFile() {
+		return null;
+	}
 }
