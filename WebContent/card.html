@@ -33,26 +33,6 @@
                 }
             }
         </script>
-        <style>
-            .free {
-                background: #0F0;
-            }
-            .crowd {
-                background: #FF0;
-            }
-            .jam {
-                background: #F00;
-            }
-            .unknown {
-                background: #AAA;
-            }
-            .notEqual {
-                background: #F00;
-            }
-            .equal {
-                background: #FCF;
-            }
-        </style>
     </head>
     <body>
 
@@ -78,19 +58,19 @@
                 <table class="table table-bordered">
                     <tr>
                         <th><a href="" ng-click="kk = 'index'; reverse=false">index</a></th>
-                        <th><a href="" ng-click="kk = 'name'; reverse=!reverse">id</a></th>
+                        <th><a href="" ng-click="kk = 'id'; reverse=!reverse">id</a></th>
                         <th><a href="" ng-click="kk = 'name'; reverse=!reverse">name</a></th>
-                        <th><a href="" ng-click="kk = 'name'; reverse=!reverse">role</a></th>
-                        <th><a href="" ng-click="kk = 'name'; reverse=!reverse">info</a></th>
-                        <th><a href="" ng-click="kk = 'count'; reverse=!reverse">createTime</a></th>
+                        <th><a href="" ng-click="kk = 'role'; reverse=!reverse">role</a></th>
+                        <th><a href="" ng-click="kk = 'info'; reverse=!reverse">info</a></th>
+                        <th><a href="" ng-click="kk = 'createTime'; reverse=!reverse">createTime</a></th>
                     </tr>
                     <tr ng-repeat="card in cards | orderBy:kk:reverse" ng-click="setCard(card)">
-                        <td class="{{traffic.comp}}">{{$index + 1}}</td>
-                        <td class="{{traffic.state}}">{{card.id}}</td>
-                        <td class="{{traffic.comp}}">{{card.name}}</td>
-                        <td class="{{traffic.comp}}">{{card.role}}</td>
-                        <td class="{{traffic.comp}}">{{card.info}}</td>
-                        <td class="{{traffic.comp}}">{{card.createTime}}</td>
+                        <td>{{$index + 1}}</td>
+                        <td>{{card.id}}</td>
+                        <td>{{card.name}}</td>
+                        <td>{{card.role}}</td>
+                        <td>{{card.info}}</td>
+                        <td>{{card.createTime}}</td>
                     </tr>
                 </table>
             </div>

@@ -24,6 +24,12 @@
 
 
     CardItem.prototype = {
+        getType:function(){
+             return this._json.role;
+        },   
+        getLocation:function(){
+            return this._json.locate;
+        },
         setJsonData: function(json) {
             this._json = json;
 

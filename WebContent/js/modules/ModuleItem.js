@@ -144,8 +144,13 @@
 
             this._$Content.find('.expand').click(
                 function() {
-                        event.preventDefault();
-                        event.stopPropagation();
+                        if(event.stopPropagation) {
+                             event.stopPropagation();
+                             event.preventDefault();
+                         } else {//IE
+                             event.cancelBubble = true;
+                             event.returnValue = false;
+                         }
                         var $trackDiv = $(self._$Content).find('>.popuplist-main');
                         $trackDiv.toggle("slow");
 
