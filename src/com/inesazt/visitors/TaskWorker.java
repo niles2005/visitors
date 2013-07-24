@@ -6,7 +6,7 @@ import javax.servlet.ServletContext;
 
 public class TaskWorker extends TimerTask {
 	private boolean isRunning = false;
-	public static final long LoopTime = 25 * 1000;//5 second
+	public static final long LoopTime = 5 * 1000;//5 second
 	private ServletContext context = null;
 
 	public TaskWorker() {

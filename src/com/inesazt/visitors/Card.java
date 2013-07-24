@@ -12,7 +12,7 @@ public class Card {
 	private long createTime;
 	private String info;
 	
-	private String lastLocate = null;
+//	private String lastLocate = null;
 	private long lastTime = 0;
 
 	public long getCreateTime() {
@@ -56,11 +56,15 @@ public class Card {
 	}
 
 	public String getLastLocate() {
-		return lastLocate;
+		if(m_eventList.size() > 0) {
+			Event lastEvent = m_eventList.get(m_eventList.size() - 1);
+			return lastEvent.getDeviceLocate();
+		}
+		return "";
 	}
 
 	public void setLastLocate(String lastLocate) {
-		this.lastLocate = lastLocate;
+		//empty method
 	}
 
 	public long getLastTime() {

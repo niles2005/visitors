@@ -89,7 +89,7 @@
 
     afterExpandDetail: function() {
             var $cardDetail = this._$Content.find(".cardDetail");
-            var url = "work?action=loadevents&cardId=aa";
+            var url = "work?action=loadtodayevents&cardid=" + this._id;
             var self = this;
 
             mapwork.utils.loadJsonData(url, function(data) {

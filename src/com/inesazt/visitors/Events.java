@@ -44,8 +44,12 @@ public class Events {
 		}
 	}
 	
+	private boolean isLoadData = false;
 	public void doTaskWork() {
 		System.err.println("do task work...");
-		reloadEvents();
+		if(!isLoadData) {
+			isLoadData = true;
+			reloadEvents();
+		}
 	}
 }
