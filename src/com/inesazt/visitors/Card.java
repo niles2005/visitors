@@ -1,5 +1,9 @@
 package com.inesazt.visitors;
 
+import java.util.ArrayList;
+
+import com.alibaba.fastjson.JSON;
+
 public class Card {
 	private String id;
 	private String name;
@@ -66,4 +70,19 @@ public class Card {
 	public void setLastTime(long lastTime) {
 		this.lastTime = lastTime;
 	}
+	
+	private ArrayList<Event> m_eventList = new ArrayList<Event>();
+	public void appendEvent(Event event) {
+		m_eventList.add(event);
+	}
+	
+	public String loadHistoryEvents(String date) {
+		ArrayList list = DBManager.getInstance().queryHistoryEvents(id, date);
+		return JSON.toJSONString(list);
+	}
+	
+	public String loadTodayEvents() {
+		return JSON.toJSONString(m_eventList);
+	}
+	
 }

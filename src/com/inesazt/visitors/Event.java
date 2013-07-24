@@ -5,7 +5,15 @@ public class Event {
 	private String cardName = null;
 	private String cardRole = null;
 	private String deviceId = null;
-	private String deviceLocate = null;
+
+	private Device m_device = null;
+	public void setDevice(Device device) {
+		this.m_device = device;
+	}
+	
+	public Device fetchDevice() {
+		return this.m_device;
+	}
 	
 	private long time = 0;
 
@@ -34,11 +42,10 @@ public class Event {
 	}
 
 	public String getDeviceLocate() {
-		return deviceLocate;
-	}
-
-	public void setDeviceLocate(String deviceLocate) {
-		this.deviceLocate = deviceLocate;
+		if(m_device != null) {
+			return m_device.getLocate();
+		}
+		return "";
 	}
 
 	public long getTime() {
