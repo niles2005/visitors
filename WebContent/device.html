@@ -38,9 +38,10 @@
         </script>
     </head>
     <body>
-
-        <div class="container">
-            <div ng-controller="BindState">
+    <div style="margin-top: 80px"></div>
+        <div class="container-fluid"  ng-controller="BindState">
+            <div  class="row-fluid">
+                <div class="span2">
                 <form ng-submit="doUpdate()" >
                     Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectDevice.id" /><br>
                     locate:<select ng-model="selectDevice.locate">
@@ -54,7 +55,8 @@
                     <input type="submit" value="新增/更新"/>
                 </form>
                 <p><p>
-
+                 </div>
+                <div class="span10">
                 <table class="table table-bordered">
                     <tr>
                         <th><a href="" ng-click="kk = 'index'; reverse=false">index</a></th>
@@ -71,6 +73,7 @@
                         <td>{{device.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     </tr>
                 </table>
+                </div>
             </div>
         </div>
     </body>
