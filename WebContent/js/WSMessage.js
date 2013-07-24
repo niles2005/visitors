@@ -9,10 +9,11 @@
     mapwork.WSMessage = WSMessage;
     var EXTEND = null;
 
-    function  WSMessage(page){
+    function  WSMessage(page,searchModule){
         this.socket = null;
         this.module = null;
         this.visitorPage = page;
+        this.searchModule = searchModule;
 
     }
 
@@ -58,8 +59,11 @@
            };
 
            this.socket.onmessage = function (message) {
-               self.module._isPageFitBounds = self.module._searchType == 'all';
-               self.module.onPageQueryResult(JSON.parse(message.data));
+               var json = JSON.parse(message.data);
+               console.dir(json);
+               self.searchModule.updateCards(json);
+//               self.module._isPageFitBounds = self.module._searchType == 'all';
+//               self.module.onPageQueryResult(JSON.parse(message.data));
            };
        }
     }
