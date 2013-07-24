@@ -1,9 +1,6 @@
 package com.inesazt.visitors;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
 
 import com.alibaba.fastjson.JSON;
 
@@ -48,7 +45,6 @@ public class Events {
 	
 	
 	public void doTaskWork() {
-		System.err.println("do task work...");
 		reloadEvents();
 	}
 }
