@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"group":{"00000000000000000000000A":{"id":"00000000000000000000000A","name":"00000000000000000000000A","role":"worker","createTime":16982410,"info":null,"lastTime":0,"lastLocate":null}}}
+=======
+{"group":{"00000000C":{"id":"00000000C","name":"00000000C","role":"guard","createTime":1374598034296,"info":null,"lastLocate":"factory","lastTime":1374635383434},"00000000B":{"id":"00000000B","name":"00000000B","role":"guard","createTime":1374598034296,"info":"","lastLocate":"building1","lastTime":1374635383434},"00000000A":{"id":"00000000A","name":"00000000A","role":"worker","createTime":1374598034296,"info":null,"lastLocate":"building1","lastTime":1374635383434},"00000000D":{"id":"00000000D","name":"00000000D","role":"worker","createTime":1374598853031,"info":null,"lastLocate":"building1","lastTime":1374635383434},"00000000E":{"id":"00000000E","name":"00000000E","role":"worker","createTime":1374598853031,"info":null,"lastLocate":"building1","lastTime":1374635383434}}}
+>>>>>>> b5fe371d844b40d1180b3e68d59ab56b8fc82aab
