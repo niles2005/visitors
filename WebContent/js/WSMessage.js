@@ -9,12 +9,10 @@
     mapwork.WSMessage = WSMessage;
     var EXTEND = null;
 
-    function  WSMessage(page,searchModule){
+    function  WSMessage(page){
         this.socket = null;
         this.module = null;
         this.visitorPage = page;
-        this.searchModule = searchModule;
-
     }
 
     WSMessage.prototype = {
@@ -61,7 +59,7 @@
            this.socket.onmessage = function (message) {
                var json = JSON.parse(message.data);
                console.dir(json);
-               self.searchModule.updateCards(json);
+               self.module.updateCards(json);
 //               self.module._isPageFitBounds = self.module._searchType == 'all';
 //               self.module.onPageQueryResult(JSON.parse(message.data));
            };
