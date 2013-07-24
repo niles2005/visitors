@@ -68,9 +68,9 @@
             }
         },
         workAllPageItem: function(callback) {
-            if (this._pageQueryResult && this._pageQueryResult.rows) {
-                for (var i in this._pageQueryResult.rows) {
-                    var item = this._pageQueryResult.rows[i];
+            if (this._pageQueryResult && this._pageQueryResult.group) {
+                for (var i in this._pageQueryResult.group) {
+                    var item = this._pageQueryResult.group[i];
                     if (item._moduleItem) {
                         callback.call(item._moduleItem, item._moduleItem);
                     }
@@ -78,9 +78,9 @@
             }
         },
         workAllListItem: function(callback) {
-            if (this._listQueryResult && this._listQueryResult.rows) {
-                for (var i in this._listQueryResult.rows) {
-                    var item = this._listQueryResult.rows[i];
+            if (this._listQueryResult && this._listQueryResult.group) {
+                for (var i in this._listQueryResult.group) {
+                    var item = this._listQueryResult.group[i];
                     if (item._moduleItem) {
                         callback.call(item._moduleItem, item._moduleItem);
                     }
@@ -89,9 +89,9 @@
         },
         doRemoveIconList: function() {
             //清空大图标
-            if (this._pageQueryResult && this._pageQueryResult.rows) {
-                for (var i in this._pageQueryResult.rows) {
-                    var item = this._pageQueryResult.rows[i];
+            if (this._pageQueryResult && this._pageQueryResult.group) {
+                for (var i in this._pageQueryResult.group) {
+                    var item = this._pageQueryResult.group[i];
                     if (item._moduleItem) {
                         item._moduleItem.doRemove();
                     }
@@ -159,9 +159,9 @@
                 return;
             }
             var bounds = new mapwork.Bounds();
-            if (!jsonResult.m_detail && jsonResult.rows) {
-                for (var i in jsonResult.rows) {
-                    var row = jsonResult.rows[i];
+            if (!jsonResult.m_detail && jsonResult.group) {
+                for (var i in jsonResult.group) {
+                    var row = jsonResult.group[i];
                     //封装moduleItem
                     var moduleItem = this.buildModuleItem(row, i);
                     moduleItem.setMap(this._map);
@@ -200,9 +200,9 @@
             if (!jsonResult) {
                 return;
             }
-            if (!jsonResult.m_detail && jsonResult.rows) {
-                for (var i in jsonResult.rows) {
-                    var row = jsonResult.rows[i];
+            if (!jsonResult.m_detail && jsonResult.group) {
+                for (var i in jsonResult.group) {
+                    var row = jsonResult.group[i];
                     //封装moduleItem
                     var moduleItem = this.buildModuleItem(row);
                     moduleItem.setMap(this._map);

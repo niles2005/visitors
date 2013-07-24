@@ -4,6 +4,7 @@ public class Device {
 	private String id = null;
 	private String locate = null;
 	private String info = null;
+	private long createTime = 0;
 
 	public String getId() {
 		return id;
@@ -27,5 +28,13 @@ public class Device {
 
 	public void setInfo(String info) {
 		this.info = info;
+	}
+
+	public long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
 	}
 }

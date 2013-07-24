@@ -10,10 +10,6 @@ public class WorkManager {
 	Random rand = new Random();
 	
 	
-	private String[] roleNames = new String[]{"worker","staff","guard","admin"};
-	private String[] roleLabels = new String[]{"工人","职员","保安","VIP"};
-	private String[] locates = new String[]{"building1","building2","factory","outside"};
-	private String[] genders = new String[]{"mail","femail"};
 	
 	private int[] rolePoses = new int[]{
 			312717660,1218221390,
@@ -43,17 +39,17 @@ public class WorkManager {
 		if(m_rolesJson == null) {
 			Roles roles = new Roles();
 			
-			for(int i=0;i<roleNames.length;i++) {
-				String roleName = roleNames[i];
-				String roleLabel = roleLabels[i];
-				for(int j=0;j<locates.length;j++) {
+			for(int i=0;i<DataEnums.RoleNames.length;i++) {
+				String roleName = DataEnums.RoleNames[i];
+				String roleLabel = DataEnums.RoleLabels[i];
+				for(int j=0;j<DataEnums.Locates.length;j++) {
 					Role role = new Role();
 					int roleLat = rolePoses[j * 2];
 					int roleLon = rolePoses[j * 2 + 1];
 					
-					String locate = locates[j];
+					String locate = DataEnums.Locates[j];
 					role.setId(roleName.substring(0,1) + "_" + locate);
-					role.setLocate(locates[j]);
+					role.setLocate(DataEnums.Locates[j]);
 					role.setName(roleName);
 					role.setLabel(roleLabel);
 					role.setCount(0);
@@ -82,19 +78,19 @@ public class WorkManager {
 		for(int i=0;i<50;i++) {
 			Visitor visitor = new Visitor();
 			int r = rand.nextInt(100);
-			String theRole = roleNames[r % 4];
+			String theRole = DataEnums.RoleNames[r % 4];
 			
 			visitor.setId(theRole.substring(0,1) + i);
 			visitor.setName(theRole + i);
 			
-			visitor.setGender(genders[r % 2]);
+			visitor.setGender(DataEnums.Genders[r % 2]);
 			visitor.setAge(rand.nextInt(30) + 20);
 			visitor.setRole(theRole);
 //			visitor.setCreateTime(new Date().getTime());
 //			visitor.setInfo("Test role for " + theRole);
 			
 			r = rand.nextInt(999);
-			String theLocate = locates[r % 4];
+			String theLocate = DataEnums.Locates[r % 4];
 			visitor.setLocate(theLocate);
 			
 			visitors.addVisitor(visitor);
@@ -108,8 +104,8 @@ public class WorkManager {
 	Cards cards = new Cards();
 	
 	private void initCards() {
-		for(int i=0;i<roleNames.length;i++) {
-			String theRole = roleNames[i];
+		for(int i=0;i<DataEnums.RoleNames.length;i++) {
+			String theRole = DataEnums.RoleNames[i];
 			for(int j=0;j<10;j++) {
 				Card card = new Card();
 				
@@ -129,25 +125,6 @@ public class WorkManager {
 		return str;
 	}
 	
-	public String setCard(String id,String name,String role,String info) {
-		Card card = cards.getCard(id);
-		if(card == null) {
-			return WebUtil.error("Can not find card:" + id);
-		}
-		if(name != null) {
-			card.setName(name);
-		}
-		if(role != null) {
-			card.setRole(role);
-		}
-		if(info != null) {
-			card.setInfo(info);
-		}
-		String str = JSON.toJSONString(card);
-		return str;
-	}
-	
-
 	
 	
 	Devices devices = new Devices();
@@ -183,22 +160,6 @@ public class WorkManager {
 		String str = JSON.toJSONString(devices);
 		return str;
 	}
-	
-	public String setDevice(String id,String locate,String info) {
-		Device device = devices.getDevice(id);
-		if(device == null) {
-			return WebUtil.error("Can not find device:" + id);
-		}
-		if(locate != null) {
-			device.setLocate(locate);
-		}
-		if(info != null) {
-			device.setInfo(info);
-		}
-		String str = JSON.toJSONString(device);
-		return str;
-	}
-	
 	
 	
 	
@@ -283,11 +244,4 @@ public class WorkManager {
 		return str;
 	}
 	
-	public String loadLocations(){
-		return JSON.toJSONString(locates);
-	}
-	
-	public String loadRoles(){
-		return JSON.toJSONString(roleLabels);
-	}
 }

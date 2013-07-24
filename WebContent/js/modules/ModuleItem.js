@@ -5,11 +5,6 @@
             '</div>' +
             '<div class="tips_show">' +
             '<div class="dis" id="tms1">' +
-            '   <div class="tips_left">' +
-            '        <span><a name="JTSK" href="javascript:void(0);">交通实况</a></span>' +
-            '        <span><a name="JTZB" href="javascript:void(0);">交通直播</a></span>' +
-            '        <span><a name="YDP" href="javascript:void(0);">诱导牌</a></span>' +
-            '    </div>' +
             '    <div class="tips_right">' +
             '		 <form name="rangeSearchForm">' +
             '        <span><input type="text" id="rangeSearchName" class="text_03"></span>' +
@@ -110,7 +105,7 @@
         //将每个moduleItem的HTML信息刷到sideBar中.
         //被各sideBar的实现类中的onPageQueryResult或onListQueryResult调用
         getSidebarElement: function() {
-            this._$Content = $(this.getSidebarContent(this._id));
+            this._$Content = $(this.getSidebarContent());
             this._$ContentImage = this._$Content.find("img");
 
             this._$Datepicker = $('<div  class="calendar"> '
@@ -294,92 +289,10 @@
             this._mapIcon.doRemove();
         },
         //每一个moduleItem的HTML信息
-        getSidebarContent: function(id) {
-            if (id) {
-                id = "id='" + id + "'";
-            } else {
-                id = "";
-            }
-//            return    "<div " + id + " class='list'>"
-//                    + "  <div class='list_num'>" + "<img src='" + this.getIcon() + "'></img>" + "</div>"
-//                    + "  <div class='list_text'>"
-//                    + "  	<h2><span>" + this.getName() + "</span></h2>"
-//                    + "		<p>" + this.getDescribe() + "</p>"
-//                    + "	 </div>"
-//                    + "</div>"
-
-            return '<div ' + id + ' class="listing"> '
-                +' <div class="main viewed on">'
-                +'<div class="row">'
-                +'<div class="info span4">'
-                +'<div class="first_photo_imagebox thumbnail lazy"> <img src=' + this.getIcon() + '></img></div>'
-                +'<div class="title ellipsis multiline" >' + this.getName() + '</div>'
-                +'</div>'
-                +'<ul class="meta-three-block">'
-                +'<li class="price">最新位置</li>'
-                +'<li class="timeago">' + this.getLocation() + '</li>'
-                +'</ul>'
-                +'</div>'
-
-                +'<div class="row list_footer">'
-                +'<div class="span list-footer-left">'
-                +'  <span class="follower-count">'+this.getType()+'</span>'
-                +'</div>'
-                +'<div class="span3 list-footer-right">'
-//                +'<span class="qiuorchu label label-chuzu">出</span>'
-//                +'<span class="qiuorchu label label-ru">入</span>'
-                +'<div class="expand">'
-                +'<a  class="yuantie btn btn-link btn-block" href="#">查看详细记录</a>'
-//                +'<span class="expand">查看详细记录</span>'
-                +'</div>'
-                +'</div>'
-                +'</div> '
-
-                +'</div>'
-
-                +' <div class="popuplist-main hide">'
-                +'<div class="modal-header">  '
-                +'    <div class="row">    '
-
-//                +'   <span  class=" "> '
-//                +' <div class="input-append date" id="datepicker" data-date-format="dd-mm-yyyy"> '
-//                +'<input class="span2" size="12" type="text" value >  '
-//                +'    <span class="add-on"><i class="icon-th"></i></span>    '
-//                +' </div> '
-//                +'</span>'
-
-//                +'       <span class="verification"><a href="#" >行踪记录 <i class="icon-ok icon-large"></i></a></span>'
-                +'        </div>                '
-                +'    </div>                      '
-                +'     <div class="popuplist-main-body modal-body">   '
-                +'        <div class="popuplist-descr">           '
-                +'<h5>行踪详情</h5>'
-                +'            <div class="cardDetail row infobox descrbox chu_descr ellipsis multiline">'
-//                '<h5>关于房子</h5>' +
-//                '<p>房子具体位置在<span class="metadata">中国北京市北京西城区黄寺大街双旗杆东里</span>。户型两居。要出租的房间是<span class="metadata">整套</span>。出租的屋子面积<span class="metadata">60</span>。</p>' +
-//                '<h5>租金和租期</h5>' +
-//                '<p>租金每月<span class="metadata">5000</span>。可入住时间是<span class="metadata">2013/07/19</span>。租期一年。</p>' +
-//                '<h5>关于室友和设施</h5>' +
-//                '<p><span class="metadata">男女不限</span>。</p>' +
-//                '<h5>联系方式</h5>' +
-//                '<p><span class="metadata">beshop@139.com</span></p>' +
-//                '<h5>其他补充</h5>' +
-//                '<p><span class="metadata">中介勿扰，希望租户是附近上学的一家三口，价格可以再商量</span></p>'
-                +'</div>'
-                +'        </div>'
-                +'</div>'
-                +'</div> '
-
-                +'</div>'
+        getSidebarContent: function() {
+            return "";
         },
 
-
-        getType:function(){
-             return '';
-        }   ,
-        getLocation:function(){
-            return '';
-        },
         setHoverImage: function() {
             if (this._$ContentImage) {
                 this._$ContentImage.attr("src", this._hoverIcon);

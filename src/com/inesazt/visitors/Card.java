@@ -7,6 +7,9 @@ public class Card {
 
 	private long createTime;
 	private String info;
+	
+	private String lastLocate = null;
+	private long lastTime = 0;
 
 	public long getCreateTime() {
 		return createTime;
@@ -46,5 +49,21 @@ public class Card {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getLastLocate() {
+		return lastLocate;
+	}
+
+	public void setLastLocate(String lastLocate) {
+		this.lastLocate = lastLocate;
+	}
+
+	public long getLastTime() {
+		return lastTime;
+	}
+
+	public void setLastTime(long lastTime) {
+		this.lastTime = lastTime;
 	}
 }

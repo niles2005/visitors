@@ -10,22 +10,24 @@
                     var url = "work?action=listdevices";
                     //console.dir(url);
                     $http.get(url).success(function(data) {
-                        if(data && data.rows) {
-                            $scope.devices = data.rows;
+                        if(data && data.group) {
+                            $scope.devices = data.group;
                         }
                     });
                 }
+                
                 $scope.setDevice = function(device) {
                     $scope.selectDevice = device;
                 }
                 $scope.kk = "index";
                 $scope.doAll();
 
-                $scope.setParam = function() {
+                $scope.doUpdate = function() {
                     var url = "work?action=setdevice";
                     if($scope.selectDevice) {
                         $http.get(url, {params: {id: $scope.selectDevice.id, locate: $scope.selectDevice.locate, info: $scope.selectDevice.info}}).success(function(data) {
-                            $scope.info = data;
+                            $scope.selectDevice = data;
+                            $scope.doAll();
                         });
                         
                     }
@@ -39,8 +41,8 @@
 
         <div class="container">
             <div ng-controller="BindState">
-                <form ng-submit="setParam()" >
-                    Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input disabled="true" ng-model="selectDevice.id" /><br>
+                <form ng-submit="doUpdate()" >
+                    Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectDevice.id" /><br>
                     locate:<select ng-model="selectDevice.locate">
                                 <option  value ='building1'> building1 </option>
                                 <option  value ='building2'> building2 </option>
@@ -48,7 +50,8 @@
                                 <option  value ='outside'> outside </option>
                     </select> <br>
                     info&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectDevice.info"><br>
-                    <input type="submit" value="设置"/>
+                    date&nbsp;&nbsp;:{{ selectDevice.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
+                    <input type="submit" value="新增/更新"/>
                 </form>
                 <p><p>
 
@@ -65,7 +68,7 @@
                         <td>{{device.id}}</td>
                         <td>{{device.locate}}</td>
                         <td>{{device.info}}</td>
-                        <td>{{device.createTime}}</td>
+                        <td>{{device.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     </tr>
                 </table>
             </div>
