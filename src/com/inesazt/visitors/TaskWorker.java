@@ -31,11 +31,12 @@ public class TaskWorker extends TimerTask {
 	private static int m_loopIndex = 0;
 	private void doLoopWork() {
 		m_loopIndex++;
-		System.err.println("do task loop:" + m_loopIndex);
+//		System.err.println("do task loop:" + m_loopIndex);
 		if(m_global == null) {
 			m_global = Global.getInstance();
 		} else {
 			m_global.getEvents().doTaskWork();
+			m_global.getSocketManager().doTaskWork();
 		}
 	}
 	

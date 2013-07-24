@@ -11,7 +11,7 @@
         this._roles = {};
         this._cards = {};
     }
-
+    
     SearchModule.prototype = {
         initRoles: function() {
             this.init();
@@ -125,10 +125,12 @@
                     if(cardItem) {
                         this._cards[cardItem._id] = cardItem;
                         var strRole = cardItem._json.role;
-                        var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
-                        var role = this._roles[roleId];
-                        if(role) {
-                            cardItem.setRole(role);
+                        if(strRole) {
+                            var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
+                            var role = this._roles[roleId];
+                            if(role) {
+                                cardItem.setRole(role);
+                            }
                         }
                     }
                     
@@ -147,11 +149,14 @@
                         this._cards[cardItem._id] = cardItem;
                     }
                     if(cardItem) {
+//                        console.dir(cardItem._json)
                         var strRole = cardItem._json.role;
-                        var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
-                        var role = this._roles[roleId];
-                        if(role) {
-                            cardItem.setRole(role);
+                        if(strRole) {
+                            var roleId = strRole.substring(0,1) + "_" + row.lastLocate;
+                            var role = this._roles[roleId];
+                            if(role) {
+                                cardItem.setRole(role);
+                            }
                         }
                     }
                 }

@@ -1,5 +1,9 @@
 package com.inesazt.visitors;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.catalina.websocket.StreamInbound;
+
 
 public class Global {
 	private static Global m_instance= null;
@@ -24,6 +28,8 @@ public class Global {
 	
 	private Events m_events = null;
 	
+	private WebSocketManager m_socketManager = null;
+	
 	private boolean m_init = false;
 	private void initGlobal() {
 		try {
@@ -35,6 +41,7 @@ public class Global {
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
 			m_events = new Events(m_cards,m_devices);
+			m_socketManager = new WebSocketManager();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -56,4 +63,14 @@ public class Global {
 	public Events getEvents() {
 		return m_events;
 	}
+	
+	public StreamInbound createWebSocketInbound(String subProtocol,
+			HttpServletRequest request) {
+		return m_socketManager.createWebSocketInbound(subProtocol, request);
+	}
+	
+	public WebSocketManager getSocketManager() {
+		return m_socketManager;
+	}
+	
 }

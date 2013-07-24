@@ -7,12 +7,12 @@ import org.apache.catalina.websocket.StreamInbound;
 import org.apache.catalina.websocket.WebSocketServlet;
 
 @WebServlet("/ws")
-public class TestWebSocketServlet extends WebSocketServlet {
+public class GlobalWebSocketServlet extends WebSocketServlet {
 	@Override
 	protected StreamInbound createWebSocketInbound(String subProtocol,
 			HttpServletRequest request) {
 		
-		return WebSocketManager.getInstance().createWebSocketInbound(subProtocol, request);
+		return Global.getInstance().createWebSocketInbound(subProtocol, request);
 	}
 
 }
