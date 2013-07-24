@@ -68,11 +68,14 @@ public class Card {
 	}
 
 	public long getLastTime() {
-		return lastTime;
+		if(m_eventList.size() > 0) {
+			Event lastEvent = m_eventList.get(m_eventList.size() - 1);
+			return lastEvent.getTime();
+		}
+		return -1;
 	}
 
 	public void setLastTime(long lastTime) {
-		this.lastTime = lastTime;
 	}
 	
 	private ArrayList<Event> m_eventList = new ArrayList<Event>();
@@ -88,5 +91,4 @@ public class Card {
 	public String loadTodayEvents() {
 		return JSON.toJSONString(m_eventList);
 	}
-	
 }

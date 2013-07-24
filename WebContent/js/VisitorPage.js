@@ -11,6 +11,10 @@
         this.initFrame();
         this.buildFrame();
         this.onPageLoad();
+        
+        var msg = new mapwork.WSMessage(this);
+        msg.initialize();
+        
     }
 
     VisitorPage.prototype = {
@@ -29,6 +33,8 @@
 
             this._map.addModule(new mapwork.SearchModule(mapwork.Search.setting));
             this._map.addModule(new mapwork.Module(mapwork.CardItem.setting));
+            
+            this._msg = new mapwork.WSMessage(this);
         },
         buildFrame: function() {
             this.createMap();

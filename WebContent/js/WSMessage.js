@@ -13,7 +13,6 @@
         this.socket = null;
         this.module = null;
         this.visitorPage = page;
-
     }
 
     WSMessage.prototype = {
@@ -58,8 +57,11 @@
            };
 
            this.socket.onmessage = function (message) {
-               self.module._isPageFitBounds = self.module._searchType == 'all';
-               self.module.onPageQueryResult(JSON.parse(message.data));
+               var json = JSON.parse(message.data);
+               console.dir(json);
+               self.module.updateCards(json);
+//               self.module._isPageFitBounds = self.module._searchType == 'all';
+//               self.module.onPageQueryResult(JSON.parse(message.data));
            };
        }
     }

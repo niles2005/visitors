@@ -39,7 +39,7 @@ public class TestWebSocketServlet extends WebSocketServlet {
     private static final String SID = "UNPAY";
     private static final String USERNAME = "gis";
     private static final String PASSWORD = "gis";
-    private static final String DRIVERNAME = "oracle.jdbc.driver.OracleDriver";// Á¬½ÓoracleÇý¶¯°ü
+    private static final String DRIVERNAME = "oracle.jdbc.driver.OracleDriver";// ï¿½ï¿½ï¿½ï¿½oracleï¿½ï¿½ï¿½
     private static final String DBURL = "jdbc:oracle:thin:@" + IP + ":" + PORT + ":" + SID + "";
     private static String today ;
     
@@ -110,7 +110,9 @@ public class TestWebSocketServlet extends WebSocketServlet {
                     nickname, "has joined.");
             try {
 				while (true) {
-					broadcast(listVisitors());
+					String cardsInfo = Global.getInstance().getCards().doList();
+//					broadcast(listVisitors());
+					broadcast(cardsInfo);
 					Thread.sleep(5000);
 				}
 			} catch (InterruptedException e) {
