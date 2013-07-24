@@ -45,20 +45,23 @@ public class DBManager {
 	}
 
     private static DateFormat DateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
-    public ArrayList queryEvents() {
+    public ArrayList queryEvents(int seqId) {
     	ArrayList list = new ArrayList();
     	ResultSet rs = null;
     	try {
 			Connection connection = getConnection();
 			Statement statement = connection.createStatement();
 			
-			rs = statement.executeQuery("select t.card_id,t.mac_address,t.up_date,t.up_time from CARDPOSITIONTRANS t");
+			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.trans_seq > " + seqId;
+			System.err.println(sql);
+			rs = statement.executeQuery(sql);
 			
 			while(rs.next()) {
-				String cardId = rs.getString(1).trim();
-				String deviceId = rs.getString(2).trim();
-				String date = rs.getString(3).trim();
-				String time = rs.getString(4).trim();
+				int theSeqId = rs.getInt(1);
+				String cardId = rs.getString(2).trim();
+				String deviceId = rs.getString(3).trim();
+				String date = rs.getString(4).trim();
+				String time = rs.getString(5).trim();
 				
 				try {
 //					System.err.println(cardId);
@@ -66,6 +69,7 @@ public class DBManager {
 					Date dateTime = DateFormat.parse(date + " " + time);
 					long theTime = dateTime.getTime();
 					Event event = new Event();
+					event.setSeqId(theSeqId);
 					event.setCardId(cardId);
 					event.setDeviceId(deviceId);
 					event.setTime(theTime);
@@ -77,6 +81,7 @@ public class DBManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+    	System.err.println("query result count:" + list.size());
     	return list;
     }
 
@@ -118,6 +123,6 @@ public class DBManager {
 
 	
 	public static void main(String[] args) {
-		DBManager.getInstance().queryEvents();
+		DBManager.getInstance().queryEvents(0);
 	}
 }

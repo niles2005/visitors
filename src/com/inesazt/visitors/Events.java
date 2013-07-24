@@ -21,11 +21,13 @@ public class Events {
 		return str;
 	}
 	
+	private int m_lastSeqId = -1;
 	private void reloadEvents() {
 		String today = "";//get today's all events,order by time
-		ArrayList eventList = DBManager.getInstance().queryEvents();
+		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId);
 		for(int i=0;i<eventList.size();i++) {
 			Event event = (Event)eventList.get(i);
+			m_lastSeqId = event.getSeqId();
 			String cardId = event.getCardId();
 			Card card = m_cards.getCard(cardId);
 			if(card == null) {//for first record,create card and set create time
@@ -44,12 +46,8 @@ public class Events {
 		}
 	}
 	
-	private boolean isLoadData = false;
 	public void doTaskWork() {
 		System.err.println("do task work...");
-		if(!isLoadData) {
-			isLoadData = true;
-			reloadEvents();
-		}
+		reloadEvents();
 	}
 }

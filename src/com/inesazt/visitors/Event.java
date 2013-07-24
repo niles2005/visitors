@@ -1,6 +1,7 @@
 package com.inesazt.visitors;
 
 public class Event {
+	private int seqId = 0;
 	private String cardId = null;
 	private String cardName = null;
 	private String cardRole = null;
@@ -62,5 +63,13 @@ public class Event {
 
 	public void setCardRole(String cardRole) {
 		this.cardRole = cardRole;
+	}
+
+	public int getSeqId() {
+		return seqId;
+	}
+
+	public void setSeqId(int seqId) {
+		this.seqId = seqId;
 	}
 }
