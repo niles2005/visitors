@@ -15,74 +15,30 @@ import org.apache.catalina.websocket.StreamInbound;
 import org.apache.catalina.websocket.WsOutbound;
 
 public class WebSocketManager {
-	private static WebSocketManager m_instance = null;
-
-	public static WebSocketManager getInstance() {
-		if(m_instance == null) {
-			m_instance = new WebSocketManager();
-		}
-		return m_instance;
+	public WebSocketManager() {
 	}
 	
-	private java.util.Timer timer = null; 
-	private WebSocketManager() {
-		timer = new java.util.Timer(true); 
-		timer.schedule(new MyTask(), 0, MyTask.LoopTime);
-	}
-	
-	 class MyTask extends TimerTask {
-			private boolean isRunning = false;
-			public static final long LoopTime = 5 * 1000;//5 second
-
-			public MyTask() {
-			}
-
-			public void run() {
-				if (!isRunning) {
-					isRunning = true;
-
-					doLoopWork();
-					
-					isRunning = false;
-				}
-			}
-			
-			private void doLoopWork() {
-				String cardsInfo = Global.getInstance().getCards().doList();
-				for (ChatMessageInbound connection : connections) {
-					try {
-						CharBuffer buffer = CharBuffer.wrap(cardsInfo);
-						connection.getWsOutbound().writeTextMessage(buffer);
-					} catch (IOException ignore) {
-						// Ignore
-					}
-				}
+	public void doTaskWork() {
+		String cardsInfo = Global.getInstance().getCards().doList();
+		for (ChatMessageInbound connection : connections) {
+			try {
+				CharBuffer buffer = CharBuffer.wrap(cardsInfo);
+				connection.getWsOutbound().writeTextMessage(buffer);
+			} catch (IOException ignore) {
+				// Ignore
 			}
 		}
-
-	
-	public void close() {
-		timer.cancel(); 
 	}
 	
-	
-	
-	private static int index = 0;
-	private static final String GUEST_PREFIX = "Guest";
-
-	private final AtomicInteger connectionIds = new AtomicInteger(0);
 	private final Set<ChatMessageInbound> connections = new CopyOnWriteArraySet<ChatMessageInbound>();
 	
 	public StreamInbound createWebSocketInbound(String subProtocol,
 			HttpServletRequest request) {
-		return new ChatMessageInbound(connectionIds.incrementAndGet());
+		return new ChatMessageInbound();
 	}
 
 	public final class ChatMessageInbound extends MessageInbound {
-		private final String nickname;
-
-		private ChatMessageInbound(int id) {
-			this.nickname = GUEST_PREFIX + id;
+		private ChatMessageInbound() {
 		}
 
 		@Override
@@ -105,22 +61,7 @@ public class WebSocketManager {
 
 		@Override
 		protected void onTextMessage(CharBuffer message) throws IOException {
-			// Never trust the client
-			String filteredMessage = String.format("%s: %s", nickname,
-					message.toString());
-//			broadcast(filteredMessage);
 		}
-
-//		private void broadcast(String message) {
-//			for (ChatMessageInbound connection : connections) {
-//				try {
-//					CharBuffer buffer = CharBuffer.wrap(message);
-//					connection.getWsOutbound().writeTextMessage(buffer);
-//				} catch (IOException ignore) {
-//					// Ignore
-//				}
-//			}
-//		}
 
 	}
 
