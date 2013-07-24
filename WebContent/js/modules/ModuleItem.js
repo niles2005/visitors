@@ -148,6 +148,11 @@
                          }
                         var $trackDiv = $(self._$Content).find('>.popuplist-main');
                         $trackDiv.toggle("slow");
+                        $('.popuplist-main').each(function(){
+                            if(this !== $trackDiv[0]) {
+                                $(this).slideUp();
+                            }
+                        });
 
                         var jQrow = self._$Content.find('.modal-header>.row');
                         var jQdatepicker = $('#dp3');

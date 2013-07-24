@@ -1,6 +1,6 @@
 (function() {
 
-	mapwork.version = 3.2;
+	mapwork.version = 3.9;
 
         mapwork.LIMIT_MAX_ZOOM = 17;
         mapwork.LIMIT_MIN_ZOOM = 16;
@@ -27,8 +27,8 @@
 	mapwork.serviceAddress = mapwork.serviceAddress3;
 	mapwork.configs = {
 
-        defaultLat:31.270257,
-        defaultLon:121.827436,
+        defaultLat:31.271839,
+        defaultLon:121.827126,
 
         defaultZoom:16,
         

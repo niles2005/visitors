@@ -129,7 +129,7 @@
                 +'</div>'
                 +'<ul class="meta-three-block">'
                 +'<li class="timeago">' + this._json.lastLocate + '</li>'
-                +'<li class="timeago">' + this._json.lastTime + '</li>'
+                +'<li class="timeago">' + this.formatDate(new Date(this._json.lastTime) ,'time')+ '</li>'
                 +'</ul>'
                 +'</div>'
 

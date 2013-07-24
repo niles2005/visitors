@@ -7,13 +7,13 @@ import com.alibaba.fastjson.JSON;
 
 
 public class Roles {
-	private static int[] rolePoses = new int[]{
-			312717660,1218221390,
-			312717660,1218280620,
-			312678600,1218279970,
-			312655300,1218294350,
+	public static int[] rolePoses = new int[]{
+		312721330,1218224820,
+		312721330,1218281250,
+		312688130,1218256360,
+		312671990,1218312360,
 	};
-	private static int roleOffsetLon = 10000;
+	public static int roleOffsetLon = 10000;
 	
     private Map<String,Role> roles = new Hashtable<String,Role>(); 
     
