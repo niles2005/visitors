@@ -1,6 +1,6 @@
 (function() {
 
-	mapwork.version = 3.1;
+	mapwork.version = 3.2;
 
         mapwork.LIMIT_MAX_ZOOM = 17;
         mapwork.LIMIT_MIN_ZOOM = 16;
