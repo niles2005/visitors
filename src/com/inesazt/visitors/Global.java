@@ -5,10 +5,13 @@ public class Global {
 	private static Global m_instance= null;
 	
 	public static Global getInstance() {
+		return m_instance;
+	}
+	
+	public static void initInstance() {
 		if(m_instance == null) {
 			m_instance = new Global();
 		}
-		return m_instance;
 	}
 	
 	private Global() {
@@ -19,8 +22,6 @@ public class Global {
 	
 	private Cards m_cards = null;
 	
-	private Roles m_roles = null;
-	
 	private Events m_events = null;
 	
 	private boolean m_init = false;
@@ -30,8 +31,6 @@ public class Global {
 				return;
 			}
 			m_init = true;
-			
-			m_roles = Roles.buildRoles();
 			
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
@@ -46,12 +45,12 @@ public class Global {
 		return m_cards;
 	}
 
-	public Devices getDevices() {
-		return m_devices;
+	public Card getCard(String cardId) {
+		return m_cards.getCard(cardId);
 	}
 
-	public Roles getRoles() {
-		return m_roles;
+	public Devices getDevices() {
+		return m_devices;
 	}
 
 	public Events getEvents() {

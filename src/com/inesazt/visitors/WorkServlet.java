@@ -10,18 +10,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "WorkServlet", urlPatterns = { "/work" })
+@WebServlet(name = "WorkServlet", urlPatterns = { "/work" }, loadOnStartup=0)
 public class WorkServlet extends HttpServlet {
-//	public void init(ServletConfig servletConfig) throws ServletException {
-//        try {
-//        	String realPath = servletConfig.getServletContext().getRealPath("");
-//        	ServerConfig.initInstance(realPath);
-//        	Global.getInstance();
-//        }
-//        catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//	}
+	public void init(ServletConfig servletConfig) throws ServletException {
+        try {
+        	String realPath = servletConfig.getServletContext().getRealPath("");
+        	ServerConfig.initInstance(realPath);
+        	DBManager.getInstance();
+        	Global.initInstance();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+	}
+
+	
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -73,12 +76,21 @@ public class WorkServlet extends HttpServlet {
 			String strInfo = request.getParameter("info");
 			
 			return Global.getInstance().getDevices().setDevice(cardId,strLocate,strInfo);
-		} else if(action.equals("listroles")) {
-			return Global.getInstance().getRoles().doList();
-		} else if(action.equals("loadevents")) {
-			String cardId = request.getParameter("action");
+		} else if(action.equals("loadhistoryevents")) {
+			String cardId = request.getParameter("cardid");
 			String strDate = request.getParameter("date");
-			return Global.getInstance().getEvents().loadEvents(cardId,strDate);
+			Card card = Global.getInstance().getCard(cardId);
+			if(card == null) {
+				return WebUtil.error("Can not find card for cardId:" + cardId);
+			}
+			return card.loadHistoryEvents(strDate);
+		} else if(action.equals("loadtodayevents")) {
+			String cardId = request.getParameter("cardid");
+			Card card = Global.getInstance().getCard(cardId);
+			if(card == null) {
+				return WebUtil.error("Can not find card for cardId:" + cardId);
+			}
+			return card.loadTodayEvents();
 		} else if(action.equals("loadallevents")) {
 			return Global.getInstance().getEvents().doList();
 		} else if(action.equals("enumlocations")) {
