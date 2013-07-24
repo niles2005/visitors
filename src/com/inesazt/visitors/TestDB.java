@@ -43,13 +43,14 @@ public class TestDB {
 	    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 	    	String today = dateFormat.format(new Date());
 			
-			rs = statement.executeQuery("select t.card_id,t.up_date,t.up_time,t.mac_address from CARDPOSITIONTRANS t");
+			rs = statement.executeQuery("select t.trans_seq,t.card_id,t.up_date,t.up_time,t.mac_address from CARDPOSITIONTRANS t");
 			
 			while(rs.next()) {
 				System.err.println(rs.getObject(1));
 				System.err.println(rs.getObject(2));
 				System.err.println(rs.getObject(3));
 				System.err.println(rs.getObject(4));
+				System.err.println(rs.getObject(5));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
