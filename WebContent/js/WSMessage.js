@@ -13,23 +13,27 @@
         this.socket = null;
         this.module = null;
         this.visitorPage = page;
+        this.key = new Date().getTime();
     }
 
     WSMessage.prototype = {
 
         initialize:function(){
             if (window.location.protocol == 'http:') {
-                this.connect('ws://' + window.location.host + '/websocket/message');
+                this.connect('ws://' + window.location.host + '/ws');
             } else {
-                this.connect('wss://' + window.location.host + '/websocket/message');
+                this.connect('wss://' + window.location.host + '/ws');
             }
         },
 
         connect:function(host){
            var self = this;
            if ('WebSocket' in window) {
+               console.dir(this.socket)
                this.socket = new WebSocket(host);
+               this.socket.key = this.key;
            } else if ('MozWebSocket' in window) {
+               console.dir(this.socket)
                this.socket = new MozWebSocket(host);
            } else {
                console.log('Error: WebSocket is not supported by this browser.');
@@ -46,8 +50,8 @@
 
 
                self.module = self.visitorPage._map.getModule(mapwork.Search.ID);
-               self.module.init();
-               self.module.setSearchType('all');
+//               self.module.init();
+//               self.module.setSearchType('all');
 
 
            };
@@ -57,8 +61,9 @@
            };
 
            this.socket.onmessage = function (message) {
+               console.dir(new Date().getTime() / 1000);
                var json = JSON.parse(message.data);
-               console.dir(json);
+//               console.dir(json);
                self.module.updateCards(json);
 //               self.module._isPageFitBounds = self.module._searchType == 'all';
 //               self.module.onPageQueryResult(JSON.parse(message.data));

@@ -9,17 +9,9 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-    <servlet>
-        <servlet-name>wsMesssage</servlet-name>
-        <servlet-class>com.inesazt.visitors.TestWebSocketServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>wsMesssage</servlet-name>
-        <url-pattern>/websocket/message</url-pattern>
-    </servlet-mapping>
     
 	<listener> 
-	<listener-class>com.inesazt.visitors.TaskServlet</listener-class> 
+		<listener-class>com.inesazt.visitors.TaskServlet</listener-class> 
 	</listener>   
     
 </web-app>

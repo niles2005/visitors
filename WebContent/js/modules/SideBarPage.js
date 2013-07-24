@@ -110,6 +110,7 @@
                             var row = jsonResult[i];
 //                            if (row._moduleItem) {
                                 
+                                console.dir(row.getSidebarElement())
                                 this._$Content.prepend(row.getSidebarElement());
 //                                this._$Content.append(row._moduleItem.getSidebarElement());
 //                            }

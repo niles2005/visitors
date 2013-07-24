@@ -12,8 +12,8 @@
         this.buildFrame();
         this.onPageLoad();
         
-        var msg = new mapwork.WSMessage(this);
-        msg.initialize();
+//        var msg = new mapwork.WSMessage(this);
+//        msg.initialize();
         
     }
 
@@ -35,6 +35,7 @@
             this._map.addModule(new mapwork.Module(mapwork.CardItem.setting));
             
             this._msg = new mapwork.WSMessage(this);
+            this._msg.initialize();
         },
         buildFrame: function() {
             this.createMap();

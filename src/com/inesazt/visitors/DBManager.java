@@ -53,7 +53,7 @@ public class DBManager {
 			Statement statement = connection.createStatement();
 			
 			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.trans_seq > " + seqId;
-			System.err.println(sql);
+//			System.err.println(sql);
 			rs = statement.executeQuery(sql);
 			
 			while(rs.next()) {
@@ -81,7 +81,7 @@ public class DBManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	System.err.println("query result count:" + list.size());
+//    	System.err.println("query result count:" + list.size());
     	return list;
     }
 
