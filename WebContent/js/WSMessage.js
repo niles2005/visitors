@@ -13,7 +13,6 @@
         this.socket = null;
         this.module = null;
         this.visitorPage = page;
-        this.key = new Date().getTime();
     }
 
     WSMessage.prototype = {
@@ -29,9 +28,7 @@
         connect:function(host){
            var self = this;
            if ('WebSocket' in window) {
-               console.dir(this.socket)
                this.socket = new WebSocket(host);
-               this.socket.key = this.key;
            } else if ('MozWebSocket' in window) {
                console.dir(this.socket)
                this.socket = new MozWebSocket(host);
@@ -61,12 +58,8 @@
            };
 
            this.socket.onmessage = function (message) {
-               console.dir(new Date().getTime() / 1000);
                var json = JSON.parse(message.data);
-//               console.dir(json);
                self.module.updateCards(json);
-//               self.module._isPageFitBounds = self.module._searchType == 'all';
-//               self.module.onPageQueryResult(JSON.parse(message.data));
            };
        }
     }

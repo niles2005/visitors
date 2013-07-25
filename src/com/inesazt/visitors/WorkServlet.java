@@ -98,7 +98,7 @@ public class WorkServlet extends HttpServlet {
 		} else if(action.equals("enumroles")) {
 			return DataEnums.loadRoleEnums();
 		} else if( action.equals("cardsunreg")){
-			return Global.getInstance().getCardsunreg();
+			return Global.getInstance().getUnregister();
 		} else if( action.equals("devicesunreg")){
 			
 		}

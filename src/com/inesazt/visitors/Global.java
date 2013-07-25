@@ -1,11 +1,13 @@
 package com.inesazt.visitors;
 
+
+import java.io.IOException;
+import java.nio.CharBuffer;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.catalina.websocket.StreamInbound;
 
 
 public class Global {
@@ -31,8 +33,6 @@ public class Global {
 	
 	private Events m_events = null;
 	
-	private WebSocketManager m_socketManager = null;
-	
 	private boolean m_init = false;
 	private void initGlobal() {
 		try {
@@ -44,7 +44,6 @@ public class Global {
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
 			m_events = new Events(m_cards,m_devices);
-			m_socketManager = new WebSocketManager();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -67,18 +66,24 @@ public class Global {
 		return m_events;
 	}
 	
-	public StreamInbound createWebSocketInbound(String subProtocol,
-			HttpServletRequest request) {
-		return m_socketManager.createWebSocketInbound(subProtocol, request);
+	
+	private final Set<ChatMessageInbound> m_connections = new CopyOnWriteArraySet<ChatMessageInbound>();
+	
+	public void addChatMessageInbound(ChatMessageInbound cmi) {
+		m_connections.add(cmi);
+//		System.err.println("aaaaaaaaaaaaaaaaaa " + m_connections.size());
 	}
 	
-	public WebSocketManager getSocketManager() {
-		return m_socketManager;
+	public void removeChatMessageInbound(ChatMessageInbound cmi) {
+		m_connections.remove(cmi);
+//		System.err.println("cccccccccccccccccc " + m_connections.size());
 	}
 	
-	public String getCardsunreg(){
-		StringBuffer sb = new StringBuffer("{");
-		sb.append("cards:");
+
+	public String getUnregister(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("{");
+		sb.append("\"cards\":");
 		Map<String,Card> cardsMap = m_cards.getGroup();
 		sb.append(cardsMap.size());
 		int unregCount = 0;
@@ -91,9 +96,43 @@ public class Global {
 			}
 		}
 		sb.append(",");
-		sb.append("unreg:");
+		sb.append("\"cardunreg\":");
 		sb.append(unregCount);
+		sb.append(",");
+		
+		sb.append("\"devices\":");
+		Map<String,Device> devicesMap = m_devices.getGroup();
+		sb.append(devicesMap.size());
+		unregCount = 0;
+		it = devicesMap.keySet().iterator();
+		while(it.hasNext()){
+			String deviceID = (String)it.next();
+			Device device = devicesMap.get(deviceID);
+			if(device.getLocate() == null){
+				unregCount++;
+			}
+		}
+		sb.append(",");
+		sb.append("\"deviceunreg\":");
+		sb.append(unregCount);
+		
+		sb.append("}");
 		return sb.toString();
 	}
 	
+
+	public void doTaskWork() {
+		m_events.doTaskWork();
+		
+		String cardsInfo = Global.getInstance().getCards().doList();
+		for (ChatMessageInbound connection : m_connections) {
+			try {
+				CharBuffer buffer = CharBuffer.wrap(cardsInfo);
+				connection.getWsOutbound().writeTextMessage(buffer);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 }

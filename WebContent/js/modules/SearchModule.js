@@ -74,7 +74,16 @@
                 self.onCardQueryResult(data);
             });
         },
-                
+        findCards: function(name) {
+            var arr = [];
+            for(var r in this._roles) {
+                var role = this._roles[r];
+                var cards = role._cards;
+                for(var c in cards) {
+                    console.dir(c);
+                }
+            }
+        },
 
         buildModuleItem: function(json, index) {
             var moduleId = json.type;

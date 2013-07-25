@@ -35,8 +35,7 @@ public class TaskWorker extends TimerTask {
 		if(m_global == null) {
 			m_global = Global.getInstance();
 		} else {
-			m_global.getEvents().doTaskWork();
-			m_global.getSocketManager().doTaskWork();
+			m_global.doTaskWork();
 		}
 	}
 	

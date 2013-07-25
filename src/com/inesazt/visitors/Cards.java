@@ -78,7 +78,7 @@ public class Cards {
 //		System.err.println(str);
 		return str;
 	}
-
+	
 	public String setCard(String id,String name,String role,String info) {
 		if(id == null) {
 			return WebUtil.error("card id is null!");
