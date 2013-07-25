@@ -1,0 +1,1 @@
+{"dbDriver":"oracle.jdbc.driver.OracleDriver","dbURL":"jdbc:oracle:thin:@192.168.1.18:1521:ORCL.LOCALDOMAIN","dbPass":"gis","dbUser":"gis"}

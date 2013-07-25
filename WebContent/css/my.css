@@ -55,7 +55,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 
 .btn {
-    font-size: 8px;
+    /*font-size: 8px;*/
     line-height: 11px;
 }
 

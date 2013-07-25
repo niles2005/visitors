@@ -6,7 +6,7 @@ import javax.servlet.ServletContext;
 
 public class TaskWorker extends TimerTask {
 	private boolean isRunning = false;
-	public static final long LoopTime = 5 * 1000;//5 second
+	public static final long LoopTime = 3 * 1000;//3 second
 	private ServletContext context = null;
 
 	public TaskWorker() {
@@ -35,7 +35,11 @@ public class TaskWorker extends TimerTask {
 		if(m_global == null) {
 			m_global = Global.getInstance();
 		} else {
-			m_global.doTaskWork();
+			try {
+				m_global.doTaskWork();
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 	

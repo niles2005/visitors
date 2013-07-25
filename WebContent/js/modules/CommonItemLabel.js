@@ -3,10 +3,10 @@
 
     var EXTEND = mapwork.MapIcon;
 
-    var labelHtml = '<div style="padding:0;margin:0;border:0;overflow:hidden;width:0px;height:0px;cursor:pointer;">' +
-            '<div class="iconLabel" style="position: absolute;width:40px;left:-13px;top:30px;font-size:14px;color:#000;"></div>' +
-            '<div class="roleCount" style="position: absolute;left:-16px;top:-30px;text-align:center;width:30px;color:#000;font-size:11px;font-weight:bold;font-family:">55</div>' +
-            '<img  style="right:-10px; top:-10px; position:absolute;"> ' +
+    var labelHtml = '<div style="text-align: center;width:80px;height:30px;">' +
+            '<div class="roleCount" style="color:#000;font-size:11px;font-weight:bold;">0</div>' +
+            '<img> ' +
+            '<div class="iconLabel" style="font-size:14px;color:#000;"></div>' +
             '</div>';
     function CommonItemLabel(id, defaultIcon, hoverIcon, imageOffset, zIndex, moduleItem) {
         if (EXTEND) {
@@ -82,8 +82,7 @@
             this._$Image.removeClass("imageSelect");
 //            this._image.style["background"] = "";
         }
-                
-    }
+    };
 
     if (EXTEND) {
         mapwork.utils.inherits(CommonItemLabel, EXTEND);

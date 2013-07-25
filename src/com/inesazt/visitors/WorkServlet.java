@@ -16,7 +16,6 @@ public class WorkServlet extends HttpServlet {
         try {
         	String realPath = servletConfig.getServletContext().getRealPath("");
         	ServerConfig.initInstance(realPath);
-        	DBManager.getInstance();
         	Global.initInstance();
         }
         catch (Exception ex) {

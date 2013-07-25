@@ -27,6 +27,8 @@ public class Global {
 		initGlobal();
 	}
 
+	private Configure m_configure = null;
+	
 	private Devices m_devices = null;
 	
 	private Cards m_cards = null;
@@ -40,6 +42,12 @@ public class Global {
 				return;
 			}
 			m_init = true;
+			m_configure = Configure.buildConfigure();
+			if(m_configure == null) {
+				System.err.println("xxxxxxxxxxxxx: Configure init error! xxxxxxxxxxxxxxx");
+				return;
+			}
+        	DBManager.initInstance(m_configure);
 			
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
@@ -67,20 +75,20 @@ public class Global {
 		return m_events;
 	}
 	
+	public Configure getConfigure() {
+		return m_configure;
+	}
 	
 	private final Set<ChatMessageInbound> m_connections = new CopyOnWriteArraySet<ChatMessageInbound>();
 	
 	public void addChatMessageInbound(ChatMessageInbound cmi) {
 		m_connections.add(cmi);
-//		System.err.println("aaaaaaaaaaaaaaaaaa " + m_connections.size());
 	}
 	
 	public void removeChatMessageInbound(ChatMessageInbound cmi) {
 		m_connections.remove(cmi);
-//		System.err.println("cccccccccccccccccc " + m_connections.size());
 	}
 	
-
 	public String getUnregister(){
 		StringBuffer sb = new StringBuffer();
 		sb.append("{");
@@ -124,14 +132,17 @@ public class Global {
 
 	public void doTaskWork() {
 		m_events.doTaskWork();
-		
-		String cardsInfo = Global.getInstance().getCards().doList();
-		for (ChatMessageInbound connection : m_connections) {
-			try {
-				CharBuffer buffer = CharBuffer.wrap(cardsInfo);
-				connection.getWsOutbound().writeTextMessage(buffer);
-			} catch (IOException ex) {
-				ex.printStackTrace();
+	}
+	
+	public void boardCastClientData(String jsonData) {
+		if(jsonData != null) {
+			for (ChatMessageInbound connection : m_connections) {
+				try {
+					CharBuffer buffer = CharBuffer.wrap(jsonData);
+					connection.getWsOutbound().writeTextMessage(buffer);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 	}

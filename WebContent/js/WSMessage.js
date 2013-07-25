@@ -59,6 +59,7 @@
 
            this.socket.onmessage = function (message) {
                var json = JSON.parse(message.data);
+//               console.dir(json);
                self.module.updateCards(json);
            };
        }

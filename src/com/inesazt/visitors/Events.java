@@ -1,6 +1,8 @@
 package com.inesazt.visitors;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 import com.alibaba.fastjson.JSON;
 
@@ -10,7 +12,7 @@ public class Events {
 	public Events(Cards cards,Devices devices) {
 		m_cards = cards;
 		m_devices = devices;
-		reloadEvents();
+		reloadEvents(false);
 	}
 	
 	public String doList() {
@@ -20,9 +22,11 @@ public class Events {
 	}
 	
 	private int m_lastSeqId = -1;
-	private void reloadEvents() {
+	private void reloadEvents(boolean doBoardcast) {
 		String today = "";//get today's all events,order by time
 		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId);
+		//only send changed card
+		Hashtable<String,Card> hash = new Hashtable<String,Card>();
 		for(int i=0;i<eventList.size();i++) {
 			Event event = (Event)eventList.get(i);
 			m_lastSeqId = event.getSeqId();
@@ -40,12 +44,26 @@ public class Events {
 				}
 				event.setDevice(device);
 				card.appendEvent(event);
+				
+				hash.put(cardId, card);
 			}
 		}
+		
+		if(doBoardcast && hash.size() > 0) {//boardcast to client
+			ArrayList list = new ArrayList();
+			Iterator iters = hash.values().iterator();
+			while(iters.hasNext()) {
+				list.add(iters.next());
+			}
+			String str = JSON.toJSONString(list);
+			Global.getInstance().boardCastClientData(str);
+		}
+		
+		
 	}
 	
 	
 	public void doTaskWork() {
-		reloadEvents();
+		reloadEvents(true);
 	}
 }

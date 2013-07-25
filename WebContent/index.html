@@ -33,7 +33,7 @@
                 var s = document.getElementById("s");
                 
                 var newHeight = mapwork.utils.getWindowHeight() - c.offsetTop - s.offsetHeight;
-                $("#indexbox").height(newHeight);
+                $(".result_search").height(newHeight);
                 getCards();
             });
 
@@ -47,8 +47,9 @@
             function  getCards(){
                 $.ajax({
                     method:'GET',
-                    url:'work?action=unregister',
+                    url:'work?action=unregister&t=' + new Date().getTime(),
                     dataType: "json",
+                    cache: false,
                     success:function(data) {
                         if(data) {
                             $('#cardsCount').text(data.cards);

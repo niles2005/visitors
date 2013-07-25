@@ -131,7 +131,7 @@
                             if (flag === self._ajaxFlag) {
                                 self.onPageQueryResult(data);
                             }
-                        }
+                        };
                     }(self._ajaxFlag)
                 });
             }

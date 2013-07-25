@@ -1,5 +1,4 @@
 package com.inesazt.visitors;
-import java.io.File;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -8,12 +7,12 @@ import com.alibaba.fastjson.JSON;
 
 public class Roles {
 	public static int[] rolePoses = new int[]{
-		312721330,1218224820,
-		312721330,1218281250,
-		312688130,1218256360,
-		312679510,1218312360,
+		312721330,1218217820,
+		312721330,1218273250,
+		312691930,1218273250,
+		312677510,1218306360,
 	};
-	public static int roleOffsetLon = 10000;
+	public static int roleOffsetLon = 12000;
 	
     private Map<String,Role> roles = new Hashtable<String,Role>(); 
     

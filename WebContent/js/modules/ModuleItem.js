@@ -182,7 +182,6 @@
         },
         afterExpandDetail: function() {
             var $cardDetail = this._$Content.find(".cardDetail");
-            $cardDetail.html("aaaaa");
         },
         //创建并获得mapIcon对象
         //设置图片资源,设置坐标,绑定徘徊及单击事件

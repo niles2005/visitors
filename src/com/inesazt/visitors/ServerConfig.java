@@ -18,6 +18,7 @@ public class ServerConfig {
 			if (!m_configPath.exists()) {
 				m_configPath.mkdir();
 			}
+			m_configureFile = new File(m_configPath, "configure.json");
 			m_deviceFile = new File(m_configPath, "device.json");
 			m_cardFile = new File(m_configPath, "card.json");
 		} else {
@@ -54,5 +55,10 @@ public class ServerConfig {
 
 	public File getCardFile() {
 		return m_cardFile;
+	}
+
+	File m_configureFile = null;
+	public File getConfigureFile() {
+		return m_configureFile;
 	}
 }

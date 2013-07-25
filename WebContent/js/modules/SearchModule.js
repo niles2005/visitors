@@ -16,7 +16,7 @@
     SearchModule.prototype = {
         initRoles: function() {
             this.init();
-            var roles = {"group":{"a_building1":{"count":0,"id":"a_building1","label":"VIP","locate":"building1","name":"admin","pos":{"lat":312721330,"lon":1218254820},"warn":false},"a_building2":{"count":0,"id":"a_building2","label":"VIP","locate":"building2","name":"admin","pos":{"lat":312721330,"lon":1218311250},"warn":false},"a_factory":{"count":0,"id":"a_factory","label":"VIP","locate":"factory","name":"admin","pos":{"lat":312688130,"lon":1218286360},"warn":false},"a_outside":{"count":0,"id":"a_outside","label":"VIP","locate":"outside","name":"admin","pos":{"lat":312671990,"lon":1218342360},"warn":false},"g_building1":{"count":0,"id":"g_building1","label":"保安","locate":"building1","name":"guard","pos":{"lat":312721330,"lon":1218244820},"warn":true},"g_building2":{"count":0,"id":"g_building2","label":"保安","locate":"building2","name":"guard","pos":{"lat":312721330,"lon":1218301250},"warn":true},"g_factory":{"count":0,"id":"g_factory","label":"保安","locate":"factory","name":"guard","pos":{"lat":312688130,"lon":1218276360},"warn":false},"g_outside":{"count":0,"id":"g_outside","label":"保安","locate":"outside","name":"guard","pos":{"lat":312671990,"lon":1218332360},"warn":false},"s_building1":{"count":0,"id":"s_building1","label":"职员","locate":"building1","name":"staff","pos":{"lat":312721330,"lon":1218234820},"warn":true},"s_building2":{"count":0,"id":"s_building2","label":"职员","locate":"building2","name":"staff","pos":{"lat":312721330,"lon":1218291250},"warn":false},"s_factory":{"count":0,"id":"s_factory","label":"职员","locate":"factory","name":"staff","pos":{"lat":312688130,"lon":1218266360},"warn":false},"s_outside":{"count":0,"id":"s_outside","label":"职员","locate":"outside","name":"staff","pos":{"lat":312671990,"lon":1218322360},"warn":false},"w_building1":{"count":0,"id":"w_building1","label":"工人","locate":"building1","name":"worker","pos":{"lat":312721330,"lon":1218224820},"warn":false},"w_building2":{"count":0,"id":"w_building2","label":"工人","locate":"building2","name":"worker","pos":{"lat":312721330,"lon":1218281250},"warn":true},"w_factory":{"count":0,"id":"w_factory","label":"工人","locate":"factory","name":"worker","pos":{"lat":312688130,"lon":1218256360},"warn":false},"w_outside":{"count":0,"id":"w_outside","label":"工人","locate":"outside","name":"worker","pos":{"lat":312671990,"lon":1218312360},"warn":false}}};
+            var roles = {"group":{"O_building1":{"count":0,"id":"O_building1","label":"Office","locate":"building1","name":"Office","pos":{"lat":312721330,"lon":1218229820},"warn":true},"O_building2":{"count":0,"id":"O_building2","label":"Office","locate":"building2","name":"Office","pos":{"lat":312721330,"lon":1218285250},"warn":false},"O_factory":{"count":0,"id":"O_factory","label":"Office","locate":"factory","name":"Office","pos":{"lat":312691930,"lon":1218285250},"warn":false},"O_outside":{"count":0,"id":"O_outside","label":"Office","locate":"outside","name":"Office","pos":{"lat":312677510,"lon":1218318360},"warn":false},"S_building1":{"count":0,"id":"S_building1","label":"Security","locate":"building1","name":"Security","pos":{"lat":312721330,"lon":1218241820},"warn":true},"S_building2":{"count":0,"id":"S_building2","label":"Security","locate":"building2","name":"Security","pos":{"lat":312721330,"lon":1218297250},"warn":true},"S_factory":{"count":0,"id":"S_factory","label":"Security","locate":"factory","name":"Security","pos":{"lat":312691930,"lon":1218297250},"warn":false},"S_outside":{"count":0,"id":"S_outside","label":"Security","locate":"outside","name":"Security","pos":{"lat":312677510,"lon":1218330360},"warn":false},"V_building1":{"count":0,"id":"V_building1","label":"VIP","locate":"building1","name":"VIP","pos":{"lat":312721330,"lon":1218253820},"warn":false},"V_building2":{"count":0,"id":"V_building2","label":"VIP","locate":"building2","name":"VIP","pos":{"lat":312721330,"lon":1218309250},"warn":false},"V_factory":{"count":0,"id":"V_factory","label":"VIP","locate":"factory","name":"VIP","pos":{"lat":312691930,"lon":1218309250},"warn":false},"V_outside":{"count":0,"id":"V_outside","label":"VIP","locate":"outside","name":"VIP","pos":{"lat":312677510,"lon":1218342360},"warn":false},"W_building1":{"count":0,"id":"W_building1","label":"Worker","locate":"building1","name":"Worker","pos":{"lat":312721330,"lon":1218217820},"warn":false},"W_building2":{"count":0,"id":"W_building2","label":"Worker","locate":"building2","name":"Worker","pos":{"lat":312721330,"lon":1218273250},"warn":true},"W_factory":{"count":0,"id":"W_factory","label":"Worker","locate":"factory","name":"Worker","pos":{"lat":312691930,"lon":1218273250},"warn":false},"W_outside":{"count":0,"id":"W_outside","label":"Worker","locate":"outside","name":"Worker","pos":{"lat":312677510,"lon":1218306360},"warn":false}}};
             var listLayer = this._map.getLayer("moduleListLayer");
             if (!listLayer) {
                 listLayer = new mapwork.MapIconLayer("moduleListLayer");
@@ -140,7 +140,6 @@
             this._searchHandler = searchHandler;
         },
         onCardQueryResult: function(jsonResult) {
-//            this.updateCards(jsonResult);
             if (jsonResult && jsonResult.group) {
                 for (var i in jsonResult.group) {
                     var row = jsonResult.group[i];
@@ -163,20 +162,20 @@
             this.doEventQuery();
         },
         updateCards: function(json) {
-            if (json && json.group) {
-                for (var i in json.group) {
-                    var row = json.group[i];
+            if (json) {
+                for (var i in json) {
+                    var card = json[i];
                     
-                    var cardItem = this._cards[row.id];
+                    var cardItem = this._cards[card.id];
                     if(!cardItem) {
-                        cardItem = this.buildCardItem(row, i);
+                        cardItem = this.buildCardItem(card, i);
                         this._cards[cardItem._id] = cardItem;
                     }
                     if(cardItem) {
-//                        console.dir(cardItem._json)
                         var strRole = cardItem._json.role;
                         if(strRole) {
-                            var roleId = strRole.substring(0,1) + "_" + row.lastLocate;
+                            cardItem.setLastEvent(card);
+                            var roleId = strRole.substring(0,1) + "_" + card.lastLocate;
                             var role = this._roles[roleId];
                             if(role) {
                                 cardItem.setRole(role);
