@@ -44,6 +44,7 @@ public class Global {
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
 			m_events = new Events(m_cards,m_devices);
+			System.err.println("Global init finished.");
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

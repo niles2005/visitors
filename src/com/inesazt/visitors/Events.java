@@ -10,6 +10,7 @@ public class Events {
 	public Events(Cards cards,Devices devices) {
 		m_cards = cards;
 		m_devices = devices;
+		reloadEvents();
 	}
 	
 	public String doList() {
