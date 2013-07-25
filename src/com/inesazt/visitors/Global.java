@@ -1,5 +1,8 @@
 package com.inesazt.visitors;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.websocket.StreamInbound;
@@ -71,6 +74,26 @@ public class Global {
 	
 	public WebSocketManager getSocketManager() {
 		return m_socketManager;
+	}
+	
+	public String getCardsunreg(){
+		StringBuffer sb = new StringBuffer("{");
+		sb.append("cards:");
+		Map<String,Card> cardsMap = m_cards.getGroup();
+		sb.append(cardsMap.size());
+		int unregCount = 0;
+		Iterator it = cardsMap.keySet().iterator();
+		while(it.hasNext()){
+			String cardID = (String)it.next();
+			Card card = cardsMap.get(cardID);
+			if(card.getRole() == null){
+				unregCount++;
+			}
+		}
+		sb.append(",");
+		sb.append("unreg:");
+		sb.append(unregCount);
+		return sb.toString();
 	}
 	
 }
