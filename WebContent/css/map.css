@@ -159,11 +159,18 @@ h3.no2 {
 
 
 
-#n{height:88px;overflow:visible;width:100%;}
+#n{height:88px;overflow:visible;width:100%;border-bottom: 1px solid #d4d4d4;}
 #n .map_link{overflow:hidden;right:0;position: absolute;}
 #n .map_link span{padding-right:25px;height:26px;line-height:26px;overflow:hidden;}
 #n .map_logo{float:left;padding:0 0 0 25px;}
 
+#e {
+    right:0;width: 380px;height:500px;position: absolute;display: block;-webkit-box-shadow: -1px 0px 1px #AAAAAA;box-shadow: -1px 0px 1px #AAAAAA;margin: 0 0 0 16px;
+}
+
+#cc {
+    height:500px;margin-right: 0px;border: #9acd32 2px;
+}
 
 
 

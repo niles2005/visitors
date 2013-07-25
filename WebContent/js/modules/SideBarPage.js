@@ -25,7 +25,7 @@
             +'            <div class="map-search pull-left">'
             +'              <form> '
             +'                <div class="input-append"> '
-            +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="在这里输入你要查找的卡" autocomplete="off"> '
+            +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="输入你要查找的卡ID或名称" autocomplete="off"> '
             +'                </div> '
             +'              </form> '
             +'            </div>   '
@@ -67,7 +67,7 @@
                 }
                 var cards = self._module.findCards(this.value);
                 if(cards) {
-                    onPageQueryResult(cards);
+                    self.onPageQueryResult(cards,self);
                 }
             });
 
@@ -107,8 +107,11 @@
         },
         //由各个业务类实现此方法
         //被module的onPageQueryResult调用
-        onPageQueryResult: function(json) {
+        onPageQueryResult: function(json,caller) {
             this.reset();
+            if(caller !== this) {
+                this._$searchInput.val("");
+            }
             if (json) {
                 if (!json.m_detail) {
                     this._$Right.show();

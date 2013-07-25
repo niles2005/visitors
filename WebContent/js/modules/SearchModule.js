@@ -10,6 +10,7 @@
         this._searchType = "all";
         this._roles = {};
         this._cards = {};
+        this._selectRole = null;
     }
     
     SearchModule.prototype = {
@@ -75,14 +76,28 @@
             });
         },
         findCards: function(name) {
+            if(this._selectRole) {
+                this._selectRole.clearFocus();
+                this._selectRole = null;
+            }
+            var r,role,c,cards,card;
             var arr = [];
-            for(var r in this._roles) {
-                var role = this._roles[r];
-                var cards = role._cards;
-                for(var c in cards) {
-                    console.dir(c);
+            name = $.trim(name);
+            if(name.length !== 0) {
+                for(r in this._roles) {
+                    role = this._roles[r];
+                    cards = role._cards;
+                    for(c in cards) {
+                        card = cards[c];
+                        if(card.getId().indexOf(name) !== -1) {
+                            arr.push(card);
+                        } else if(card.getName().indexOf(name) !== -1) {
+                            arr.push(card);
+                        }
+                    }
                 }
             }
+            return arr;
         },
 
         buildModuleItem: function(json, index) {

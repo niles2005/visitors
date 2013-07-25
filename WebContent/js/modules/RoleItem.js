@@ -67,6 +67,7 @@
             this._moduleLabel.doFocus();
             this._sideBar.onPageQueryResult(this._cards);
             selectRoleItem = this;
+            this._module._selectRole = this;
         },
         clearFocus: function() {
             this._moduleLabel.clearFocus();

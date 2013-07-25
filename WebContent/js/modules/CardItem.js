@@ -14,7 +14,7 @@
         }
     };
 
-    function CardItem(module, index,roles) {
+    function CardItem(module, index, roles) {
 
         if (EXTEND) {
             EXTEND.apply(this, arguments);
@@ -24,10 +24,10 @@
 
 
     CardItem.prototype = {
-        getType:function(){
-             return this._json.role;
-        },   
-        getLocation:function(){
+        getType: function() {
+            return this._json.role;
+        },
+        getLocation: function() {
             return this._json.lastLocate;
         },
         setJsonData: function(json) {
@@ -52,13 +52,13 @@
             var icon = this._icon;
             var hoverIcon = null;//this._hoverIcon;
             var iconOffset = this._offsetPos;
-            var moduleLabel = new mapwork.CommonItemLabel(id, icon,hoverIcon,iconOffset,this._zIndex,this);
-            moduleLabel.setLabel(this._json.label,this._json.count);
+            var moduleLabel = new mapwork.CommonItemLabel(id, icon, hoverIcon, iconOffset, this._zIndex, this);
+            moduleLabel.setLabel(this._json.label, this._json.count);
             return moduleLabel;
         },
         setRole: function(role) {
-            if(this._role) {
-                if(this._role !== role) {
+            if (this._role) {
+                if (this._role !== role) {
                     this._role.removeCard(this);
                     this._role = role;
                     this._role.addCard(this);
@@ -71,23 +71,22 @@
         getRole: function() {
             return this._role;
         },
-        formatDate: function(now,form) {
-            var year = now.getYear()-100+2000;
-            var month = now.getMonth()+1;
+        formatDate: function(now, form) {
+            var year = now.getYear() - 100 + 2000;
+            var month = now.getMonth() + 1;
             var date = now.getDate();
             var hour = now.getHours();
             var minute = now.getMinutes();
             var second = now.getSeconds();
-            if(form === 'day'){
-                return year+"-"+month+"-"+date ;
-            }else if(form === 'time'){
-                return hour+":"+minute+":"+second ;
-            }else{
-                return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second ;
+            if (form === 'day') {
+                return year + "-" + month + "-" + date;
+            } else if (form === 'time') {
+                return hour + ":" + minute + ":" + second;
+            } else {
+                return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
             }
-         } ,
-
-    afterExpandDetail: function() {
+        },
+        afterExpandDetail: function() {
             var $cardDetail = this._$Content.find(".cardDetail");
             var url = "work?action=loadtodayevents&cardid=" + this._id;
             var self = this;
@@ -96,62 +95,76 @@
                 if (!data) {
                     return;
                 }
-               var htmlContent = '<table class="table">'
-                   +'<tbody><tr><th>Index</th><th>日期</th><th>时间</th><th>方位</th>';
-               for(var i=0 ; i < data.length ;i++){
+                var htmlContent = '<table class="table">'
+                        + '<tbody><tr><th>Index</th><th>日期</th><th>时间</th><th>方位</th>';
+                for (var i = 0; i < data.length; i++) {
                     htmlContent = htmlContent
-                                  +'<tr><td>'
-                                  + (i+1)
-                                  +'</td>'
-                                  +'<td>'
-                                  + self.formatDate(new Date(data[i]['time']),'day')
-                                  +'</td>'
-                                +'<td>'
-                                + self.formatDate(new Date(data[i]['time']),'time')
-                                +'</td>'
-                                  +'<td>'
-                                  +'<span class="metadata">'
-                                  + data[i]['deviceLocate']
-                                  +'</span></td></tr>';
-               }
+                            + '<tr><td>'
+                            + (i + 1)
+                            + '</td>'
+                            + '<td>'
+                            + self.formatDate(new Date(data[i]['time']), 'day')
+                            + '</td>'
+                            + '<td>'
+                            + self.formatDate(new Date(data[i]['time']), 'time')
+                            + '</td>'
+                            + '<td>'
+                            + '<span class="metadata">'
+                            + data[i]['deviceLocate']
+                            + '</span></td></tr>';
+                }
                 htmlContent = htmlContent + '</tbody></table>';
                 $cardDetail.html(htmlContent);
 //                self.onEventQueryResult(data);
-            });            
+            });
+        },
+        getName: function() {
+            return this._json.name;
+        },
+        getId: function() {
+            return this._json.id;
+        },
+        getInfo: function() {
+            if(this._json.info) {
+                return this._json.info;
+            }
+            return "";
         },
         getSidebarContent: function() {
             return '<div  class="listing"> '
-                +' <div class="main viewed on">'
-                +'<div class="row">'
-                +'<div class="info span4">'
-                +'<div class="first_photo_imagebox thumbnail lazy"> <img src=' + this.getIcon() + '></img></div>'
-                +'<div class="title ellipsis multiline" >' + this._json.name + '</div>'
-                +'</div>'
-                +'<ul class="meta-three-block">'
-                +'<li class="timeago">' + this._json.lastLocate + '</li>'
-                +'<li class="timeago">' + this.formatDate(new Date(this._json.lastTime) ,'time')+ '</li>'
-                +'</ul>'
-                +'</div>'
+                    + ' <div class="main viewed on">'
+                    + '<div class="row">'
+                    + '<div class="info span4">'
+                    + '<div class="first_photo_imagebox thumbnail lazy"> <img src=' + this.getIcon() + '></img></div>'
+                    + '<div class="title ellipsis" style="Color:blue;">' + this._json.name + '</div>'
+                    + '<div class="title ellipsis multiline" title="' + this.getInfo() + '">' + this.getInfo() + '</div>'
+                    + '</div>'
+                    + '<ul class="meta-three-block">'
+                    + '<li class="timeago">' + this._json.lastLocate + '</li>'
+                    + '<li class="timeago">' + this.formatDate(new Date(this._json.lastTime), 'time') + '</li>'
+                    + '</ul>'
+                    + '</div>'
 
-                +'<div class="row list_footer">'
-                +'<div class="span list-footer-left">'
-                +'  <span class="follower-count">'+this._json.role+'</span>'
-                +'</div>'
-                +'<div class="span3 list-footer-right">'
+                    + '<div class="row list_footer">'
+                    + '<div class="span list-footer-left">'
+                    + '  <span class="follower-count">' + this._json.role + '</span>'
+                    + '</div>'
+                    + '<div class="" style="right:0;position:absolute;">'
 //                +'<span class="qiuorchu label label-chuzu">出</span>'
 //                +'<span class="qiuorchu label label-ru">入</span>'
-                +'<div class="expand">'
-                +'<a  class="yuantie btn btn-link btn-block" href="#">查看详细记录</a>'
+                    + '<div class="expand">'
+                    + '<a  class="yuantie btn btn-link btn-block" href="#">查看详细记录</a>'
 //                +'<span class="expand">查看详细记录</span>'
-                +'</div>'
-                +'</div>'
-                +'</div> '
+                    + '</div>'
+                    + '</div>'
+                    + '</div> '
 
-                +'</div>'
+                    + '</div>'
 
-                +' <div class="popuplist-main hide">'
-                +'<div class="modal-header">  '
-                +'    <div class="row">    '
+                    + ' <div class="popuplist-main hide">'
+//                    + '<h5>cardId: ' + this._json.id + '</h5>'
+                    + '<div class="modal-header">  '
+                    + '    <div class="row">    '
 
 //                +'   <span  class=" "> '
 //                +' <div class="input-append date" id="datepicker" data-date-format="dd-mm-yyyy"> '
@@ -161,12 +174,12 @@
 //                +'</span>'
 
 //                +'       <span class="verification"><a href="#" >行踪记录 <i class="icon-ok icon-large"></i></a></span>'
-                +'        </div>                '
-                +'    </div>                      '
-                +'     <div class="popuplist-main-body modal-body">   '
-                +'        <div class="popuplist-descr">           '
-                +'<h5>行踪详情</h5>'
-                +'            <div class="cardDetail row infobox descrbox chu_descr ellipsis multiline">'
+                    + '        </div>                '
+                    + '    </div>                      '
+                    + '     <div class="popuplist-main-body modal-body">   '
+                    + '        <div class="popuplist-descr">           '
+                    + '<span style="margin-left:15px;">行踪详情</span>'
+                    + '            <div class="cardDetail row infobox descrbox chu_descr ellipsis multiline">'
 //                '<h5>关于房子</h5>' +
 //                '<p>房子具体位置在<span class="metadata">中国北京市北京西城区黄寺大街双旗杆东里</span>。户型两居。要出租的房间是<span class="metadata">整套</span>。出租的屋子面积<span class="metadata">60</span>。</p>' +
 //                '<h5>租金和租期</h5>' +
@@ -177,14 +190,14 @@
 //                '<p><span class="metadata">beshop@139.com</span></p>' +
 //                '<h5>其他补充</h5>' +
 //                '<p><span class="metadata">中介勿扰，希望租户是附近上学的一家三口，价格可以再商量</span></p>'
-                +'</div>'
-                +'        </div>'
-                +'</div>'
-                +'</div> '
+                    + '</div>'
+                    + '        </div>'
+                    + '</div>'
+                    + '</div> '
 
-                +'</div>'
+                    + '</div>'
         }
-                
+
     };
 
     if (EXTEND) {
