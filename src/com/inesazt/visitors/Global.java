@@ -1,9 +1,13 @@
 package com.inesazt.visitors;
 
+
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+
 
 
 public class Global {
@@ -75,6 +79,48 @@ public class Global {
 //		System.err.println("cccccccccccccccccc " + m_connections.size());
 	}
 	
+
+	public String getUnregister(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("{");
+		sb.append("\"cards\":");
+		Map<String,Card> cardsMap = m_cards.getGroup();
+		sb.append(cardsMap.size());
+		int unregCount = 0;
+		Iterator it = cardsMap.keySet().iterator();
+		while(it.hasNext()){
+			String cardID = (String)it.next();
+			Card card = cardsMap.get(cardID);
+			if(card.getRole() == null){
+				unregCount++;
+			}
+		}
+		sb.append(",");
+		sb.append("\"cardunreg\":");
+		sb.append(unregCount);
+		sb.append(",");
+		
+		sb.append("\"devices\":");
+		Map<String,Device> devicesMap = m_devices.getGroup();
+		sb.append(devicesMap.size());
+		unregCount = 0;
+		it = devicesMap.keySet().iterator();
+		while(it.hasNext()){
+			String deviceID = (String)it.next();
+			Device device = devicesMap.get(deviceID);
+			if(device.getLocate() == null){
+				unregCount++;
+			}
+		}
+		sb.append(",");
+		sb.append("\"deviceunreg\":");
+		sb.append(unregCount);
+		
+		sb.append("}");
+		return sb.toString();
+	}
+	
+
 	public void doTaskWork() {
 		m_events.doTaskWork();
 		
@@ -88,4 +134,5 @@ public class Global {
 			}
 		}
 	}
+
 }

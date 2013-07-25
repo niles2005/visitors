@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+{"group":{"aaaa":{"id":"aaaa","name":"000A","role":"staff","createTime":1359607382410,"info":"test","lastTime":1374658689132,"lastLocate":"building2"},"00000000000000000000000A":{"id":"00000000000000000000000A","name":"00000000000000000000000A","role":"staff","createTime":16982410,"info":null,"lastTime":17090260,"lastLocate":"building2"},"aaaabb":{"id":"aaaabb","name":"aaaabb","role":"guard","createTime":1359607382410,"info":"aaaafdsafasdf","lastTime":1359607382410,"lastLocate":"building1"}}}
+=======
+{"group":{"aaaa":{"id":"aaaa","name":"aaaa","role":"staff","createTime":1359607382410,"info":null,"lastTime":1374658689132,"lastLocate":null},"00000000000000000000000A":{"id":"00000000000000000000000A","name":"00000000000000000000000A","role":"worker","createTime":16982410,"info":null,"lastTime":17090260,"lastLocate":null},"aaaabb":{"id":"aaaabb","name":"aaaabb","role":null,"createTime":1359607382410,"info":null,"lastTime":1359607382410,"lastLocate":null}}}
+>>>>>>> 61dea2cd5118ae662ad601f5d93b18d6c4670eef

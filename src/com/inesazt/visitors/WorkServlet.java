@@ -95,9 +95,11 @@ public class WorkServlet extends HttpServlet {
 			return Global.getInstance().getEvents().doList();
 		} else if(action.equals("enumlocations")) {
 			return DataEnums.loadLocateEnums();
-		}else if(action.equals("enumroles")) {
+		} else if(action.equals("enumroles")) {
 			return DataEnums.loadRoleEnums();
-		}
+		} else if( action.equals("unregister")){
+			return Global.getInstance().getUnregister();
+		} 
 		return null;
 	}
 }

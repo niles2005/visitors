@@ -11,8 +11,8 @@ import java.util.Date;
 
 public class TestConnect {
 	public TestConnect() {
-//		doAtoBuilding1();
-		doAtoFactory();
+		doAtoBuilding1();
+//		doAtoFactory();
 	}
 	
     private static DateFormat DateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
