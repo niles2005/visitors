@@ -47,11 +47,10 @@
             function  getCards(){
                 $.ajax({
                     method:'GET',
-                    url:'work?action=cardsunreg',
+                    url:'work?action=unregister',
                     dataType: "json",
                     success:function(data) {
                         if(data) {
-                            console.dir($('#cardsCount'))
                             $('#cardsCount').text(data.cards);
                             $('#cardsUnreg').text( data.cardunreg);
                             $('#devicesCount').text ( data.devices);
