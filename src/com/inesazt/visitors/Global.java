@@ -1,8 +1,9 @@
 package com.inesazt.visitors;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.catalina.websocket.StreamInbound;
+import java.io.IOException;
+import java.nio.CharBuffer;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 
 public class Global {
@@ -28,8 +29,6 @@ public class Global {
 	
 	private Events m_events = null;
 	
-	private WebSocketManager m_socketManager = null;
-	
 	private boolean m_init = false;
 	private void initGlobal() {
 		try {
@@ -41,7 +40,6 @@ public class Global {
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
 			m_events = new Events(m_cards,m_devices);
-			m_socketManager = new WebSocketManager();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -64,13 +62,30 @@ public class Global {
 		return m_events;
 	}
 	
-	public StreamInbound createWebSocketInbound(String subProtocol,
-			HttpServletRequest request) {
-		return m_socketManager.createWebSocketInbound(subProtocol, request);
+	
+	private final Set<ChatMessageInbound> m_connections = new CopyOnWriteArraySet<ChatMessageInbound>();
+	
+	public void addChatMessageInbound(ChatMessageInbound cmi) {
+		m_connections.add(cmi);
+//		System.err.println("aaaaaaaaaaaaaaaaaa " + m_connections.size());
 	}
 	
-	public WebSocketManager getSocketManager() {
-		return m_socketManager;
+	public void removeChatMessageInbound(ChatMessageInbound cmi) {
+		m_connections.remove(cmi);
+//		System.err.println("cccccccccccccccccc " + m_connections.size());
 	}
 	
+	public void doTaskWork() {
+		m_events.doTaskWork();
+		
+		String cardsInfo = Global.getInstance().getCards().doList();
+		for (ChatMessageInbound connection : m_connections) {
+			try {
+				CharBuffer buffer = CharBuffer.wrap(cardsInfo);
+				connection.getWsOutbound().writeTextMessage(buffer);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 }

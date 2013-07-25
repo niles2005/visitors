@@ -11,8 +11,7 @@ public class GlobalWebSocketServlet extends WebSocketServlet {
 	@Override
 	protected StreamInbound createWebSocketInbound(String subProtocol,
 			HttpServletRequest request) {
-		
-		return Global.getInstance().createWebSocketInbound(subProtocol, request);
+		return new ChatMessageInbound();
 	}
 
 }

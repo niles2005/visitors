@@ -23,10 +23,9 @@
 //            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">G</i></button>'
 //            +'            </div>'
             +'            <div class="map-search pull-left">'
-            +'              <form name="searchMap" action="" class="searchMap" method="post" onsubmit="return false;"> '
+            +'              <form> '
             +'                <div class="input-append"> '
             +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="在这里输入你要查找的卡" autocomplete="off"> '
-            +'                  <button type="submit" class="btn btn-primary searchInputBtn pull-left"><i class="icon-search icon-large"></i></button>'
             +'                </div> '
             +'              </form> '
             +'            </div>   '
@@ -60,10 +59,20 @@
             this._$Content = this._$ConentDiv.find(".result_search");
             this._$Page = this._$ConentDiv.find(".page");
             this._$A = this._$ConentDiv.find("li a");
-
+            this._$searchInput = this._$ConentDiv.find(".searchInput");
+            var self = this;
+            this._$searchInput.keyup(function(event) {
+                if (event.which == 13) {
+                    event.preventDefault();
+                }
+                var cards = self._module.findCards(this.value);
+                if(cards) {
+                    onPageQueryResult(cards);
+                }
+            });
 
             this._$SideBarDiv.append(this._$ConentDiv);
-
+            
 
             this._$SideBarDiv.show();
             if (this._pageQuery) {
@@ -98,45 +107,24 @@
         },
         //由各个业务类实现此方法
         //被module的onPageQueryResult调用
-        onPageQueryResult: function(jsonResult) {
+        onPageQueryResult: function(json) {
             this.reset();
-            var data = jsonResult;
-            if (data) {
-                if (!data.m_detail) {
-                    if (jsonResult) {
-                        this._$Right.show();
-                        this._$RecordCount.html(data.total);
-                        for (var i in jsonResult) {
-                            var row = jsonResult[i];
-//                            if (row._moduleItem) {
-                                
-                                console.dir(row.getSidebarElement())
-                                this._$Content.prepend(row.getSidebarElement());
-//                                this._$Content.append(row._moduleItem.getSidebarElement());
-//                            }
-                        }
-
-//                        this.doPage(data.page, data.pageSize, data.total);
-                    } else {
-                        this._$Right.hide();
-                        this._$Content.html('<td colspan="5" style="text-align:center;">无相关信息</td>');
+            if (json) {
+                if (!json.m_detail) {
+                    this._$Right.show();
+                    this._$RecordCount.html(json.total);
+                    for (var i in json) {
+                        this._$Content.prepend(json[i].getSidebarElement());
                     }
                 } else {
                     this._$Right.hide();
-                    this._$Content.html('<td colspan="5" style="text-align:center;">' + data.m_message + '</td>');
+                    this._$Content.html('<td colspan="5" style="text-align:center;">' + json.m_message + '</td>');
                 }
 
             } else {
                 this._$Right.hide();
                 this._$Content.html('<td colspan="5" style="text-align:center;">无相关信息</td>');
             }
-
-            //滚动条
-//            this._$Content.mCustomScrollbar({
-//                scrollButtons: {
-//                    enable: true
-//                }
-//            });
         },
         //点击返回时做的清空操作
         clean: function() {
