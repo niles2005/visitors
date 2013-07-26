@@ -138,7 +138,7 @@
             );
 
             this._$Content.find('.expand').click(
-                function() {
+                function(event) {
                         if(event.stopPropagation) {
                              event.stopPropagation();
                              event.preventDefault();

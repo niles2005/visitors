@@ -29,6 +29,7 @@ public class DBManager {
 	}
     
     private Connection m_connection = null;
+    private Statement statement = null;
     private Connection getConnection() {
 		Connection conn = null;
 		try {
@@ -76,8 +77,9 @@ public class DBManager {
 			if(m_connection == null) {
 				return list;
 			}
-			Statement statement = m_connection.createStatement();
-			
+			if (statement == null) {
+				statement = m_connection.createStatement();
+			}
 			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.trans_seq > " + seqId;
 //			System.err.println(sql);
 			rs = statement.executeQuery(sql);
@@ -118,7 +120,7 @@ public class DBManager {
     	ResultSet rs = null;
     	try {
 			Connection connection = getConnection();
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 			
 			rs = statement.executeQuery("select t.card_id,t.mac_address,t.up_date,t.up_time from CARDPOSITIONTRANS t");
 			
