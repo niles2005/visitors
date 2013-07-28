@@ -131,9 +131,7 @@ public class Global {
 	
 
 	public void doTaskWork() {
-		if(m_events != null) {
-			m_events.doTaskWork();
-		}
+		m_events.doTaskWork();
 	}
 	
 	public void boardCastClientData(String jsonData) {
