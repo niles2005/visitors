@@ -1,1 +1,0 @@
-javac -Djava.ext.dirs="E:\apache-tomcat-7.0.29\lib;E:\apache-tomcat-7.0.29\bin;E:\mywork\inesazt\workspace\visitors\WebContent\WEB-INF\lib;.\src" *.java
