@@ -106,6 +106,7 @@ public class DBManager {
 					ex.printStackTrace();
 				}
 			}
+			rs.close();
 		} catch (SQLException e) {
 //			e.printStackTrace();
 			System.err.println("DB Exception:" + e.getMessage());
@@ -142,6 +143,7 @@ public class DBManager {
 					ex.printStackTrace();
 				}
 			}
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
