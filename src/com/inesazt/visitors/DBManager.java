@@ -29,12 +29,13 @@ public class DBManager {
 	}
     
     private Connection m_connection = null;
-    private Statement statement = null;
+    private Statement m_statement = null;
     private Connection getConnection() {
 		Connection conn = null;
 		try {
 			Class.forName(m_configure.getDbDriver());
 			conn = DriverManager.getConnection(m_configure.getDbURL(), m_configure.getDbUser(), m_configure.getDbPass());
+			m_statement = m_connection.createStatement();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -77,12 +78,9 @@ public class DBManager {
 			if(m_connection == null) {
 				return list;
 			}
-			if (statement == null) {
-				statement = m_connection.createStatement();
-			}
 			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.trans_seq > " + seqId;
 //			System.err.println(sql);
-			rs = statement.executeQuery(sql);
+			rs = m_statement.executeQuery(sql);
 			
 			while(rs.next()) {
 				int theSeqId = rs.getInt(1);
@@ -121,9 +119,9 @@ public class DBManager {
     	ResultSet rs = null;
     	try {
 			Connection connection = getConnection();
-			statement = connection.createStatement();
+			m_statement = connection.createStatement();
 			
-			rs = statement.executeQuery("select t.card_id,t.mac_address,t.up_date,t.up_time from CARDPOSITIONTRANS t");
+			rs = m_statement.executeQuery("select t.card_id,t.mac_address,t.up_date,t.up_time from CARDPOSITIONTRANS t");
 			
 			while(rs.next()) {
 				cardId = rs.getString(1).trim();
