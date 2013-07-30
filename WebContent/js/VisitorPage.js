@@ -26,10 +26,10 @@
             });
 
 
-            this._map.addHandler(new mapwork.KeyHandler());
-            this._map.addHandler(new mapwork.DragHandler());
-            this._map.addHandler(new mapwork.WheelHandler());
-            this._map.addControl(new mapwork.SimpleZoomControl());
+//            this._map.addHandler(new mapwork.KeyHandler());
+//            this._map.addHandler(new mapwork.DragHandler());
+//            this._map.addHandler(new mapwork.WheelHandler());
+//            this._map.addControl(new mapwork.SimpleZoomControl());
 
             this._map.addModule(new mapwork.SearchModule(mapwork.Search.setting));
             this._map.addModule(new mapwork.Module(mapwork.CardItem.setting));

@@ -4,8 +4,9 @@
     var EXTEND = mapwork.MapIcon;
 
     var labelHtml = '<div style="text-align: center;width:80px;height:30px;">' +
+            '<div style="width:80px;height:30px;"><img class="cautionImg" style="display:none;" title="Caution,restricted location!"></div>' +
             '<div class="roleCount" style="color:#000;font-size:11px;font-weight:bold;">0</div>' +
-            '<img> ' +
+            '<img class="roleImg">' +
             '<div class="iconLabel" style="font-size:14px;color:#000;"></div>' +
             '</div>';
     function CommonItemLabel(id, defaultIcon, hoverIcon, imageOffset, zIndex, moduleItem) {
@@ -25,13 +26,15 @@
             this._$Element.append(labelHtml);
             this._$IconNameDiv = this._$Element.find(".iconLabel");
             this._$RoleCountDiv = this._$Element.find(".roleCount");
-            this._$Image = this._$Element.find("img");
+            this._$CautionImage = this._$Element.find(".cautionImg");
+            this._$Image = this._$Element.find(".roleImg");
             this._image = this._$Image.get(0);
 
             this.setIcon(this._defaultIcon);
             if (this._zIndex) {
                 this._htmlObj.style["z-index"] = this._zIndex;
             }
+            
         },
         setIcon: function(icon) {
             if (typeof icon === 'string') {
@@ -41,24 +44,31 @@
             }
         },
         setWarn: function(warn) {
+            this.warn = warn;
             if(warn) {
                 this._$RoleCountDiv.css("color","red");
+                this._$CautionImage.get(0).src = "images/caution.gif";
             }
         },
         setLabel: function(name,count) {
             this._$IconNameDiv.html(name);
             this._$RoleCountDiv.html(count);
+            if(this.warn && count > 0) {
+                this._$CautionImage.show();
+            } else {
+                this._$CautionImage.hide();
+            }
         },
         setHoverImage: function() {
 //            this.setIcon(this._hoverIcon);
-            if (this._zIndex != undefined) {
+            if (this._zIndex !== undefined) {
                 this._htmlObj.style["z-index"] = 101;
             }
             this._$IconNameDiv.css("fontWeight", "bold");
         },
         setDefaultImage: function() {
 //            this.setIcon(this._defaultIcon);
-            if (this._zIndex != undefined) {
+            if (this._zIndex !== undefined) {
                 this._htmlObj.style["z-index"] = this._zIndex;
             }
             this._$IconNameDiv.css("fontWeight", "normal");

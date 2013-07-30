@@ -7,10 +7,10 @@ import com.alibaba.fastjson.JSON;
 
 public class Roles {
 	public static int[] rolePoses = new int[]{
-		312721330,1218217820,
-		312721330,1218273250,
-		312691930,1218273250,
-		312677510,1218306360,
+		312727030,1218217820,
+		312727030,1218273250,
+		312697630,1218273250,
+		312683510,1218306360,
 	};
 	public static int roleOffsetLon = 12000;
 	
