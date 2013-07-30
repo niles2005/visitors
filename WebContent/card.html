@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="css/bootstrap.css"/>
         <script src="scripts/angular.js"></script>
         <script>
-            function BindState($scope, $http) {
+            function BindState($scope, $http ) {
                 $scope.doAll = function() {
                     var url = "work?action=listcards";
                     //console.dir(url);
@@ -28,7 +28,7 @@
                             $scope.selectCard = data;
                             $scope.doAll();
                         });
-                        
+
                     }
                 }
             }

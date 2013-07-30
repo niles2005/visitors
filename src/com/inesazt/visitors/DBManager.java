@@ -35,7 +35,7 @@ public class DBManager {
 		try {
 			Class.forName(m_configure.getDbDriver());
 			conn = DriverManager.getConnection(m_configure.getDbURL(), m_configure.getDbUser(), m_configure.getDbPass());
-			m_statement = m_connection.createStatement();
+			m_statement = conn.createStatement();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

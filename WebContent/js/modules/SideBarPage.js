@@ -26,6 +26,8 @@
             +'              <form> '
             +'                <div class="input-append"> '
             +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="输入你要查找的卡ID或名称" autocomplete="off"> '
+            +'<span style="padding-left: 60px"></span>'
+             +'                  <span id="refresh" class="btn btn-primary searchInputBtn"><i>刷新</i></span>'
             +'                </div> '
             +'              </form> '
             +'            </div>   '
@@ -70,9 +72,10 @@
                     self.onPageQueryResult(cards,self);
                 }
             });
+            this._$refresh = this._$ConentDiv.find("#refresh");
+
 
             this._$SideBarDiv.append(this._$ConentDiv);
-            
 
             this._$SideBarDiv.show();
             if (this._pageQuery) {

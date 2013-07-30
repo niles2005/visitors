@@ -34,7 +34,7 @@ public class TestConnect {
 				strDate = dateTime.substring(0,pos);
 				strTime = dateTime.substring(pos + 1);
 			}
-			ResultSet rs = sm.executeQuery("insert into cardpositiontrans(card_id,reader_name,up_date,up_time,mac_address,trans_seq) values('aaaa','Alien RFID Reader','" + strDate + "','" + strTime + "','00:1B:5F:00:81:98',SEQ_CARDTRANS.NEXTVAL)");
+			ResultSet rs = sm.executeQuery("insert into cardpositiontrans(card_id,reader_name,ant_id,up_date,up_time,mac_address,trans_seq) values('aaaa','Alien RFID Reader','0','" + strDate + "','" + strTime + "','00:1B:5F:00:81:98',SEQ_CARDTRANS.NEXTVAL)");
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -60,7 +60,7 @@ public class TestConnect {
 				strDate = dateTime.substring(0,pos);
 				strTime = dateTime.substring(pos + 1);
 			}
-    		ResultSet rs = sm.executeQuery("insert into cardpositiontrans(card_id,reader_name,up_date,up_time,mac_address,trans_seq) values('aaaa','Alien RFID Reader','" + strDate + "','" + strTime + "','00:1B:00:88',SEQ_CARDTRANS.NEXTVAL)");
+    		ResultSet rs = sm.executeQuery("insert into cardpositiontrans(card_id,reader_name,ant_id,up_date,up_time,mac_address,trans_seq) values('aaaa','Alien RFID Reader','0','" + strDate + "','" + strTime + "','00:1B:00:88',SEQ_CARDTRANS.NEXTVAL)");
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

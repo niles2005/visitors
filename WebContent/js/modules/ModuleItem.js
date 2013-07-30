@@ -37,6 +37,15 @@
     ModuleItem.prototype = {
         setSidebar: function(sideBar) {
             this._sideBar = sideBar;
+            var self = this;
+            if (this._sideBar._$refresh) {
+                this._sideBar._$refresh.click(function (event) {
+                    if (mapwork.RoleItem.selectRoleItem == self) {
+                        self.doFocus();
+                        self._sideBar._$Content.find('.popuplist-main').slideUp();
+                    }
+                });
+            }
         },
         setIndex: function(index) {
             this._index = index;

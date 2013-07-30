@@ -21,9 +21,15 @@ public class TestTomcat {
 			Tomcat tomcat = new Tomcat();
 			tomcat.setBaseDir(CATALINA_HOME);
 			tomcat.setPort(8081);
+			
 			tomcat.addWebapp("/visitors",
 					"WebContent");
+			System.out.println(tomcat.getConnector().getURIEncoding());
+			tomcat.getConnector().setURIEncoding("UTF-8");
+			System.out.println(tomcat.getConnector().getURIEncoding());
 			tomcat.start();
+			
+			tomcat.getConnector().setURIEncoding("UTF-8");
 			System.out.println("Started tomcat");
 			tomcat.getServer().await(); // Keeps Tomcat running until it is shut
 										// down
