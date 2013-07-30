@@ -1878,7 +1878,7 @@ div#users-contain table td,div#users-contain table th {
 }
 
 .searchInputBtn {
-	height: 30px;
+	height: 18px;
 }
 
 input.searchInput {
@@ -1892,7 +1892,7 @@ button.searchInputBtn{
 	font-size: 22px;
 }
 .input-append .btn:last-child {
-	border-radius: 0 3px 3px 0;
+	border-radius: 3px 3px 3px 3px;
 }
 
 form.searchMap {

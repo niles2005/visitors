@@ -21,10 +21,19 @@ public class TestTomcat {
 			Tomcat tomcat = new Tomcat();
 			tomcat.setBaseDir(CATALINA_HOME);
 			tomcat.setPort(8081);
+<<<<<<< HEAD
 			tomcat.getConnector().setURIEncoding("UTF-8");
+=======
+			
+>>>>>>> 123ee664e6a7e62aa8bed57cdbdeec1dc7da0907
 			tomcat.addWebapp("/visitors",
 					"WebContent");
+			System.out.println(tomcat.getConnector().getURIEncoding());
+			tomcat.getConnector().setURIEncoding("UTF-8");
+			System.out.println(tomcat.getConnector().getURIEncoding());
 			tomcat.start();
+			
+			tomcat.getConnector().setURIEncoding("UTF-8");
 			System.out.println("Started tomcat");
 			tomcat.getServer().await(); // Keeps Tomcat running until it is shutdown
 		} catch (Exception ex) {

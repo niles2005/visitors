@@ -3,7 +3,7 @@
 
     var EXTEND = mapwork.ModuleItem;
     RoleItem.ID = "RoleItem";
-    var selectRoleItem = null;
+    RoleItem.selectRoleItem = null;
     function RoleItem(module, index) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
@@ -61,12 +61,12 @@
             }
         },
         doFocus: function() {
-            if(selectRoleItem) {
-                selectRoleItem.clearFocus();
+            if( RoleItem.selectRoleItem) {
+                RoleItem.selectRoleItem.clearFocus();
             }
             this._moduleLabel.doFocus();
             this._sideBar.onPageQueryResult(this._cards);
-            selectRoleItem = this;
+            RoleItem.selectRoleItem = this;
             this._module._selectRole = this;
         },
         clearFocus: function() {
