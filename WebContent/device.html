@@ -3,6 +3,9 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" href="css/bootstrap.css"/>
+        <style>
+            
+        </style>
         <script src="scripts/angular.js"></script>
         <script>
             function BindState($scope, $http) {
@@ -11,29 +14,35 @@
                     //console.dir(url);
                     $http.get(url).success(function(data) {
                         if(data && data.group) {
-                            $scope.devices = data.group;
+                            var arr = [];
+                            for(var k in data.group) {
+                                arr.push(data.group[k]);
+                            }
+                            $scope.devices = arr;
                         }
                     });
-                }
+                };
                 
                 $scope.setDevice = function(device) {
                     $scope.selectDevice = device;
-                }
-                $scope.kk = "index";
+                };
+                
+                $scope.disablesubmit = "true";
+                $scope.kk = "locate";
                 $scope.doAll();
 
                 $scope.doUpdate = function() {
+                    $scope.disablesubmit = "true";
                     var url = "work?action=setdevice";
                     if($scope.selectDevice) {
-                        $http.get(url, {params: {id: $scope.selectDevice.id, locate: $scope.selectDevice.locate, info: $scope.selectDevice.info}}).success(function(data) {
+                        var params = {id: $scope.selectDevice.id, locate: $scope.selectDevice.locate, info: $scope.selectDevice.info};
+                        $http.get(url, {params: params}).success(function(data) {
                             $scope.selectDevice = data;
                             $scope.doAll();
                         });
                         
                     }
-                }
-
-
+                };
             }
         </script>
     </head>
@@ -52,7 +61,7 @@
                     </select> <br>
                     info&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectDevice.info"><br>
                     date&nbsp;&nbsp;:{{ selectDevice.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
-                    <input type="submit" value="新增/更新"/>
+                    <input type="submit" ng-disable='true' value="新增/更新"/>
                 </form>
                 <p><p>
                  </div>

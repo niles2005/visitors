@@ -30,20 +30,39 @@ public class DBManager {
     
     private Connection m_connection = null;
     private Statement m_statement = null;
-    private Connection getConnection() {
-		Connection conn = null;
+    private void initConnection() {
 		try {
 			Class.forName(m_configure.getDbDriver());
-			conn = DriverManager.getConnection(m_configure.getDbURL(), m_configure.getDbUser(), m_configure.getDbPass());
-			m_statement = m_connection.createStatement();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
+			m_connection = DriverManager.getConnection(m_configure.getDbURL(), m_configure.getDbUser(), m_configure.getDbPass());
+			if(m_connection != null) {
+				m_statement = m_connection.createStatement();
+			}
+		} catch (Exception e) {
 //			e.printStackTrace();
 			System.err.println("DB exception:" + e.getMessage());
+			m_connection = null;
 		}
-		return conn;
 	}
+    
+    private void checkConnection() throws Exception {
+		if(m_connection == null) {
+			initConnection();
+			if(m_connection == null) {
+				try {
+					Thread.sleep(500);
+				} catch(Exception ex) {
+				}
+				initConnection();
+				if(m_connection == null) {
+					try {
+						Thread.sleep(500);
+					} catch(Exception ex) {
+					}
+					initConnection();
+				}
+			}
+		}
+    }
 
     private static DateFormat DateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
     public ArrayList queryEvents(int seqId) {
@@ -58,23 +77,7 @@ public class DBManager {
 //    	}
     	ResultSet rs = null;
     	try {
-			if(m_connection == null) {
-				m_connection = getConnection();
-				if(m_connection == null) {
-					try {
-						Thread.sleep(500);
-					} catch(Exception ex) {
-					}
-					m_connection = getConnection();
-					if(m_connection == null) {
-						try {
-							Thread.sleep(500);
-						} catch(Exception ex) {
-						}
-						m_connection = getConnection();
-					}
-				}
-			}
+    		checkConnection();
 			if(m_connection == null) {
 				return list;
 			}
@@ -105,7 +108,7 @@ public class DBManager {
 				}
 			}
 			rs.close();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 //			e.printStackTrace();
 			System.err.println("DB Exception:" + e.getMessage());
 			m_connection = null;
@@ -118,8 +121,10 @@ public class DBManager {
     	ArrayList<Event> list = new ArrayList<Event>();
     	ResultSet rs = null;
     	try {
-			Connection connection = getConnection();
-			m_statement = connection.createStatement();
+    		checkConnection();
+			if(m_connection == null) {
+				return list;
+			}
 			
 			rs = m_statement.executeQuery("select t.card_id,t.mac_address,t.up_date,t.up_time from CARDPOSITIONTRANS t");
 			
@@ -142,7 +147,7 @@ public class DBManager {
 				}
 			}
 			rs.close();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
     	return list;

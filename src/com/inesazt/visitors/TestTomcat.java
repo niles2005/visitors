@@ -21,14 +21,12 @@ public class TestTomcat {
 			Tomcat tomcat = new Tomcat();
 			tomcat.setBaseDir(CATALINA_HOME);
 			tomcat.setPort(8081);
+			tomcat.getConnector().setURIEncoding("UTF-8");
 			tomcat.addWebapp("/visitors",
 					"WebContent");
 			tomcat.start();
 			System.out.println("Started tomcat");
-			tomcat.getServer().await(); // Keeps Tomcat running until it is shut
-										// down
-			// Webapp tomcat7demo accessible at
-			// http://localhost:8080/tomcat7demo/
+			tomcat.getServer().await(); // Keeps Tomcat running until it is shutdown
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

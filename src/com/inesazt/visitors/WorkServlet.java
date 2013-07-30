@@ -23,8 +23,6 @@ public class WorkServlet extends HttpServlet {
         }
 	}
 
-	
-
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		this.doPage(request, response);
@@ -65,7 +63,6 @@ public class WorkServlet extends HttpServlet {
 			String strName = request.getParameter("name");
 			String strRole = request.getParameter("role");
 			String strInfo = request.getParameter("info");
-			
 			return Global.getInstance().getCards().setCard(cardId,strName,strRole,strInfo);
 		} else if(action.equals("listdevices")) {
 			return Global.getInstance().getDevices().doList();
@@ -73,7 +70,7 @@ public class WorkServlet extends HttpServlet {
 			String cardId = request.getParameter("id");
 			String strLocate = request.getParameter("locate");
 			String strInfo = request.getParameter("info");
-			
+			System.err.println(strInfo);
 			return Global.getInstance().getDevices().setDevice(cardId,strLocate,strInfo);
 		} else if(action.equals("loadhistoryevents")) {
 			String cardId = request.getParameter("cardid");
