@@ -11,14 +11,18 @@
                     //console.dir(url);
                     $http.get(url, {params: {t: "all"}}).success(function(data) {
                         if(data && data.group) {
-                            $scope.cards = data.group;
+                            var theCards = [];
+                            for(var k in data.group) {
+                                theCards.push(data.group[k]);
+                            }
+                            $scope.cards = theCards;
                         }
                     });
                 }
                 $scope.setCard = function(card) {
                     $scope.selectCard = card;
                 }
-                $scope.kk = "index";
+                $scope.kk = "role";
                 $scope.doAll();
 
                 $scope.doUpdate = function() {

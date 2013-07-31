@@ -23,8 +23,6 @@ public class WorkServlet extends HttpServlet {
         }
 	}
 
-	
-
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		this.doPage(request, response);
@@ -65,18 +63,27 @@ public class WorkServlet extends HttpServlet {
 			String strName = request.getParameter("name");
 			String strRole = request.getParameter("role");
 			String strInfo = request.getParameter("info");
+<<<<<<< HEAD
 			boolean actived = Boolean.parseBoolean(request.getParameter("actived"));
 			
 			return Global.getInstance().getCards().setCard(cardId,strName,strRole,strInfo,actived);
+=======
+			return Global.getInstance().getCards().setCard(cardId,strName,strRole,strInfo);
+>>>>>>> 114910c760c5b23c1365530dca62d759992ce127
 		} else if(action.equals("listdevices")) {
 			return Global.getInstance().getDevices().doList();
 		} else if(action.equals("setdevice")) {
 			String deviceId = request.getParameter("id");
 			String strLocate = request.getParameter("locate");
 			String strInfo = request.getParameter("info");
+<<<<<<< HEAD
 			boolean actived = Boolean.parseBoolean(request.getParameter("actived"));
 			
 			return Global.getInstance().getDevices().setDevice(deviceId,strLocate,strInfo,actived);
+=======
+			System.err.println(strInfo);
+			return Global.getInstance().getDevices().setDevice(cardId,strLocate,strInfo);
+>>>>>>> 114910c760c5b23c1365530dca62d759992ce127
 		} else if(action.equals("loadhistoryevents")) {
 			String cardId = request.getParameter("cardid");
 			String strDate = request.getParameter("date");
