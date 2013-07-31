@@ -61,8 +61,8 @@
                     date&nbsp;&nbsp;:{{ selectDevice.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
 
                     isActived&nbsp;&nbsp;&nbsp;:
-                    <input type="radio" ng-model="selectDevice.actived" value="true"> true
-                    <input type="radio" ng-model="selectDevice.actived" value="false"> false <br>
+                    <input type="radio" ng-model="selectDevice.actived" ng-value="true"> true
+                    <input type="radio" ng-model="selectDevice.actived" ng-value="false"> false <br>
 
 
                     <input type="submit" ng-disable='true' value="新增/更新"/>
