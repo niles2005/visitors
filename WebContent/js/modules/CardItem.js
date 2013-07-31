@@ -148,7 +148,8 @@
                             + mapwork.utils.formatDate(new Date(data[i]['time']), 'time')
                             + '</td>'
                             + '<td>'
-                            + '<span class="metadata">'
+                            + '<span class="metadata"'
+                            +' title="'+data[i]['deviceId']+'">'
                             + data[i]['deviceLocate']
                             + '</span></td></tr>';
                 }
@@ -191,10 +192,10 @@
 
             this._json.lastLocate = eventJson.lastLocate;
             this._json.lastTime = eventJson.lastTime;
+            this._json.lastDeviceId =  eventJson.lastDeviceId ;
             
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate);
             this._$SidebarContent.find("#cardTime").html(mapwork.utils.formatDate(new Date(this._json.lastTime), 'time'));
-            var self = this;
             setTimeout(function() {
                 self._$SidebarContent.find("#cardLocate").css("background","#efefef");
                 self._$SidebarContent.find("#cardTime").css("background","#efefef");
@@ -207,8 +208,13 @@
             this._$SidebarContent.find("#cardName").attr("title","ID:" + this._json.id);
             this._$SidebarContent.find("#cardInfo").html(this._json.info);
             this._$SidebarContent.find("#cardInfo").attr("title",this._json.info);
-            this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate);
-            this._$SidebarContent.find("#cardTime").html(mapwork.utils.formatDate(new Date(this._json.lastTime), 'time'));
+
+            var jQCardLocate = this._$SidebarContent.find("#cardLocate");
+            jQCardLocate.html(this._json.lastLocate);
+            jQCardLocate.attr('title',this._json.lastDeviceId);
+            var jQCardTime =  this._$SidebarContent.find("#cardTime");
+            jQCardTime.html(mapwork.utils.formatDate(new Date(this._json.lastTime), 'time'));
+            jQCardTime.attr('title',mapwork.utils.formatDate(new Date(this._json.lastTime), 'day'));
             this._$SidebarContent.find("#cardRole").html(this._json.role);
             
             return this._$SidebarContent;

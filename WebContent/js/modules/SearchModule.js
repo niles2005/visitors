@@ -144,7 +144,6 @@
                 for (var i in jsonResult.group) {
                     var row = jsonResult.group[i];
                     var cardItem = this.buildCardItem(row, i);
-                    
                     if(cardItem) {
                         this._cards[cardItem._id] = cardItem;
                         var strRole = cardItem._json.role;
@@ -173,7 +172,6 @@
                         this._cards[cardItem._id] = cardItem;
 
                     }
-                    console.dir(cardItem)
                     if(cardItem) {
                         var strRole = cardItem._json.role;
                         if(strRole) {

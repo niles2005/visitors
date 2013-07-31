@@ -71,6 +71,14 @@ public class Card {
 		}
 		return "";
 	}
+	
+	public String getLastDeviceId(){
+		if(m_eventList.size() > 0) {
+			Event lastEvent = m_eventList.get(m_eventList.size() - 1);
+			return lastEvent.getDeviceId();
+		}
+		return "";
+	}
 
 	public void setLastLocate(String lastLocate) {
 		//empty method
