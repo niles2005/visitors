@@ -11,10 +11,6 @@
         this.initFrame();
         this.buildFrame();
         this.onPageLoad();
-        
-//        var msg = new mapwork.WSMessage(this);
-//        msg.initialize();
-        
     }
 
     VisitorPage.prototype = {
@@ -31,8 +27,8 @@
 //            this._map.addHandler(new mapwork.WheelHandler());
 //            this._map.addControl(new mapwork.SimpleZoomControl());
 
-            this._map.addModule(new mapwork.SearchModule(mapwork.Search.setting));
-            this._map.addModule(new mapwork.Module(mapwork.CardItem.setting));
+            this._searchModule = new mapwork.SearchModule(mapwork.Search.setting);
+            this._map.addModule(this._searchModule);
             
             this._msg = new mapwork.WSMessage(this);
             this._msg.initialize();
@@ -47,7 +43,6 @@
             var mainHeight = mapwork.utils.getClientSize().height - headHeight - cnHeight;
             cc.style.height = mainHeight + 'px';
             this._map.resetSize();
-
             if (mapwork.resizeListener) {
                 mapwork.resizeListener();
             }
@@ -56,11 +51,8 @@
         },
         //每个业务的sideBar的resize事件
         sideBarResize: function() {
-            if (this._map._currentModule) {
-                var sideBar = this._map._currentModule._sideBar;
-                sideBar.resize();
-            }
-
+            var sideBar = this._searchModule._sideBar;
+            sideBar.resize();
         },
         //测距
         doMeasure: function() {
@@ -84,7 +76,7 @@
             this._map.movedToMapCenter(ePos);
         },
         changeMapStyle: function() {
-            if (mapwork.mapStyle == mapwork.mapStyle1) {
+            if (mapwork.mapStyle === mapwork.mapStyle1) {
                 mapwork.mapStyle = mapwork.mapStyle2;
             } else {
                 mapwork.mapStyle = mapwork.mapStyle1;
@@ -102,27 +94,8 @@
             }
             return false;
         },
-        //搜索
-        doSearch: function(name, isBoundsSearch) {
-
-            if (this._map._currentModule) {
-                this._map._currentModule.clean();
-            }
-            var searchModule = this._map.getModule(mapwork.Search.ID);
-            if (isBoundsSearch) {
-                searchModule.setSearchType('bounds');
-            } else {
-                searchModule.setSearchType('all');
-            }
-            searchModule.init();
-            searchModule.doPageQuery(null, null, name);
-            this._map._currentModule = searchModule;
-        },
         onPageLoad: function() {
-            var searchModule = this._map.getModule(mapwork.Search.ID);
-            if(searchModule) {
-                searchModule.initRoles();
-            }
+            this._searchModule.initRoles();
         }
     };
 

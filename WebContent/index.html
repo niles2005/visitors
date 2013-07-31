@@ -20,19 +20,8 @@
         <script type="text/javascript" src="js/jsall.js"></script> 
 
         <script type="text/javascript">
-            var visitorPage = null;
-            mapwork.resizeListener = function() {
-                $("#indexbox").height($("#w").height());
-            };
             $(document).ready(function() {
-                visitorPage = new mapwork.VisitorPage("cc");
-
-
-                var c = document.getElementById("c");
-                var s = document.getElementById("s");
-                
-                var newHeight = mapwork.utils.getWindowHeight() - c.offsetTop - s.offsetHeight;
-                $(".result_search").height(newHeight);
+                new mapwork.VisitorPage("cc");
             });
         </script>
     </head>

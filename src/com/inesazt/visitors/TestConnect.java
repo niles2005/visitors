@@ -11,9 +11,64 @@ import java.util.Date;
 
 public class TestConnect {
 	public TestConnect() {
-		doAtoBuilding1();
+//		doAtoBuilding1();
 //		doAtoFactory();
+		
+//		testSqlite();
+		String card = "bbb";
+		String date = "2013/08/01";
+		String device = "00:1B:00:99_1";
+		for(int i=0;i<20;i++) {
+			doAtoFactory_sqlite(date,card,device);
+		}
 	}
+	
+	
+	
+	private void testSqlite() {
+		Connection conn = null;  
+		try {
+			Class.forName("org.sqlite.JDBC");
+			conn = DriverManager.getConnection("jdbc:sqlite:E:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test.db");
+			Statement stmt = conn.createStatement();  
+            ResultSet rs = stmt.executeQuery("select * from user");  
+            while(rs.next()){  
+                String id = rs.getString(1);  
+                String code= rs.getString(2);  
+                System.out.println("用户名:" + id + "， 密码:" + code);  
+            }  
+            rs.close();  
+            stmt.close();  
+            conn.close();  			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	private void doAtoFactory_sqlite(String date,String card,String device) {
+		try {
+			Connection conn = null;
+			Class.forName("org.sqlite.JDBC");
+			conn = DriverManager.getConnection("jdbc:sqlite:E:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test.db","gis","gis");
+			// 从下面开始，和SQL Server一模一样
+			Statement sm = conn.createStatement();
+			String dateTime = DateFormat.format(new Date());
+			int pos = dateTime.indexOf(" ");
+			String strDate = null;
+			String strTime = null;
+			if(pos != -1) {
+				strDate = dateTime.substring(0,pos);
+				strTime = dateTime.substring(pos + 1);
+			}
+			strDate = date;
+			String sql = "insert into cardpositiontrans(card_id,reader_name,ant_id,up_date,up_time,mac_address) values('" + card + "','Alien RFID Reader','0','" + strDate + "','" + strTime + "','" + device + "')";
+    		sm.execute(sql);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+	}	
 	
     private static DateFormat DateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
 	private void doAtoBuilding1() {

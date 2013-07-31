@@ -65,25 +65,15 @@ public class DBManager {
     }
 
     private static DateFormat DateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
-    public ArrayList queryEvents(int seqId,Devices devices) {
+    public ArrayList queryEvents(int seqId,Devices devices,String strDBToday) {
     	ArrayList list = new ArrayList();
-//    	if(true) {//for test when no database link
-//			Event event = new Event();
-//			event.setCardId("00000000000000000000000A");
-//			event.setDeviceId("00:1B:5F:00:3B:F1_0");
-//			event.setTime(new Date().getTime());
-//			list.add(event);
-//    		return list;
-//    	}
     	ResultSet rs = null;
     	try {
     		checkConnection();
 			if(m_connection == null) {
 				return list;
 			}
-			String today = Global.getInstance().getToday();
-			String dbToday = DateTimeUtil.date8ToDate10(today);
-			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where  t.up_date='" + dbToday + "' and t.trans_seq > " + seqId;
+			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where  t.up_date='" + strDBToday + "' and t.trans_seq > " + seqId;
 //			System.err.println(sql);
 			rs = m_statement.executeQuery(sql);
 			
@@ -152,8 +142,4 @@ public class DBManager {
 			}
 		}    	
     }
-	
-	public static void main(String[] args) {
-//		DBManager.getInstance().queryEvents(0);
-	}
 }

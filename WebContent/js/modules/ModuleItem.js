@@ -110,7 +110,9 @@
         getEarthPos: function() {
             return this._ePos;
         },
-
+        reset: function() {//when close page
+    
+        },
         //将每个moduleItem的HTML信息刷到sideBar中.
         //被各sideBar的实现类中的onPageQueryResult或onListQueryResult调用
         getSidebarElement: function() {

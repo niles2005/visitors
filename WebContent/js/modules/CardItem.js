@@ -55,16 +55,6 @@
             + '</div> '
             + '</div>';
 
-    CardItem.setting = {
-        ID: CardItem.ID,
-        pageUrl: null,
-        listUrl: null,
-        detailUrl: null,
-        newModuleItem: function(module, index) {
-            return new CardItem(module, index);
-        }
-    };
-
     function CardItem(module, index, roles) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
@@ -134,7 +124,7 @@
                 }
                 var htmlContent = '<table class="table">'
                         + '<tbody><tr><th>Index</th><th>日期</th><th>时间</th><th>方位</th>';
-                for (var i = 0; i < data.length; i++) {
+                for (var i = data.length - 1; i >= 0; i--) {
                     htmlContent = htmlContent
                             + '<tr><td>'
                             + (i + 1)
@@ -157,21 +147,6 @@
         },
         afterExpandDetail: function() {
             this.loadCardEvents(mapwork.today);
-        },
-        changeDate: function(date) {
-            if (date) {
-                var strDate = 1900 + date.getYear();
-                if (date.getMonth() < 10) {
-                    strDate += "0";
-                }
-                strDate += (date.getMonth() + 1);
-                if (date.getDate() < 10) {
-                    strDate += "0";
-                }
-                strDate += date.getDate();
-//                console.dir(strDate);
-                this.loadCardEvents(strDate);
-            }
         },
         getName: function() {
             return this._json.name;
@@ -204,7 +179,11 @@
                 self._$SidebarContent.find("#cardTime").css("background", "#efefef");
             }, 1500);
         },
+        reset: function() {
+            this._$detailPage.hide();
+        },
         getSidebarContent: function() {
+            this._$detailPage = this._$SidebarContent.find(".popuplist-main");
             this._$SidebarContent.find("#cardImage").attr("src", this.getIcon()).attr("title", "ID:" + this._json.id);
             this._$SidebarContent.find("#cardName").html(this._json.name).attr("title", "ID:" + this._json.id);
             if (this._json.info) {
@@ -217,12 +196,13 @@
 
             var self = this;
             var today = mapwork.utils.formatDate(new Date(), "day");
-            this._$SidebarContent.find("#detailRefresh").click(function() {
+            this._refreshButton = this._$SidebarContent.find("#detailRefresh");
+            this._refreshButton.click(function() {
                 var queryToday = mapwork.utils.date10ToDate8(today);
                 self.loadCardEvents(queryToday);
             });
 
-             var jQdatepicker = this._$SidebarContent.find('#dp3');
+            var jQdatepicker = this._$SidebarContent.find('#dp3');
             jQdatepicker.datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
@@ -235,6 +215,26 @@
                 self.changeDate(ev.date);
             });
             return this._$SidebarContent;
+        },
+        changeDate: function(date) {
+            if (date) {
+                var strDate = 1900 + date.getYear();
+                if (date.getMonth() < 10) {
+                    strDate += "0";
+                }
+                strDate += (date.getMonth() + 1);
+                if (date.getDate() < 10) {
+                    strDate += "0";
+                }
+                strDate += date.getDate();
+                if (strDate === mapwork.today) {
+                    this._refreshButton.show();
+                } else {
+                    this._refreshButton.hide();
+                }
+//                console.dir(strDate);
+                this.loadCardEvents(strDate);
+            }
         }
 
     };
