@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonEncoding;
@@ -114,6 +115,27 @@ public class Devices {
 		}
 	}
 	
+	public void checkRegInfo(Hashtable hash) {
+		Iterator it = devices.values().iterator();
+		int unregCount = 0;
+		int regCount = 0;
+		int deactiveCount = 0;
+		while(it.hasNext()){
+			Device device = (Device)it.next();
+			if(device.getActived()) {
+				if(device.getLocate() == null){
+					unregCount++;
+				} else {
+					regCount++;
+				}
+			} else {
+				deactiveCount++;
+			}
+		}
+		hash.put("deviceNum", regCount + unregCount);
+		hash.put("deviceUnregNum", unregCount);
+		hash.put("deviceDeactiveNum", deactiveCount);
+	}
 	
 	
 }

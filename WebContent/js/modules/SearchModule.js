@@ -65,16 +65,47 @@
             this._searchRadius = searchRadius;
         },
         doCardQuery: function() {
-            var url = "work?action=listcards";
+            var url = "work?action=initdatas";
             var self = this;
 
             mapwork.utils.loadJsonData(url, function(data) {
                 if (!data) {
                     return;
                 }
-                self.onCardQueryResult(data);
+                console.dir(data);
+                if(data.cards) {
+                    self.onCardQueryResult(data.cards);
+                    
+                    $('#cardsCount').text(data.cardNum);
+                    $('#cardsUnreg').text( data.cardUnregNum);
+                    $('#devicesCount').text ( data.deviceNum);
+                    $('#devicesUnreg').text( data.deviceUnregNum);
+                    
+                }
             });
         },
+        onCardQueryResult: function(cards) {
+            if (cards) {
+                for (var i in cards) {
+                    var row = cards[i];
+                    var cardItem = this.buildCardItem(row, i);
+                    
+                    if(cardItem) {
+                        this._cards[cardItem._id] = cardItem;
+                        var strRole = cardItem._json.role;
+                        if(strRole) {
+                            var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
+                            var role = this._roles[roleId];
+                            if(role) {
+                                cardItem.setRole(role);
+                            }
+                        }
+                    }
+                }
+            }
+            this.doEventQuery();
+        },
+                
         findCards: function(name) {
             if(this._selectRole) {
                 this._selectRole.clearFocus();
@@ -139,41 +170,16 @@
         setSearchHandler: function(searchHandler) {
             this._searchHandler = searchHandler;
         },
-        onCardQueryResult: function(jsonResult) {
-            if (jsonResult && jsonResult.group) {
-                for (var i in jsonResult.group) {
-                    var row = jsonResult.group[i];
-                    var cardItem = this.buildCardItem(row, i);
-                    
-                    if(cardItem) {
-                        this._cards[cardItem._id] = cardItem;
-                        var strRole = cardItem._json.role;
-                        if(strRole) {
-                            var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
-                            var role = this._roles[roleId];
-                            if(role) {
-                                cardItem.setRole(role);
-                            }
-                        }
-                    }
-                    
-                }
-            }
-            this.doEventQuery();
-        },
         updateCards: function(json) {
-
             if (json) {
                 for (var i in json) {
                     var card = json[i];
-
                     var cardItem = this._cards[card.id];
                     if(!cardItem) {
                         cardItem = this.buildCardItem(card, i);
                         this._cards[cardItem._id] = cardItem;
 
                     }
-                    console.dir(cardItem)
                     if(cardItem) {
                         var strRole = cardItem._json.role;
                         if(strRole) {
@@ -190,7 +196,7 @@
         },
         buildCardItem: function(json, index) {
             var cardItem = null;
-            if (json.actived ==='true') {
+            if (json.actived) {
                 var cardItem = new mapwork.CardItem(this, index, this._roles);
                 cardItem.setJsonData(json);
                 cardItem.setSidebar(this._sideBar);

@@ -110,24 +110,13 @@
         getRole: function() {
             return this._role;
         },
-        formatDate: function(now, form) {
-            var year = now.getYear() - 100 + 2000;
-            var month = now.getMonth() + 1;
-            var date = now.getDate();
-            var hour = now.getHours();
-            var minute = now.getMinutes();
-            var second = now.getSeconds();
-            if (form === 'day') {
-                return year + "-" + month + "-" + date;
-            } else if (form === 'time') {
-                return hour + ":" + minute + ":" + second;
-            } else {
-                return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
-            }
-        },
-        afterExpandDetail: function() {
+        loadCardEvents: function(date) {
             var $cardDetail = this._$Content.find(".cardDetail");
+            $cardDetail.empty();
             var url = "work?action=loadtodayevents&cardid=" + this._id;
+            if(date) {
+                url += "&date=" + date;
+            }
             var self = this;
 
             mapwork.utils.loadJsonData(url, function(data) {
@@ -154,20 +143,24 @@
                 }
                 htmlContent = htmlContent + '</tbody></table>';
                 $cardDetail.html(htmlContent);
-//                self.onEventQueryResult(data);
             });
+        },
+        afterExpandDetail: function() {
+            this.loadCardEvents();
         },
         changeDate: function(date) {
             if(date) {
                 var strDate = 1900 + date.getYear();
                 if(date.getMonth() < 10) {
                     strDate += "0";
-                    strDate += date.getMonth();
                 }
-                if(date.getDay() < 10) {
+                strDate += date.getMonth();
+                if(date.getDate() < 10) {
                     strDate += "0";
-                    strDate += date.getDay();
                 }
+                strDate += date.getDate();
+//                console.dir(strDate);
+                this.loadCardEvents(strDate);
             }
         },
         getName: function() {

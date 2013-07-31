@@ -56,7 +56,9 @@ public class WorkServlet extends HttpServlet {
 		if(action == null) {
 			return WebUtil.error("unknown action!");
 		}
-		if(action.equals("listcards")) {
+		if(action.equals("initdatas")) {
+			return Global.getInstance().getInitDatas();
+		} else if(action.equals("listcards")) {
 			return Global.getInstance().getCards().doList();
 		} else if(action.equals("setcard")) {
 			String cardId = request.getParameter("id");

@@ -217,7 +217,7 @@
             if(month < 10) {
                 month = "0" + month;
             }
-            var day = now.getDay();
+            var day = now.getDate();
             if(day < 10) {
                 day = "0" + day;
             }
