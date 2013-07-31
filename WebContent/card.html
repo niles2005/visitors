@@ -24,7 +24,7 @@
                 $scope.doUpdate = function() {
                     var url = "work?action=setcard";
                     if($scope.selectCard) {
-                        $http.get(url, {params: {id: $scope.selectCard.id, name: $scope.selectCard.name, role: $scope.selectCard.role, info: $scope.selectCard.info}}).success(function(data) {
+                        $http.get(url, {params: {id: $scope.selectCard.id, name: $scope.selectCard.name, role: $scope.selectCard.role, info: $scope.selectCard.info,actived:$scope.selectCard.actived}}).success(function(data) {
                             $scope.selectCard = data;
                             $scope.doAll();
                         });
@@ -49,6 +49,9 @@
                     <option value='VIP'>VIP</option>
                     </select><br>
                     info&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.info"><br>
+                    isActived&nbsp;&nbsp;&nbsp;:
+                    <input type="radio" ng-model="selectCard.actived" value="true"> true
+                    <input type="radio" ng-model="selectCard.actived" value="false"> false <br>
                     date&nbsp;&nbsp;:{{ selectCard.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
                     lastLocate:{{ selectCard.lastLocate}} <br>
                     lastTime:{{ selectCard.lastTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
@@ -62,6 +65,7 @@
                         <th><a href="" ng-click="kk = 'index'; reverse=false">index</a></th>
                         <th><a href="" ng-click="kk = 'id'; reverse=!reverse">id</a></th>
                         <th><a href="" ng-click="kk = 'name'; reverse=!reverse">name</a></th>
+                        <th><a href="" ng-click="kk = 'name'; reverse=!reverse">actived</a></th>
                         <th><a href="" ng-click="kk = 'role'; reverse=!reverse">role</a></th>
                         <th><a href="" ng-click="kk = 'info'; reverse=!reverse">info</a></th>
                         <th><a href="" ng-click="kk = 'createTime'; reverse=!reverse">createTime</a></th>
@@ -72,6 +76,7 @@
                         <td>{{$index + 1}}</td>
                         <td>{{card.id}}</td>
                         <td>{{card.name}}</td>
+                        <td>{{card.actived}}</td>
                         <td>{{card.role}}</td>
                         <td>{{card.info}}</td>
                         <td>{{card.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>

@@ -44,7 +44,9 @@ public class Event {
 
 	public String getDeviceLocate() {
 		if(m_device != null) {
-			return m_device.getLocate();
+			if(m_device.getActived()) {
+				return m_device.getLocate();
+			}
 		}
 		return "";
 	}

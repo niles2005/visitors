@@ -25,7 +25,7 @@
                 $scope.doUpdate = function() {
                     var url = "work?action=setdevice";
                     if($scope.selectDevice) {
-                        $http.get(url, {params: {id: $scope.selectDevice.id, locate: $scope.selectDevice.locate, info: $scope.selectDevice.info}}).success(function(data) {
+                        $http.get(url, {params: {id: $scope.selectDevice.id, locate: $scope.selectDevice.locate, info: $scope.selectDevice.info,actived: $scope.selectDevice.actived}}).success(function(data) {
                             $scope.selectDevice = data;
                             $scope.doAll();
                         });
@@ -52,6 +52,9 @@
                     </select> <br>
                     info&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectDevice.info"><br>
                     date&nbsp;&nbsp;:{{ selectDevice.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
+                    isActived&nbsp;&nbsp;&nbsp;:
+                    <input type="radio" ng-model="selectDevice.actived" value="true"> true
+                    <input type="radio" ng-model="selectDevice.actived" value="false"> false <br>
                     <input type="submit" value="新增/更新"/>
                 </form>
                 <p><p>
@@ -61,6 +64,7 @@
                     <tr>
                         <th><a href="" ng-click="kk = 'index'; reverse=false">index</a></th>
                         <th><a href="" ng-click="kk = 'id'; reverse=!reverse">id</a></th>
+                        <th><a href="" ng-click="kk = 'name'; reverse=!reverse">actived</a></th>
                         <th><a href="" ng-click="kk = 'locate'; reverse=!reverse">locate</a></th>
                         <th><a href="" ng-click="kk = 'info'; reverse=!reverse">info</a></th>
                         <th><a href="" ng-click="kk = 'createTime'; reverse=!reverse">createTime</a></th>
@@ -68,6 +72,7 @@
                     <tr ng-repeat="device in devices | orderBy:kk:reverse" ng-click="setDevice(device)">
                         <td>{{$index + 1}}</td>
                         <td>{{device.id}}</td>
+                        <td>{{device.actived}}</td>
                         <td>{{device.locate}}</td>
                         <td>{{device.info}}</td>
                         <td>{{device.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>

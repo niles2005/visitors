@@ -79,7 +79,7 @@ public class Cards {
 		return str;
 	}
 	
-	public String setCard(String id,String name,String role,String info) {
+	public String setCard(String id,String name,String role,String info,boolean actived) {
 		if(id == null) {
 			return WebUtil.error("card id is null!");
 		}
@@ -100,6 +100,7 @@ public class Cards {
 			if(info != null) {
 				card.setInfo(info);
 			}
+			card.setActived(actived);
 			card.setCreateTime(new Date().getTime());
 			this.addCard(card);
 		} else {
@@ -112,6 +113,7 @@ public class Cards {
 			if(info != null) {
 				card.setInfo(info);
 			}
+			card.setActived(actived);
 		}
 		boolean success = saveCards();
 		if(success) {

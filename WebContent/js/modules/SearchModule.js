@@ -162,15 +162,18 @@
             this.doEventQuery();
         },
         updateCards: function(json) {
+
             if (json) {
                 for (var i in json) {
                     var card = json[i];
-                    
+
                     var cardItem = this._cards[card.id];
                     if(!cardItem) {
                         cardItem = this.buildCardItem(card, i);
                         this._cards[cardItem._id] = cardItem;
+
                     }
+                    console.dir(cardItem)
                     if(cardItem) {
                         var strRole = cardItem._json.role;
                         if(strRole) {
@@ -186,17 +189,20 @@
             }
         },
         buildCardItem: function(json, index) {
-            var cardItem = new mapwork.CardItem(this, index,this._roles);
-            cardItem.setJsonData(json);
-            cardItem.setSidebar(this._sideBar);
+            var cardItem = null;
+            if (json.actived ==='true') {
+                var cardItem = new mapwork.CardItem(this, index, this._roles);
+                cardItem.setJsonData(json);
+                cardItem.setSidebar(this._sideBar);
 
-            cardItem._id = json.id;
-            cardItem._name = json.name;
-            cardItem.setIcon("images/" + json.role + "2.png");
-            cardItem.setDescribe("");
-            cardItem.setZIndex(100 - parseInt(index));
-            cardItem.setOffsetPos([11, 31]);
-            cardItem.setMap(this._map);
+                cardItem._id = json.id;
+                cardItem._name = json.name;
+                cardItem.setIcon("images/" + json.role + "2.png");
+                cardItem.setDescribe("");
+                cardItem.setZIndex(100 - parseInt(index));
+                cardItem.setOffsetPos([11, 31]);
+                cardItem.setMap(this._map);
+            }
             return cardItem;
         },
         doEventQuery: function() {

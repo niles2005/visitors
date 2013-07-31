@@ -44,7 +44,6 @@ public class Events {
 				}
 				event.setDevice(device);
 				card.appendEvent(event);
-				
 				hash.put(cardId, card);
 			}
 		}

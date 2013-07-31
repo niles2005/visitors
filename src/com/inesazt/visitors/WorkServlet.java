@@ -65,16 +65,18 @@ public class WorkServlet extends HttpServlet {
 			String strName = request.getParameter("name");
 			String strRole = request.getParameter("role");
 			String strInfo = request.getParameter("info");
+			boolean actived = Boolean.parseBoolean(request.getParameter("actived"));
 			
-			return Global.getInstance().getCards().setCard(cardId,strName,strRole,strInfo);
+			return Global.getInstance().getCards().setCard(cardId,strName,strRole,strInfo,actived);
 		} else if(action.equals("listdevices")) {
 			return Global.getInstance().getDevices().doList();
 		} else if(action.equals("setdevice")) {
-			String cardId = request.getParameter("id");
+			String deviceId = request.getParameter("id");
 			String strLocate = request.getParameter("locate");
 			String strInfo = request.getParameter("info");
+			boolean actived = Boolean.parseBoolean(request.getParameter("actived"));
 			
-			return Global.getInstance().getDevices().setDevice(cardId,strLocate,strInfo);
+			return Global.getInstance().getDevices().setDevice(deviceId,strLocate,strInfo,actived);
 		} else if(action.equals("loadhistoryevents")) {
 			String cardId = request.getParameter("cardid");
 			String strDate = request.getParameter("date");

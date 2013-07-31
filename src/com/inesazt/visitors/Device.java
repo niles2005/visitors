@@ -5,6 +5,15 @@ public class Device {
 	private String locate = null;
 	private String info = null;
 	private long createTime = 0;
+	private boolean isActived = true;
+
+	public boolean getActived() {
+		return isActived;
+	}
+
+	public void setActived(boolean isActived) {
+		this.isActived = isActived;
+	}
 
 	public String getId() {
 		return id;

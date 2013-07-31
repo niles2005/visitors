@@ -76,7 +76,7 @@ public class Devices {
 		return str;
 	}
 	
-	public String setDevice(String id,String locate,String info) {
+	public String setDevice(String id,String locate,String info,boolean actived) {
 		if(id == null) {
 			return WebUtil.error("device id is null!");
 		}
@@ -94,6 +94,7 @@ public class Devices {
 			if(info != null) {
 				device.setInfo(info);
 			}
+			device.setActived(actived);
 			device.setCreateTime(new Date().getTime());
 			this.addDevice(device);
 		} else {
@@ -103,6 +104,7 @@ public class Devices {
 			if(info != null) {
 				device.setInfo(info);
 			}
+			device.setActived(actived);
 		}
 		boolean success = saveDevices();
 		if(success) {

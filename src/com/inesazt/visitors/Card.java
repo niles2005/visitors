@@ -14,6 +14,15 @@ public class Card {
 	
 //	private String lastLocate = null;
 	private long lastTime = 0;
+	private boolean isActived = true;
+
+	public boolean getActived() {
+		return isActived;
+	}
+
+	public void setActived(boolean isActived) {
+		this.isActived = isActived;
+	}
 
 	public long getCreateTime() {
 		return createTime;
