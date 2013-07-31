@@ -16,6 +16,7 @@
                                 theCards.push(data.group[k]);
                             }
                             $scope.cards = theCards;
+                            console.dir(theCards)
                         }
                     });
                 }
@@ -34,6 +35,9 @@
                         });
 
                     }
+                }
+                $scope.getActive = function(){
+                    return ''+$scope.selectCard.actived;
                 }
             }
         </script>
@@ -54,8 +58,8 @@
                     </select><br>
                     info&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.info"><br>
                     isActived&nbsp;&nbsp;&nbsp;:
-                    <input type="radio" ng-model="selectCard.actived" value="true"> true
-                    <input type="radio" ng-model="selectCard.actived" value="false"> false <br>
+                    <input type="radio" ng-model="selectCard.actived" ng-value="true"> true
+                    <input type="radio" ng-model="selectCard.actived" ng-value="false"> false <br>
                     date&nbsp;&nbsp;:{{ selectCard.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
                     lastLocate:{{ selectCard.lastLocate}} <br>
                     lastTime:{{ selectCard.lastTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
