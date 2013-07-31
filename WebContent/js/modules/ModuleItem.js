@@ -171,26 +171,40 @@
                         } else {
                             jQrow.append(jQdatepicker.parent());
                         }
-
+                        var jSpan2 = jQdatepicker.find('.span2');
+                        var today = mapwork.utils.formatDate(new Date(),"day");
+                        jSpan2.attr("value",today);
                         jQdatepicker.datepicker({
                             format: 'yyyy-mm-dd',
-//                            setDate:new Date(),
-//                            autoclose:true,
-                            todayBtn:true,
-//                            todayHighlight:true,
-//                            clearBtn:true,
-                            language:"CN"
+                            setDate:new Date(),
+                            autoclose:true,
+                            todayBtn: 'linked',
+                            todayHighlight:true,
+                            language:"zh-CN"
+                        });
+//                        jQdatepicker.datepicker({
+//                            format: 'yyyy-mm-dd',
+////                            setDate:new Date(),
+////                            autoclose:true,
+//                            todayBtn:'linked',
+////                            todayHighlight:true,
+////                            clearBtn:true,
+//                            language:"CN"
+//                        });
+                        jQdatepicker.on('changeDate', function(ev){
+                            self.changeDate(ev.date);
                         });
                         self.afterExpandDetail();
 
                 }
             );
-
-
             return this._$Content.get(0);
         },
         afterExpandDetail: function() {
             var $cardDetail = this._$Content.find(".cardDetail");
+        },
+        changeDate: function(date) {
+            console.dir(date);
         },
         //创建并获得mapIcon对象
         //设置图片资源,设置坐标,绑定徘徊及单击事件

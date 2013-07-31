@@ -31,7 +31,7 @@
                     + '</div>'
 
                     + ' <div class="popuplist-main hide">'
-//                    + '<h5>cardId: ' + this._json.id + '</h5>'
+//                    + '<span style="margin-left:15px;">CardID:</span>'
                     + '<div class="modal-header">  '
                     + '    <div class="row">    '
                     + '        </div>                '
@@ -57,14 +57,12 @@
     };
 
     function CardItem(module, index, roles) {
-
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
         this._roles = roles;
         this._$SidebarContent = $(sidebarContentHtml);
     }
-
 
     CardItem.prototype = {
         getType: function() {
@@ -144,10 +142,10 @@
                             + (i + 1)
                             + '</td>'
                             + '<td>'
-                            + self.formatDate(new Date(data[i]['time']), 'day')
+                            + mapwork.utils.formatDate(new Date(data[i]['time']), 'day')
                             + '</td>'
                             + '<td>'
-                            + self.formatDate(new Date(data[i]['time']), 'time')
+                            + mapwork.utils.formatDate(new Date(data[i]['time']), 'time')
                             + '</td>'
                             + '<td>'
                             + '<span class="metadata">'
@@ -158,6 +156,19 @@
                 $cardDetail.html(htmlContent);
 //                self.onEventQueryResult(data);
             });
+        },
+        changeDate: function(date) {
+            if(date) {
+                var strDate = 1900 + date.getYear();
+                if(date.getMonth() < 10) {
+                    strDate += "0";
+                    strDate += date.getMonth();
+                }
+                if(date.getDay() < 10) {
+                    strDate += "0";
+                    strDate += date.getDay();
+                }
+            }
         },
         getName: function() {
             return this._json.name;
@@ -182,7 +193,7 @@
             this._json.lastTime = eventJson.lastTime;
             
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate);
-            this._$SidebarContent.find("#cardTime").html(this.formatDate(new Date(this._json.lastTime), 'time'));
+            this._$SidebarContent.find("#cardTime").html(mapwork.utils.formatDate(new Date(this._json.lastTime), 'time'));
             var self = this;
             setTimeout(function() {
                 self._$SidebarContent.find("#cardLocate").css("background","#efefef");
@@ -191,11 +202,13 @@
         },
         getSidebarContent: function() {
             this._$SidebarContent.find("#cardImage").attr("src",this.getIcon());
+            this._$SidebarContent.find("#cardImage").attr("title","ID:" + this._json.id);
             this._$SidebarContent.find("#cardName").html(this._json.name);
+            this._$SidebarContent.find("#cardName").attr("title","ID:" + this._json.id);
             this._$SidebarContent.find("#cardInfo").html(this._json.info);
             this._$SidebarContent.find("#cardInfo").attr("title",this._json.info);
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate);
-            this._$SidebarContent.find("#cardTime").html(this.formatDate(new Date(this._json.lastTime), 'time'));
+            this._$SidebarContent.find("#cardTime").html(mapwork.utils.formatDate(new Date(this._json.lastTime), 'time'));
             this._$SidebarContent.find("#cardRole").html(this._json.role);
             
             return this._$SidebarContent;
