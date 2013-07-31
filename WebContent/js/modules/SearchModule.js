@@ -190,7 +190,7 @@
         },
         buildCardItem: function(json, index) {
             var cardItem = null;
-            if (json.actived ==='true') {
+            if (json.actived) {
                 var cardItem = new mapwork.CardItem(this, index, this._roles);
                 cardItem.setJsonData(json);
                 cardItem.setSidebar(this._sideBar);
