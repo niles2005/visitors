@@ -43,7 +43,9 @@ public class TestDB {
 	    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 	    	String today = dateFormat.format(new Date());
 			
-			rs = statement.executeQuery("select t.trans_seq,t.card_id,t.up_date,t.up_time,t.mac_address from CARDPOSITIONTRANS t");
+	    	String sql = "select t.trans_seq,t.card_id,t.ant_id,t.up_date,t.up_time,t.mac_address from CARDPOSITIONTRANS t where t.card_id='aaaa' and t.up_date='2013/07/30'";
+//	    	String sql = "select t.trans_seq,t.card_id,t.ant_id,t.up_date,t.up_time,t.mac_address from CARDPOSITIONTRANS t";
+			rs = statement.executeQuery(sql);
 			
 			while(rs.next()) {
 				System.err.println(rs.getObject(1));

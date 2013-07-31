@@ -24,7 +24,7 @@ public class Events {
 	private int m_lastSeqId = -1;
 	private void reloadEvents(boolean doBoardcast) {
 		String today = "";//get today's all events,order by time
-		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId);
+		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId,m_devices);
 		//only send changed card
 		Hashtable<String,Card> hash = new Hashtable<String,Card>();
 		for(int i=0;i<eventList.size();i++) {
@@ -37,12 +37,6 @@ public class Events {
 				card = m_cards.buildCard(cardId,dateTime);
 			}
 			if(card != null) {
-				String deviceId = event.getDeviceId();
-				Device device = m_devices.getDevice(deviceId);
-				if(device == null) {
-					device = m_devices.buildDevice(deviceId);
-				}
-				event.setDevice(device);
 				card.appendEvent(event);
 				hash.put(cardId, card);
 			}

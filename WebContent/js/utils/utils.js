@@ -240,7 +240,26 @@
             } else {
                 return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
             }
-        }
+        },
+	date8ToDate10: function(strDate,split) {//20130731 -> 2013-07-31
+            if(strDate.length === 8) {
+                if(!split) {
+                    split = "-";
+                }
+                return strDate.substring(0,4) + split + strDate.substring(4,6) + split + strDate.substring(6);
+            } else if(strDate.length === 10) {
+                    return strDate;
+            }
+            return null;
+	},
+	date10ToDate8: function(strDate) {  //2013-07-31  -> 20130731
+		if(strDate.length === 10) {
+			return strDate.substring(0,4) + strDate.substring(5,7) + strDate.substring(8);
+		} else if(strDate.length === 8) {
+			return strDate;
+		}
+		return null;
+	}
     };
 
     function getPageCoord(element) {   //计算从触发到root间所有元素的offsetLeft值之和,被getOffset方法使用。

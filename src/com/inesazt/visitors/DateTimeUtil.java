@@ -24,7 +24,7 @@ public class DateTimeUtil {
 	
 	public static String date8ToDate10(String strDate) {
 		if(strDate.length() == 8) {
-			return strDate.substring(0,4) + "-" + strDate.substring(4,6) + "-" + strDate.substring(6);
+			return strDate.substring(0,4) + "/" + strDate.substring(4,6) + "/" + strDate.substring(6);
 		} else if(strDate.length() == 10) {
 			return strDate;
 		}
@@ -42,7 +42,7 @@ public class DateTimeUtil {
 			if(day.startsWith("0")) {
 				day = day.substring(1);
 			}
-			return year + "-" + month + "-" + day;
+			return year + "/" + month + "/" + day;
 		} else if(strDate.length() == 10) {
 			String year = strDate.substring(0,4);
 			String month = strDate.substring(5,7);
@@ -53,7 +53,7 @@ public class DateTimeUtil {
 			if(day.startsWith("0")) {
 				day = day.substring(1);
 			}
-			return year + "-" + month + "-" + day;
+			return year + "/" + month + "/" + day;
 		}
 		return null;
 	}

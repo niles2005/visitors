@@ -40,7 +40,7 @@
             var self = this;
             if (this._sideBar._$refresh) {
                 this._sideBar._$refresh.click(function (event) {
-                    if (mapwork.RoleItem.selectRoleItem == self) {
+                    if (mapwork.RoleItem.selectRoleItem === self) {
                         self.doFocus();
                         self._sideBar._$Content.find('.popuplist-main').slideUp();
                     }
@@ -117,12 +117,6 @@
             this._$Content = $(this.getSidebarContent());
             this._$ContentImage = this._$Content.find("img");
 
-            this._$Datepicker = $('<div  class="calendar"> '
-                    +' <div  id="dp3" class="input-append date"> '
-                    +'<input class="span2" size="10" type="text" readonly /> '
-                    +'    <span class="add-on"><i class="icon-th"></i></span>    '
-                    +' </div> '
-                    +'</div>');
 
             var self = this;
             //给content设置鼠标徘徊事件
@@ -163,37 +157,6 @@
                             }
                         });
 
-                        var jQrow = self._$Content.find('.modal-header>.row');
-                        var jQdatepicker = $('#dp3');
-                        if (jQdatepicker.length == 0) {
-                            jQrow.append(self._$Datepicker);
-                            jQdatepicker = $('#dp3');
-                        } else {
-                            jQrow.append(jQdatepicker.parent());
-                        }
-                        var jSpan2 = jQdatepicker.find('.span2');
-                        var today = mapwork.utils.formatDate(new Date(),"day");
-                        jSpan2.attr("value",today);
-                        jQdatepicker.datepicker({
-                            format: 'yyyy-mm-dd',
-                            setDate:new Date(),
-                            autoclose:true,
-                            todayBtn: 'linked',
-                            todayHighlight:true,
-                            language:"zh-CN"
-                        });
-//                        jQdatepicker.datepicker({
-//                            format: 'yyyy-mm-dd',
-////                            setDate:new Date(),
-////                            autoclose:true,
-//                            todayBtn:'linked',
-////                            todayHighlight:true,
-////                            clearBtn:true,
-//                            language:"CN"
-//                        });
-                        jQdatepicker.on('changeDate', function(ev){
-                            self.changeDate(ev.date);
-                        });
                         self.afterExpandDetail();
 
                 }
@@ -202,9 +165,6 @@
         },
         afterExpandDetail: function() {
             var $cardDetail = this._$Content.find(".cardDetail");
-        },
-        changeDate: function(date) {
-            console.dir(date);
         },
         //创建并获得mapIcon对象
         //设置图片资源,设置坐标,绑定徘徊及单击事件
@@ -237,7 +197,7 @@
                             event.cancelBubble = true;
                             event.returnValue = false;
                         }
-                    }
+                    };
                 }
             }
             return this._mapIcon;
@@ -280,7 +240,7 @@
         },
         getTipTail: function() {
 
-            var $tailDiv = $(tailDiv)
+            var $tailDiv = $(tailDiv);
             var rangeSearchForm = $tailDiv.find("form[name='rangeSearchForm']").get(0);
             var rangeSearchHandler = this._map.getHandler(mapwork.RangeSearchHandler.ID);
             if (rangeSearchForm) {
@@ -306,7 +266,7 @@
         },
         doOpenTip: function() {
             this.doBeforeOpenTip();
-            if (this._index == undefined) {
+            if (this._index === undefined) {
                 this._map.openTip(this._ePos, this.getTipTitle(), this.getTipContent(), this.getTipTail(), this._tipOffsetTop4Icon);
             } else {
                 this._map.openTip(this._ePos, this.getTipTitle(), this.getTipContent(), this.getTipTail(), this._tipOffsetTop4Pop);
@@ -372,7 +332,7 @@
         },
         deHover: function() {
             this.setDefaultDiv();
-            if (this != ModuleItem.selectItem) {
+            if (this !== ModuleItem.selectItem) {
                 this.setDefaultImage();
                 this.getMapIcon().setDefaultImage();
             }
@@ -406,7 +366,7 @@
                 this.doItemDetailInfo();
             }
             this.doOpenTip();
-            if (this._index == undefined) {
+            if (this._index === undefined) {
                 this.getMapIcon().setHoverImage();
             } else {
                 var selectedObject = ModuleItem.selectItem;
@@ -442,7 +402,7 @@
             var mapIcon = new mapwork.MapIcon(id, icon, hoverIcon, iconOffset, this._zIndex);
             return mapIcon;
         }
-    }
+    };
 
     if (EXTEND) {
         mapwork.utils.inherits(ModuleItem, EXTEND);

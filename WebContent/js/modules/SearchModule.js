@@ -72,8 +72,9 @@
                 if (!data) {
                     return;
                 }
-                console.dir(data);
+//                console.dir(data);
                 if(data.cards) {
+                    mapwork.today = data.today;
                     self.onCardQueryResult(data.cards);
                     
                     $('#cardsCount').text(data.cardNum);
@@ -103,7 +104,7 @@
                     }
                 }
             }
-            this.doEventQuery();
+//            this.doEventQuery();
         },
                 
         findCards: function(name) {
@@ -111,20 +112,16 @@
                 this._selectRole.clearFocus();
                 this._selectRole = null;
             }
-            var r,role,c,cards,card;
+            var c,card;
             var arr = [];
             name = $.trim(name);
             if(name.length !== 0) {
-                for(r in this._roles) {
-                    role = this._roles[r];
-                    cards = role._cards;
-                    for(c in cards) {
-                        card = cards[c];
-                        if(card.getId().indexOf(name) !== -1) {
-                            arr.push(card);
-                        } else if(card.getName().indexOf(name) !== -1) {
-                            arr.push(card);
-                        }
+                for(c in this._cards) {
+                    card = this._cards[c];
+                    if(card.getId().indexOf(name) !== -1) {
+                        arr.push(card);
+                    } else if(card.getName().indexOf(name) !== -1) {
+                        arr.push(card);
                     }
                 }
             }

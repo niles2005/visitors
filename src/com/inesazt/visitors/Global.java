@@ -64,6 +64,13 @@ public class Global {
 		}
 	}
 	
+	public String getToday() {
+		return this.m_strToday;
+	}
+
+	public boolean isToday(String date) {
+		return m_strToday.equals(date);
+	}
 
 	public Cards getCards() {
 		return m_cards;

@@ -45,11 +45,11 @@
         </script>
     </head>
     <body>
-    <div style="margin-top: 80px"></div>
+    <div style="margin-top: 20px"></div>
         <div class="container-fluid"  ng-controller="BindState">
             <div  class="row-fluid">
                 <div class="span3" style="width:260px;">
-                <form ng-submit="doUpdate()" >
+                <form ng-submit="doUpdate()" style="position:fixed;background: white;">
                     Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectDevice.id" /><br>
                     locate:<select ng-model="selectDevice.locate">
                                 <option  value ='building1'> building1 </option>
@@ -71,6 +71,12 @@
                 <p><p>
                  </div>
                 <div class="span9">
+                    <pre>Display:<select ng-model="displayDeactive">
+                    <option value=''>All item</option>
+                    <option value='true'>Only active item</option>
+                    <option value='false'>Only deactive item</option>
+                    </select>  Search: <input ng-model="searchText"></pre>
+                    
                 <table class="table table-bordered">
                     <tr>
                         <th><a href="" ng-click="kk = 'index'; reverse=false">index</a></th>
@@ -80,7 +86,7 @@
                         <th><a href="" ng-click="kk = 'info'; reverse=!reverse">info</a></th>
                         <th><a href="" ng-click="kk = 'createTime'; reverse=!reverse">createTime</a></th>
                     </tr>
-                    <tr ng-repeat="device in devices | orderBy:kk:reverse" ng-click="setDevice(device)">
+                    <tr ng-repeat="device in devices | filter:searchText | filter:displayDeactive | orderBy:kk:reverse" ng-click="setDevice(device)">
                         <td>{{$index + 1}}</td>
                         <td>{{device.id}}</td>
                         <td>{{device.actived}}</td>
