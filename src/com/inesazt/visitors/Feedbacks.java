@@ -10,6 +10,7 @@ import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONReader;
 
 public class Feedbacks {
@@ -31,14 +32,12 @@ public class Feedbacks {
     }
 
 
-	public static Feedbacks readFeedback() {
-
+	public static Feedbacks buildFeedback() {
 		Feedbacks feedbacks = new Feedbacks();
 		try {
-//			File feedbackFile = ServerConfig.getInstance().getFeedbackFile();
-			File feedbackFile = new File("D:\\mywork\\inesazt\\workspace\\visitors\\WebContent\\WEB-INF\\config","feedback.json");
+			File feedbackFile = ServerConfig.getInstance().getFeedbackFile();
+//			File feedbackFile = new File("D:\\mywork\\inesazt\\workspace\\visitors\\WebContent\\WEB-INF\\config","feedback.json");
 			JSONReader jReader = new JSONReader(new FileReader(feedbackFile));
-			
 			
 			if(feedbackFile.exists()) {
 				
@@ -49,7 +48,6 @@ public class Feedbacks {
 				}
 				jReader.endArray();
 				jReader.close();
-				
 			} 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -57,11 +55,23 @@ public class Feedbacks {
 		return feedbacks;
 	}
 	
+	public String doList(){
+		return JSON.toJSONString(feedbacks);
+	}
+	
+	public String updateFeedbacks(Feedback feedback){
+		addFeedback(feedback);
+		saveFeedbacks();
+		return JSON.toJSONString(feedbacks);
+	}
+	
+	
+	
 	public synchronized boolean saveFeedbacks() {
 		try {
-//			File feedbackFile = ServerConfig.getInstance().getFeedbackFile();
-//			FileOutputStream fos = new FileOutputStream(feedbackFile);
-			FileOutputStream fos = new FileOutputStream(new File("D:\\mywork\\inesazt\\workspace\\visitors\\WebContent\\WEB-INF\\config","feedback.json"));
+			File feedbackFile = ServerConfig.getInstance().getFeedbackFile();
+			FileOutputStream fos = new FileOutputStream(feedbackFile);
+//			FileOutputStream fos = new FileOutputStream(new File("D:\\mywork\\inesazt\\workspace\\visitors\\WebContent\\WEB-INF\\config","feedback.json"));
 			JsonGenerator jsonGenerator = fileData_mapper.getJsonFactory().createJsonGenerator(fos, JsonEncoding.UTF8);
 			jsonGenerator.writeObject(feedbacks);
 			return true;
@@ -80,7 +90,7 @@ public class Feedbacks {
 //		feedbacks.addFeedback(feedback);
 //		feedbacks.saveFeedbacks();
 		
-		Feedbacks feedbacks = Feedbacks.readFeedback();
+		Feedbacks feedbacks = Feedbacks.buildFeedback();
 		Feedback feedback = feedbacks.getFeedback(0);
 		System.out.println(feedback.getCreateTime());
 		System.out.println(feedback.getProposal());

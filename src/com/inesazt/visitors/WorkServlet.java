@@ -100,7 +100,16 @@ public class WorkServlet extends HttpServlet {
 			return DataEnums.loadRoleEnums();
 		} else if( action.equals("unregister")){
 			return Global.getInstance().getUnregister();
-		} 
+		} else if(action.equals("listfeedbacks")){
+			return Global.getInstance().getFeedbacks().doList();
+		} else if(action.equals("addfeedback")){
+			String userName = request.getParameter("username");
+			String proposal = request.getParameter("proposal");
+			String emailAddress = request.getParameter("email");
+			Feedback feedback = new Feedback(userName, proposal, emailAddress,System.currentTimeMillis());
+			
+			return Global.getInstance().getFeedbacks().updateFeedbacks(feedback);
+		}
 		return null;
 	}
 }

@@ -38,6 +38,8 @@ public class Global {
 	
 	private Cards m_cards = null;
 	
+	private Feedbacks m_feedbacks = null;
+	
 	private Events m_events = null;
 	
 	private boolean m_init = false;
@@ -57,6 +59,7 @@ public class Global {
 			
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
+			m_feedbacks = Feedbacks.buildFeedback();
 			m_events = new Events(m_cards,m_devices,m_strToday);
 			System.err.println("Global init finished.");
 		} catch(Exception ex) {
@@ -82,6 +85,10 @@ public class Global {
 
 	public Devices getDevices() {
 		return m_devices;
+	}
+	
+	public Feedbacks getFeedbacks(){
+		return m_feedbacks;
 	}
 
 	public Events getEvents() {
