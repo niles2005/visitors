@@ -23,9 +23,11 @@
                      console.log('send new feedback')
                      $http.get(url, {params: {username: $scope.newFeedback.username, proposal: $scope.newFeedback.proposal, email: $scope.newFeedback.email}}).success(function (data) {
                          $scope.showFeedbacks();
+                         $scope.newFeedback = null;
                      });
                  }
              };
+
 
             $scope.showFeedbacks();
          }
@@ -38,15 +40,19 @@
 <div id="main" class="span10">
     <div class="comment" ng-repeat = "feedback in feedbacks">
         <div class="avatar">
-            <img src="">
+            <img src="images/VIP1.png">
         </div>
         <div class="name">{{feedback.userName}}</div>
         <div class="date" title="Added at 06:18 on 23 Nov 2010"><feedback class="createTime">{{feedback.createTime |date:'yyyy-MM-dd HH:mm:ss'}}</feedback></div>
         <p>{{feedback.proposal}}</p>
+        <pre style="display: block">
+            <p class="reply"> reply: </p>
+            <p class="proposal">{{feedback.reply}}</p>
+        </pre>
     </div>
 
     <div id="addCommentContainer">
-        <p>添加评论</p>
+        <p>添加反馈意见</p>
         <form id="addCommentForm" ng-submit="addFeedback()">
             <div>
                 <label for="name">您的名字</label>

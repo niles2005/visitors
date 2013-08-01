@@ -164,3 +164,13 @@ a:hover{
 a img{
 	border:none;
 }
+
+.comment p.reply{
+    color: #0088cc;
+    font-size: 16px;
+}
+
+.comment p.proposal{
+   font-style: italic;
+    font-size: 13px;
+}
