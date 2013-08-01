@@ -40,13 +40,13 @@
 <div id="main" class="span10">
     <div class="comment" ng-repeat = "feedback in feedbacks">
         <div class="avatar">
-            <img src="images/VIP1.png">
+
         </div>
         <div class="name">{{feedback.userName}}</div>
         <div class="date" title="Added at 06:18 on 23 Nov 2010"><feedback class="createTime">{{feedback.createTime |date:'yyyy-MM-dd HH:mm:ss'}}</feedback></div>
         <p>{{feedback.proposal}}</p>
-        <pre style="display: block">
-            <p class="reply"> reply: </p>
+        <pre ng-show=feedback.reply>
+            <span class="reply"> reply: </span>
             <p class="proposal">{{feedback.reply}}</p>
         </pre>
     </div>
