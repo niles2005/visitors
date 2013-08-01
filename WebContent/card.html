@@ -16,7 +16,6 @@
                                 theCards.push(data.group[k]);
                             }
                             $scope.cards = theCards;
-                            console.dir(theCards)
                         }
                     });
                 }
@@ -36,9 +35,7 @@
 
                     }
                 }
-                $scope.getActive = function(){
-                    return ''+$scope.selectCard.actived;
-                }
+
             }
         </script>
     </head>

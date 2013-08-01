@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/feedback.css"/>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+    <script src="scripts/angular.js"></script>
+    <script>
+         function feedbackCtrl($scope,$http){
+            $scope.showFeedbacks = function(){
+                 $http.get("work?action=listfeedbacks").success(function(data){
+                     if(data){
+                         console.dir(data)
+                         $scope.feedbacks = data;
+                     }
+                 });
+             };
+             $scope.newFeedback = null;
+             $scope.addFeedback = function(){
+
+                 var url = "work?action=addfeedback";
+                 if ($scope.newFeedback) {
+                     console.log('send new feedback')
+                     $http.get(url, {params: {username: $scope.newFeedback.username, proposal: $scope.newFeedback.proposal, email: $scope.newFeedback.email}}).success(function (data) {
+                         $scope.showFeedbacks();
+                         $scope.newFeedback = null;
+                     });
+                 }
+             };
+
+
+            $scope.showFeedbacks();
+         }
+
+    </script>
+    <title>FeedBack</title>
+</head>
+<body>
+<div class="container" ng-controller="feedbackCtrl">
+<div id="main" class="span10">
+    <div class="comment" ng-repeat = "feedback in feedbacks">
+        <div class="avatar">
+            <img src="images/VIP1.png">
+        </div>
+        <div class="name">{{feedback.userName}}</div>
+        <div class="date" title="Added at 06:18 on 23 Nov 2010"><feedback class="createTime">{{feedback.createTime |date:'yyyy-MM-dd HH:mm:ss'}}</feedback></div>
+        <p>{{feedback.proposal}}</p>
+        <pre style="display: block">
+            <p class="reply"> reply: </p>
+            <p class="proposal">{{feedback.reply}}</p>
+        </pre>
+    </div>
+
+    <div id="addCommentContainer">
+        <p>添加反馈意见</p>
+        <form id="addCommentForm" ng-submit="addFeedback()">
+            <div>
+                <label for="name">您的名字</label>
+                <input type="text" name="name" id="name" ng-model="newFeedback.username" required>
+
+                <label for="email">您的邮箱</label>
+                <input type="email" name="email" id="email"  ng-model="newFeedback.email">
+
+                <label for="body">意见内容</label>
+                <textarea name="body" id="body" rows="5"  ng-model="newFeedback.proposal" required></textarea>
+
+                <input type="submit" id="submit" value="提交">
+            </div>
+        </form>
+    </div>
+
+</div>
+</div>
+</body>
+</html>

@@ -21,6 +21,7 @@ public class ServerConfig {
 			m_configureFile = new File(m_configPath, "configure1.json");
 			m_deviceFile = new File(m_configPath, "device.json");
 			m_cardFile = new File(m_configPath, "card.json");
+			m_feedbackFile = new File(m_configPath, "feedback.json");
 		} else {
 			System.err.println("WEB-INF path not found!");
 		}
@@ -60,5 +61,10 @@ public class ServerConfig {
 	File m_configureFile = null;
 	public File getConfigureFile() {
 		return m_configureFile;
+	}
+	
+	File m_feedbackFile = null;
+	public File getFeedbackFile(){
+		return m_feedbackFile;
 	}
 }
