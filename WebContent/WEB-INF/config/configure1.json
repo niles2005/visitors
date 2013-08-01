@@ -1,1 +1,6 @@
-{"dbDriver":"org.sqlite.JDBC","dbURL":"jdbc:sqlite:E:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test.db","dbPass":"","dbUser":""}
+{
+"dbDriver":"org.sqlite.JDBC",
+"dbURL":"jdbc:sqlite:E:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test\\test.db",
+"dbPass":"",
+"dbUser":""
+}
