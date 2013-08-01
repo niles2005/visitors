@@ -56,7 +56,9 @@ public class WorkServlet extends HttpServlet {
 		if(action == null) {
 			return WebUtil.error("unknown action!");
 		}
-		if(action.equals("listcards")) {
+		if(action.equals("initdatas")) {
+			return Global.getInstance().getInitDatas();
+		} else if(action.equals("listcards")) {
 			return Global.getInstance().getCards().doList();
 		} else if(action.equals("setcard")) {
 			String cardId = request.getParameter("id");
@@ -75,14 +77,14 @@ public class WorkServlet extends HttpServlet {
 			boolean actived = Boolean.parseBoolean(request.getParameter("actived"));
 			
 			return Global.getInstance().getDevices().setDevice(deviceId,strLocate,strInfo,actived);
-		} else if(action.equals("loadhistoryevents")) {
+		} else if(action.equals("loadevents")) {
 			String cardId = request.getParameter("cardid");
 			String strDate = request.getParameter("date");
 			Card card = Global.getInstance().getCard(cardId);
 			if(card == null) {
 				return WebUtil.error("Can not find card for cardId:" + cardId);
 			}
-			return card.loadHistoryEvents(strDate);
+			return card.loadEvents(strDate);
 		} else if(action.equals("loadtodayevents")) {
 			String cardId = request.getParameter("cardid");
 			Card card = Global.getInstance().getCard(cardId);

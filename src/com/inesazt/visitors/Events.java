@@ -9,9 +9,12 @@ import com.alibaba.fastjson.JSON;
 public class Events {
 	private Cards m_cards;
 	private Devices m_devices;
-	public Events(Cards cards,Devices devices) {
+	private String m_dbToday;
+	
+	public Events(Cards cards,Devices devices,String today) {
 		m_cards = cards;
 		m_devices = devices;
+		m_dbToday = DateTimeUtil.date8ToDate10(today);
 		reloadEvents(false);
 	}
 	
@@ -23,8 +26,7 @@ public class Events {
 	
 	private int m_lastSeqId = -1;
 	private void reloadEvents(boolean doBoardcast) {
-		String today = "";//get today's all events,order by time
-		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId);
+		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId,m_devices,m_dbToday);
 		//only send changed card
 		Hashtable<String,Card> hash = new Hashtable<String,Card>();
 		for(int i=0;i<eventList.size();i++) {
@@ -37,12 +39,6 @@ public class Events {
 				card = m_cards.buildCard(cardId,dateTime);
 			}
 			if(card != null) {
-				String deviceId = event.getDeviceId();
-				Device device = m_devices.getDevice(deviceId);
-				if(device == null) {
-					device = m_devices.buildDevice(deviceId);
-				}
-				event.setDevice(device);
 				card.appendEvent(event);
 				hash.put(cardId, card);
 			}

@@ -26,8 +26,8 @@
             +'              <form> '
             +'                <div class="input-append"> '
             +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="输入你要查找的卡ID或名称" autocomplete="off"> '
-            +'<span style="padding-left: 60px"></span>'
-             +'                  <span id="refresh" class="btn btn-primary searchInputBtn"><i>刷新</i></span>'
+//            +'<span style="padding-left: 60px"></span>'
+//             +'                  <span id="refresh" class="btn btn-primary searchInputBtn"><i>刷新</i></span>'
             +'                </div> '
             +'              </form> '
             +'            </div>   '
@@ -64,7 +64,7 @@
             this._$searchInput = this._$ConentDiv.find(".searchInput");
             var self = this;
             this._$searchInput.keyup(function(event) {
-                if (event.which == 13) {
+                if (event.which === 13) {
                     event.preventDefault();
                 }
                 var cards = self._module.findCards(this.value);
@@ -86,7 +86,7 @@
                             self._pageQuery.call(self._module, this.pageInfo.pageIndex, this.pageInfo.pageSize);
                         }
                     };
-                })
+                });
             }
             this.adjustSideBarHeight();
 
@@ -100,7 +100,6 @@
             var titleHeight = $(".search_title").outerHeight();
             var mbLineHeight = $(".mb_line").height();
             var pageHeight = this._$Page.outerHeight();
-
             this._$Content.height(westHeight - mbLineHeight - titleHeight - pageHeight);
         },
         //文档窗口改变大小时触发
@@ -115,6 +114,7 @@
             if(caller !== this) {
                 this._$searchInput.val("");
             }
+            this._json = json;
             if (json) {
                 if (!json.m_detail) {
                     this._$Right.show();
@@ -147,66 +147,21 @@
         },
         //分页时做的清空操作
         reset: function() {
+            if(this._json) {
+                for (var i in this._json) {
+                    this._json[i].reset();
+                }
+            }
+            
             this._$Content.empty();
             this._$RecordCount.empty();
-        },
-        //分页
-        doPage: function(pageIndex, pageSize, total) {
-            pageSize = 10;
-            var pageCount = parseInt(total / pageSize);
-            pageCount = total % pageSize == 0 ? pageCount : pageCount + 1;
-
-            var preIndex = pageIndex == 1 ? 1 : pageIndex - 1;
-            var nxtIndex = pageIndex == pageCount ? pageIndex : pageIndex + 1;
-
-            var bg = 1;
-            var ed = pageCount;
-            var numcount = 4;
-            if (pageCount > numcount) {
-                bg = pageIndex - parseInt(numcount / 2);
-                if (bg < 1)
-                    bg = 1;
-                ed = bg + numcount - 1;
-                if (ed > pageCount) {
-                    ed = pageCount;
-                    bg = ed - numcount + 1;
-                }
-            }
-            if (preIndex == pageIndex) {
-                this._$A.get(0).pageInfo = null;
-            }
-            else {
-                this._$A.get(0).pageInfo = {"pageIndex": preIndex, "pageSize": pageSize, "total": total};
-            }
-            var index = 1;
-            for (var i = bg; i <= ed; i++) {
-                this._$A.eq(index).html(i);
-
-                if (i == pageIndex) {
-                    this._$A.eq(index).addClass("selected");
-                    this._$A.get(index).pageInfo = null;
-                }
-                else {
-                    this._$A.eq(index).removeClass("selected");
-                    this._$A.get(index).pageInfo = {"pageIndex": i, "pageSize": pageSize, "total": total};
-                }
-                index++;
-            }
-            if (nxtIndex == pageIndex) {
-                this._$A.get(5).pageInfo = null;
-            }
-            else {
-                this._$A.get(5).pageInfo = {"pageIndex": nxtIndex, "pageSize": pageSize, "total": total};
-            }
-
         },
         doReturn: function() {
             $("div[name='indexDiv']").show();
             this._$SideBarDiv.hide();
             this._module.clean();
         }
-
-    }
+    };
 
     if (EXTEND) {
         mapwork.utils.inherits(SideBarPage, EXTEND);

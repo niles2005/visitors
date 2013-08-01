@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonEncoding;
@@ -15,14 +16,14 @@ import com.alibaba.fastjson.JSON;
 
 public class Cards {
 	private static ObjectMapper fileData_mapper= new ObjectMapper();
-
+	
     private Map<String,Card> cards = new Hashtable<String,Card>(); 
     
     public Map<String,Card> getGroup() { return cards; }
     public void setGroup(Map<String,Card> cards) { this.cards = cards; }
 
-    public void addCard(Card Card) {
-    	cards.put(Card.getId(), Card);
+    public void addCard(Card card) {
+    	cards.put(card.getId(), card);
     }
     
     public Card getCard(String cardId) {
@@ -39,6 +40,7 @@ public class Cards {
     		card.setId(cardId);
     		card.setName(cardId);
     		card.setCreateTime(time);
+    		card.setActived(true);//default true
     		addCard(card);
     	}
     	return card;
@@ -127,5 +129,25 @@ public class Cards {
 		
 	}
 
-	
+	public void checkRegInfo(Hashtable hash) {
+		Iterator it = cards.values().iterator();
+		int unregCount = 0;
+		int regCount = 0;
+		int deactiveCount = 0;
+		while(it.hasNext()){
+			Card card = (Card)it.next();
+			if(card.getActived()) {
+				if(card.getRole() == null){
+					unregCount++;
+				} else {
+					regCount++;
+				}
+			} else {
+				deactiveCount++;
+			}
+		}
+		hash.put("cardNum", regCount + unregCount);
+		hash.put("cardUnregNum", unregCount);
+		hash.put("cardDeactiveNum", deactiveCount);
+	}
 }

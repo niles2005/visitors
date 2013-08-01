@@ -40,11 +40,11 @@
         </script>
     </head>
     <body>
-         <div style="margin-top: 80px"></div>
+         <div style="margin-top: 20px"></div>
         <div class="container-fluid" ng-controller="BindState">
             <div class="row-fluid">
                 <div class="span3" style="width: 258px;">
-                <form ng-submit="doUpdate()" >
+                <form ng-submit="doUpdate()" style="position:fixed;background: white; ">
                     Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.id" /><br>
                     name:<input ng-model="selectCard.name" /><br>
                     role&nbsp;&nbsp;&nbsp;:<select ng-model="selectCard.role">
@@ -65,6 +65,11 @@
                 <p><p>
                 </div>
                 <div class="span9">
+                    <pre>Display:<select ng-model="displayDeactive">
+                    <option value=''>All item</option>
+                    <option value='true'>Only active item</option>
+                    <option value='false'>Only deactive item</option>
+                    </select>  Search: <input ng-model="searchText"></pre>
                 <table class="table table-bordered">
                     <tr>
                         <th><a href="" ng-click="kk = 'index'; reverse=false">index</a></th>
@@ -77,7 +82,7 @@
                         <th><a href="" ng-click="kk = 'lastLocate'; reverse=!reverse">lastLocate</a></th>
                         <th><a href="" ng-click="kk = 'lastTime'; reverse=!reverse">lastTime</a></th>
                     </tr>
-                    <tr ng-repeat="card in cards | orderBy:kk:reverse" ng-click="setCard(card)">
+                    <tr ng-repeat="card in cards | filter:searchText | filter:displayDeactive | orderBy:kk:reverse" ng-click="setCard(card)">
                         <td>{{$index + 1}}</td>
                         <td>{{card.id}}</td>
                         <td>{{card.name}}</td>

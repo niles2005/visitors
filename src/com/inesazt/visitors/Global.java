@@ -3,14 +3,19 @@ package com.inesazt.visitors;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.alibaba.fastjson.JSON;
+
 
 
 public class Global {
+	private String m_strToday = null;
+	
 	private static Global m_instance= null;
 	
 	public static Global getInstance() {
@@ -47,17 +52,25 @@ public class Global {
 				System.err.println("xxxxxxxxxxxxx: Configure init error! xxxxxxxxxxxxxxx");
 				return;
 			}
+			m_strToday = DateTimeUtil.getTodayString();
         	DBManager.initInstance(m_configure);
 			
 			m_devices = Devices.buildDevices();
 			m_cards = Cards.buildCards();
-			m_events = new Events(m_cards,m_devices);
+			m_events = new Events(m_cards,m_devices,m_strToday);
 			System.err.println("Global init finished.");
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
+	public String getToday() {
+		return this.m_strToday;
+	}
+
+	public boolean isToday(String date) {
+		return m_strToday.equals(date);
+	}
 
 	public Cards getCards() {
 		return m_cards;
@@ -87,6 +100,20 @@ public class Global {
 	
 	public void removeChatMessageInbound(ChatMessageInbound cmi) {
 		m_connections.remove(cmi);
+	}
+	
+	//for client init
+	public String getInitDatas() {
+		Hashtable hash = new Hashtable();
+		m_cards.checkRegInfo(hash);
+		m_devices.checkRegInfo(hash);
+		hash.put("today", m_strToday);
+		
+		hash.put("cards", m_cards.getGroup());
+		
+		String str = JSON.toJSONString(hash);
+//		System.err.println(str);
+		return str;
 	}
 	
 	public String getUnregister(){
@@ -124,8 +151,11 @@ public class Global {
 		sb.append(",");
 		sb.append("\"deviceunreg\":");
 		sb.append(unregCount);
+		sb.append(",");
+		sb.append("\"today\":\"");
+		sb.append(DateTimeUtil.getTodayString());
 		
-		sb.append("}");
+		sb.append("\"}");
 		return sb.toString();
 	}
 	

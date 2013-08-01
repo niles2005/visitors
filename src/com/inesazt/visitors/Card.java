@@ -72,7 +72,11 @@ public class Card {
 		return "";
 	}
 	
-	public String getLastDeviceId(){
+	public void setLastLocate(String lastLocate) {
+		//empty method
+	}
+
+	public String getLastDeviceId() {
 		if(m_eventList.size() > 0) {
 			Event lastEvent = m_eventList.get(m_eventList.size() - 1);
 			return lastEvent.getDeviceId();
@@ -80,10 +84,10 @@ public class Card {
 		return "";
 	}
 
-	public void setLastLocate(String lastLocate) {
+	public void setLastDeviceId(String deviceId) {
 		//empty method
 	}
-
+	
 	public long getLastTime() {
 		if(m_eventList.size() > 0) {
 			Event lastEvent = m_eventList.get(m_eventList.size() - 1);
@@ -101,6 +105,17 @@ public class Card {
 	}
 	
 	public String loadHistoryEvents(String date) {
+		ArrayList list = DBManager.getInstance().queryHistoryEvents(id, date);
+		return JSON.toJSONString(list);
+	}
+	
+	public String loadEvents(String date) {
+		if(date == null) {//return today events
+			return JSON.toJSONString(m_eventList);
+		}
+		if(Global.getInstance().isToday(date)) {
+			return JSON.toJSONString(m_eventList);
+		}
 		ArrayList list = DBManager.getInstance().queryHistoryEvents(id, date);
 		return JSON.toJSONString(list);
 	}

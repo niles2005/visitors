@@ -65,48 +65,19 @@ public class DBManager {
     }
 
     private static DateFormat DateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
-    public ArrayList queryEvents(int seqId) {
+    public ArrayList queryEvents(int seqId,Devices devices,String strDBToday) {
     	ArrayList list = new ArrayList();
-//    	if(true) {//for test when no database link
-//			Event event = new Event();
-//			event.setCardId("00000000000000000000000A");
-//			event.setDeviceId("00:1B:5F:00:3B:F1_0");
-//			event.setTime(new Date().getTime());
-//			list.add(event);
-//    		return list;
-//    	}
     	ResultSet rs = null;
     	try {
     		checkConnection();
 			if(m_connection == null) {
 				return list;
 			}
-			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.trans_seq > " + seqId;
+			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where  t.up_date='" + strDBToday + "' and t.trans_seq > " + seqId;
 //			System.err.println(sql);
 			rs = m_statement.executeQuery(sql);
 			
-			while(rs.next()) {
-				int theSeqId = rs.getInt(1);
-				String cardId = rs.getString(2).trim();
-				String address = rs.getString(3).trim();
-				String antId = rs.getString(4).trim();
-				String date = rs.getString(5).trim();
-				String time = rs.getString(6).trim();
-				
-				try {
-					String deviceId = address + "_" + antId;
-					Date dateTime = DateFormat.parse(date + " " + time);
-					long theTime = dateTime.getTime();
-					Event event = new Event();
-					event.setSeqId(theSeqId);
-					event.setCardId(cardId);
-					event.setDeviceId(deviceId);
-					event.setTime(theTime);
-					list.add(event);
-				} catch(Exception ex) {
-					ex.printStackTrace();
-				}
-			}
+			buildEvents(rs,list,devices);
 			rs.close();
 		} catch (Exception e) {
 //			e.printStackTrace();
@@ -125,27 +96,14 @@ public class DBManager {
 			if(m_connection == null) {
 				return list;
 			}
+			String dbDate = DateTimeUtil.date8ToDate10(theDate);
+			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.card_id='" + cardId + "' and t.up_date='" + dbDate + "'";
+//			System.err.println(sql);
+			rs = m_statement.executeQuery(sql);
 			
-			rs = m_statement.executeQuery("select t.card_id,t.mac_address,t.up_date,t.up_time from CARDPOSITIONTRANS t");
-			
-			while(rs.next()) {
-				cardId = rs.getString(1).trim();
-				String deviceId = rs.getString(2).trim();
-				String date = rs.getString(3).trim();
-				String time = rs.getString(4).trim();
-				
-				try {
-					Date dateTime = DateFormat.parse(date + " " + time);
-					long theTime = dateTime.getTime();
-					Event event = new Event();
-					event.setCardId(cardId);
-					event.setDeviceId(deviceId);
-					event.setTime(theTime);
-					list.add(event);
-				} catch(Exception ex) {
-					ex.printStackTrace();
-				}
-			}
+			Devices devices = Global.getInstance().getDevices();
+			buildEvents(rs,list,devices);
+
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,8 +111,35 @@ public class DBManager {
     	return list;
     }
 
-	
-	public static void main(String[] args) {
-		DBManager.getInstance().queryEvents(0);
-	}
+    private void buildEvents(ResultSet rs,ArrayList list,Devices devices) throws SQLException {
+		while(rs.next()) {
+			int theSeqId = rs.getInt(1);
+			String cardId = rs.getString(2).trim();
+			String address = rs.getString(3).trim();
+			String antId = rs.getString(4).trim();
+			String date = rs.getString(5).trim();
+			String time = rs.getString(6).trim();
+			
+			try {
+				String deviceId = address + "_" + antId;
+				Date dateTime = DateFormat.parse(date + " " + time);
+				long theTime = dateTime.getTime();
+				Event event = new Event();
+				event.setSeqId(theSeqId);
+				event.setCardId(cardId);
+				event.setDeviceId(deviceId);
+				event.setTime(theTime);
+				
+				Device device = devices.getDevice(deviceId);
+				if(device == null) {
+					device = devices.buildDevice(deviceId);
+				}
+				event.setDevice(device);
+				
+				list.add(event);
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+		}    	
+    }
 }

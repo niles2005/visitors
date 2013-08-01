@@ -20,51 +20,9 @@
         <script type="text/javascript" src="js/jsall.js"></script> 
 
         <script type="text/javascript">
-            var visitorPage = null;
-//            mapwork.ajaxtype = 1;  //use jsonp
-            mapwork.resizeListener = function() {
-                $("#indexbox").height($("#w").height());
-            };
             $(document).ready(function() {
-                visitorPage = new mapwork.VisitorPage("cc");
-
-
-                var c = document.getElementById("c");
-                var s = document.getElementById("s");
-                
-                var newHeight = mapwork.utils.getWindowHeight() - c.offsetTop - s.offsetHeight;
-                $(".result_search").height(newHeight);
-                getCards();
+                new mapwork.VisitorPage("cc");
             });
-
-//            function mapSearch(searchName) {
-//                visitorPage.doSearch(searchName);
-//                 var wsMessage = new mapwork.WSMessage(visitorPage);
-//                 wsMessage.initialize();
-
-//            }
-
-            function  getCards(){
-                $.ajax({
-                    method:'GET',
-                    url:'work?action=unregister&t=' + new Date().getTime(),
-                    dataType: "json",
-                    cache: false,
-                    success:function(data) {
-                        if(data) {
-                            $('#cardsCount').text(data.cards);
-                            $('#cardsUnreg').text( data.cardunreg);
-                            $('#devicesCount').text ( data.devices);
-                            $('#devicesUnreg').text( data.deviceunreg);
-                        }
-                    }
-                });
-
-            }
-
-
-
-
         </script>
     </head>
     <body>

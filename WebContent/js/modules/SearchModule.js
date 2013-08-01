@@ -65,35 +65,63 @@
             this._searchRadius = searchRadius;
         },
         doCardQuery: function() {
-            var url = "work?action=listcards";
+            var url = "work?action=initdatas";
             var self = this;
 
             mapwork.utils.loadJsonData(url, function(data) {
                 if (!data) {
                     return;
                 }
-                self.onCardQueryResult(data);
+//                console.dir(data);
+                if(data.cards) {
+                    mapwork.today = data.today;
+                    self.onCardQueryResult(data.cards);
+                    
+                    $('#cardsCount').text(data.cardNum);
+                    $('#cardsUnreg').text( data.cardUnregNum);
+                    $('#devicesCount').text ( data.deviceNum);
+                    $('#devicesUnreg').text( data.deviceUnregNum);
+                    
+                }
             });
         },
+        onCardQueryResult: function(cards) {
+            if (cards) {
+                for (var i in cards) {
+                    var row = cards[i];
+                    var cardItem = this.buildCardItem(row, i);
+                    
+                    if(cardItem) {
+                        this._cards[cardItem._id] = cardItem;
+                        var strRole = cardItem._json.role;
+                        if(strRole) {
+                            var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
+                            var role = this._roles[roleId];
+                            if(role) {
+                                cardItem.setRole(role);
+                            }
+                        }
+                    }
+                }
+            }
+//            this.doEventQuery();
+        },
+                
         findCards: function(name) {
             if(this._selectRole) {
                 this._selectRole.clearFocus();
                 this._selectRole = null;
             }
-            var r,role,c,cards,card;
+            var c,card;
             var arr = [];
             name = $.trim(name);
             if(name.length !== 0) {
-                for(r in this._roles) {
-                    role = this._roles[r];
-                    cards = role._cards;
-                    for(c in cards) {
-                        card = cards[c];
-                        if(card.getId().indexOf(name) !== -1) {
-                            arr.push(card);
-                        } else if(card.getName().indexOf(name) !== -1) {
-                            arr.push(card);
-                        }
+                for(c in this._cards) {
+                    card = this._cards[c];
+                    if(card.getId().indexOf(name) !== -1) {
+                        arr.push(card);
+                    } else if(card.getName().indexOf(name) !== -1) {
+                        arr.push(card);
                     }
                 }
             }
@@ -139,33 +167,10 @@
         setSearchHandler: function(searchHandler) {
             this._searchHandler = searchHandler;
         },
-        onCardQueryResult: function(jsonResult) {
-            if (jsonResult && jsonResult.group) {
-                for (var i in jsonResult.group) {
-                    var row = jsonResult.group[i];
-                    var cardItem = this.buildCardItem(row, i);
-                    if(cardItem) {
-                        this._cards[cardItem._id] = cardItem;
-                        var strRole = cardItem._json.role;
-                        if(strRole) {
-                            var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
-                            var role = this._roles[roleId];
-                            if(role) {
-                                cardItem.setRole(role);
-                            }
-                        }
-                    }
-                    
-                }
-            }
-            this.doEventQuery();
-        },
         updateCards: function(json) {
-
             if (json) {
                 for (var i in json) {
                     var card = json[i];
-
                     var cardItem = this._cards[card.id];
                     if(!cardItem) {
                         cardItem = this.buildCardItem(card, i);
