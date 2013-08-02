@@ -120,9 +120,9 @@ public class DeviceGroup {
 	}
 
 	public void checkRegInfo(Hashtable hash) {
-		hash.put("deviceNum", "" + (m_regCount + m_unregCount));
-		hash.put("deviceUnregNum", "" + m_unregCount);
-		hash.put("deviceDeactiveNum", "" + m_deactiveCount);
+		hash.put("deviceReg", "" + m_regCount );
+		hash.put("deviceUnreg", "" + m_unregCount);
+		hash.put("deviceDeactive", "" + m_deactiveCount);
 	}
 	
 	public void checkRegInfo0(Hashtable hash) {

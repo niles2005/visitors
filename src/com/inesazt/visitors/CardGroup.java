@@ -120,9 +120,9 @@ public class CardGroup {
 	}
 
 	public void checkRegInfo(Hashtable hash) {
-		hash.put("cardNum", "" + (m_regCount + m_unregCount));
-		hash.put("cardUnregNum", "" + m_unregCount);
-		hash.put("cardDeactiveNum", "" + m_deactiveCount);
+		hash.put("cardReg", "" + m_regCount);
+		hash.put("cardUnreg", "" + m_unregCount);
+		hash.put("cardDeactive", "" + m_deactiveCount);
 	}
 	
 	public void checkRegInfo0(Hashtable hash) {

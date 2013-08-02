@@ -87,17 +87,23 @@
         },
         updateRegisterInfo: function(data) {
             if(data) {
-                if(data.cardNum) {
-                    $('#cardsCount').text(data.cardNum);
+                if(data.cardReg) {
+                    $('#cardReg').text(data.cardReg);
                 }
-                if(data.cardUnregNum) {
-                    $('#cardsUnreg').text(data.cardUnregNum);
+                if(data.cardUnreg) {
+                    $('#cardUnreg').text(data.cardUnreg);
                 }
-                if(data.deviceNum) {
-                    $('#devicesCount').text(data.deviceNum);
+                if(data.cardDeactive) {
+                    $('#cardDeactive').text(data.cardDeactive);
                 }
-                if(data.deviceUnregNum) {
-                    $('#devicesUnreg').text(data.deviceUnregNum);
+                if(data.deviceReg) {
+                    $('#deviceReg').text(data.deviceReg);
+                }
+                if(data.deviceUnreg) {
+                    $('#deviceUnreg').text(data.deviceUnreg);
+                }
+                if(data.deviceDeactive) {
+                    $('#deviceDeactive').text(data.deviceDeactive);
                 }
             }
         },
