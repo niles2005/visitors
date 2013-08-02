@@ -90,6 +90,9 @@
     <div class="mh_main">
         <div class="feedback_logo"><i class="feedbacktitle">意见反馈</i></div>
     </div>
+    <div>
+       <h2><a href="index.html" class="homepage">返回主页 »</a></h2 >
+    </div>
 <div id="main" class="span10">
     <div class="comment" ng-repeat = "feedback in feedbacks">
         <div class="avatar">
@@ -97,8 +100,8 @@
         </div>
         <div class="name">{{feedback.userName}}</div>
         <div class="date" title="Added at 06:18 on 23 Nov 2010"><feedback class="createTime">{{feedback.createTime |date:'yyyy-MM-dd HH:mm:ss'}}</feedback></div>
-        <p>{{feedback.proposal}}</p>
-        <p class="reply" ng-click="showReplyArea($event,feedback.reply)"> reply </p>
+       <p> <span class="question">Q:</span>{{feedback.proposal}}</p>
+        <p class="reply" ng-click="showReplyArea($event,feedback.reply)"> reply: </p>
         <div  class="replytext hide">
             <textarea class="replytextarea" rows="5" ></textarea>
             <input type="submit" id="{{feedback.createTime}}" ng-click="addReply($event)" value="提交">

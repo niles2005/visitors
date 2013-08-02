@@ -197,3 +197,19 @@ a img{
     background-color:powderblue;
     width: 816px;
 }
+
+h2 .homepage:link,.homepage:visited,.homepage:hover,.homepage:active {
+    font-family: "Myriad Pro",微软雅黑,Arial,Helvetica,sans-serif;
+    text-align: center;
+    font-weight: normal;
+    text-shadow: 0 1px 1px #FFFFFF;
+    font-size: 16px;
+    color: #0196e3;
+    text-decoration: none;
+    outline: none;
+}
+
+.question{
+    font-style: oblique;
+    padding-right: 12px;
+}
