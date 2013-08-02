@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 @WebServlet(name = "WorkServlet", urlPatterns = { "/work" }, loadOnStartup=0)
 public class WorkServlet extends HttpServlet {
@@ -108,42 +109,71 @@ public class WorkServlet extends HttpServlet {
 		} else if(action.equals("listfeedbacks")){
 			return Global.getInstance().getFeedbacks().doList();
 		} else if(action.equals("addfeedback")){
-			String userName = request.getParameter("username");
-			String proposal = request.getParameter("proposal");
-			String emailAddress = request.getParameter("email");
-			Feedback feedback = new Feedback(userName, proposal, emailAddress,System.currentTimeMillis());
-			
-			return Global.getInstance().getFeedbacks().updateFeedbacks(feedback);
-		}else if(action.equals("addreply")){
-			try {
-				BufferedReader reader = request.getReader();
-				String str = reader.readLine();
-				if(str == null) {
-					return null;
-				}
-				StringBuilder strBuff = new StringBuilder();
-				while(str != null) {
-					strBuff.append(str);
-					str = reader.readLine();
-				}
-				JsonParser parser = new JsonParser();
-				JsonObject json = (JsonObject) parser.parse(strBuff.toString());
+
+			JsonObject json = this.getJsonFromRequest(request);
+			if (json != null) {
+				String userName = null;
+				String proposal = null;
+				String emailAddress = null;
 				
-				long createTime = -1;
-				String reply = null;
-				JsonElement jsonElement = json.get("createtime");
-				if(jsonElement != null) {
-					createTime = jsonElement.getAsLong();
+				JsonElement jsonElement = json.get("username");
+				if (jsonElement != null) {
+					userName = jsonElement.getAsString();
 				}
-				jsonElement = json.get("reply");
-				if(jsonElement != null) {
-					reply = jsonElement.getAsString();
+				jsonElement = json.get("proposal");
+				if (jsonElement != null) {
+					proposal = jsonElement.getAsString();
 				}
-				return Global.getInstance().getFeedbacks().updateReply(createTime,reply);
-			} catch(Exception ex) {
-				ex.printStackTrace();
+				jsonElement = json.get("email");
+				if (jsonElement != null) {
+					emailAddress = jsonElement.getAsString();
+				}
+				Feedback feedback = new Feedback(userName, proposal, emailAddress,System.currentTimeMillis());
+				return Global.getInstance().getFeedbacks().updateFeedbacks(feedback);
 			}
+			
+		}else if(action.equals("addreply")){
+				JsonObject json = this.getJsonFromRequest(request);
+				if (json != null) {
+					long createTime = -1;
+					String reply = null;
+					JsonElement jsonElement = json.get("createtime");
+					if (jsonElement != null) {
+						createTime = jsonElement.getAsLong();
+					}
+					jsonElement = json.get("reply");
+					if (jsonElement != null) {
+						reply = jsonElement.getAsString();
+					}
+					return Global.getInstance().getFeedbacks().updateReply(createTime, reply);
+							
+				}
+			
 		}
 		return null;
+	}
+	
+	private JsonObject getJsonFromRequest(HttpServletRequest request){
+		JsonObject json = null;
+		try {
+			BufferedReader reader = request.getReader();
+			String str = reader.readLine();
+			if(str == null) {
+				return null;
+			}
+			StringBuilder strBuff = new StringBuilder();
+			while(str != null) {
+				strBuff.append(str);
+				str = reader.readLine();
+			}
+			JsonParser parser = new JsonParser();
+			json = (JsonObject) parser.parse(strBuff.toString());
+			
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return json;
 	}
 }
