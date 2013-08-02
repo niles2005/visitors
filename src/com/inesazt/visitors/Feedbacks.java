@@ -1,8 +1,10 @@
 package com.inesazt.visitors;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class Feedbacks {
 		try {
 			File feedbackFile = ServerConfig.getInstance().getFeedbackFile();
 //			File feedbackFile = new File("D:\\mywork\\inesazt\\workspace\\visitors\\WebContent\\WEB-INF\\config","feedback.json");
-			JSONReader jReader = new JSONReader(new FileReader(feedbackFile));
+			JSONReader jReader = new JSONReader(new BufferedReader(new InputStreamReader(new FileInputStream(feedbackFile),"UTF-8")));
 			
 			if(feedbackFile.exists()) {
 				
@@ -63,6 +65,17 @@ public class Feedbacks {
 		addFeedback(feedback);
 		saveFeedbacks();
 		return JSON.toJSONString(feedbacks);
+	}
+	
+	public String updateReply(long createTime,String reply){
+		for(Feedback feedback : feedbacks){
+			if(createTime == feedback.getCreateTime()){
+				feedback.setReply(reply);
+			}
+			
+		}
+		saveFeedbacks();
+		return WebUtil.oKJSON();
 	}
 	
 	

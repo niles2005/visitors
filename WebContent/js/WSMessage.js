@@ -30,15 +30,15 @@
            if ('WebSocket' in window) {
                this.socket = new WebSocket(host);
            } else if ('MozWebSocket' in window) {
-               console.dir(this.socket)
+//               console.dir(this.socket)
                this.socket = new MozWebSocket(host);
            } else {
-               console.log('Error: WebSocket is not supported by this browser.');
+//               console.log('Error: WebSocket is not supported by this browser.');
                return;
            }
 
            this.socket.onopen = function () {
-               console.log('Info: WebSocket connection opened.');
+//               console.log('Info: WebSocket connection opened.');
 
 //               if (self.module._map._currentModule) {
 //                   self.module._map._currentModule.clean();
@@ -54,7 +54,7 @@
            };
 
            this.socket.onclose = function () {
-               console.log('Info: WebSocket closed.');
+//               console.log('Info: WebSocket closed.');
            };
 
            this.socket.onmessage = function (message) {

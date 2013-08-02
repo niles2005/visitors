@@ -1,1 +1,6 @@
-{"dbDriver":"oracle.jdbc.driver.OracleDriver","dbURL":"jdbc:oracle:thin:@192.168.1.203:1521:UNPAY","dbPass":"gis","dbUser":"gis"}
+{
+"dbDriver":"org.sqlite.JDBC",
+"dbURL":"jdbc:sqlite:d:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test\\test.db",
+"dbPass":"",
+"dbUser":""
+}

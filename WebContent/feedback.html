@@ -5,12 +5,13 @@
     <link rel="stylesheet" href="css/feedback.css"/>
     <link rel="stylesheet" href="css/bootstrap.css"/>
     <script src="scripts/angular.js"></script>
+    <script type="text/javascript" src="scripts/jquery-1.7.js"></script>
     <script>
          function feedbackCtrl($scope,$http){
             $scope.showFeedbacks = function(){
-                 $http.get("work?action=listfeedbacks").success(function(data){
+                 $http.get("work?action=listfeedbacks&t="+new Date().getTime()).success(function(data){
                      if(data){
-                         console.dir(data)
+//                         console.dir(data)
                          $scope.feedbacks = data;
                      }
                  });
@@ -20,7 +21,7 @@
 
                  var url = "work?action=addfeedback";
                  if ($scope.newFeedback) {
-                     console.log('send new feedback')
+//                     console.log('send new feedback')
                      $http.get(url, {params: {username: $scope.newFeedback.username, proposal: $scope.newFeedback.proposal, email: $scope.newFeedback.email}}).success(function (data) {
                          $scope.showFeedbacks();
                          $scope.newFeedback = null;
@@ -28,6 +29,45 @@
                  }
              };
 
+             $scope.showReplyArea = function($event,proposal){
+                 var $currDiv = $($event.target).parent();
+                 var $replyTextArea = $currDiv.find(".replytext");
+                 var $prepart = $currDiv.find(".prepart");
+                 $prepart.hide();
+                 $replyTextArea.show();
+                 $replyTextArea.find('>.replytextarea').val(proposal) ;
+             }
+
+             $scope.hideReplyArea  = function($event){
+                 var $currDiv = $($event.target).parent().parent();
+                 var $replyTextArea = $currDiv.find(".replytext");
+                 var $prepart = $currDiv.find(".prepart");
+                 if($prepart.find('>.proposal').text()){
+                     $prepart.show();
+                 }
+                 $replyTextArea.hide();
+             }
+
+             $scope.addReply = function($event){
+                 var $currDiv = $($event.target).parent().parent();
+                 var $replyTextArea = $currDiv.find(".replytext");
+                 var $prepart = $currDiv.find(".prepart");
+                 var replyContent = $replyTextArea.find('>.replytextarea').val();
+
+                 if (replyContent) {
+                     $($scope.feedbacks).each(function () {
+                         if (this.createTime == $event.target.id) {
+                             this.reply = replyContent;
+                             var url = "work?action=addreply";
+                             $http.get(url, {params: {createtime: this.createTime, reply: this.reply}}).success(function () {
+                                 $replyTextArea.hide();
+                                 $prepart.show();
+                                 $prepart.find('>.proposal').text(replyContent);
+                             });
+                         }
+                     });
+                 }
+             }
 
             $scope.showFeedbacks();
          }
@@ -36,17 +76,26 @@
     <title>FeedBack</title>
 </head>
 <body>
+
 <div class="container" ng-controller="feedbackCtrl">
+    <div class="mh_main">
+        <div class="feedback_logo"><i class="feedbacktitle">意见反馈</i></div>
+    </div>
 <div id="main" class="span10">
     <div class="comment" ng-repeat = "feedback in feedbacks">
         <div class="avatar">
-
+           <img src="images/visitor.jpg" style="width: 50px;height:50px ">
         </div>
         <div class="name">{{feedback.userName}}</div>
         <div class="date" title="Added at 06:18 on 23 Nov 2010"><feedback class="createTime">{{feedback.createTime |date:'yyyy-MM-dd HH:mm:ss'}}</feedback></div>
         <p>{{feedback.proposal}}</p>
-        <pre ng-show=feedback.reply>
-            <span class="reply"> reply: </span>
+        <p class="reply" ng-click="showReplyArea($event,feedback.reply)"> reply </p>
+        <div  class="replytext hide">
+            <textarea class="replytextarea" rows="5" ></textarea>
+            <input type="submit" id="{{feedback.createTime}}" ng-click="addReply($event)" value="提交">
+            <input type="submit" ng-click="hideReplyArea($event)" value ="取消" >
+        </div>
+        <pre class="prepart" ng-show=feedback.reply>
             <p class="proposal">{{feedback.reply}}</p>
         </pre>
     </div>

@@ -109,6 +109,10 @@ public class WorkServlet extends HttpServlet {
 			Feedback feedback = new Feedback(userName, proposal, emailAddress,System.currentTimeMillis());
 			
 			return Global.getInstance().getFeedbacks().updateFeedbacks(feedback);
+		}else if(action.equals("addreply")){
+			long createTime = Long.parseLong(request.getParameter("createtime"));
+			String reply = request.getParameter("reply");
+			return Global.getInstance().getFeedbacks().updateReply(createTime,reply);
 		}
 		return null;
 	}
