@@ -209,9 +209,11 @@ h2 .homepage:link,.homepage:visited,.homepage:hover,.homepage:active {
     outline: none;
 }
 
-.question{
-    font-style: oblique;
-    padding-right: 12px;
+pre .question{
+    color:violet;
+    font-style:oblique;
+    font-size: 18px;
+
 }
 
 pre.proposalcontent{
