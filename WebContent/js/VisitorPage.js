@@ -39,8 +39,9 @@
         onWindowResize: function() {
             var headHeight = document.getElementById('n').clientHeight;
             var cnHeight = document.getElementById('cn').clientHeight;
+            var csHeight = document.getElementById('cs').clientHeight;
             var cc = document.getElementById('cc');
-            var mainHeight = mapwork.utils.getClientSize().height - headHeight - cnHeight;
+            var mainHeight = mapwork.utils.getClientSize().height - headHeight - cnHeight - csHeight;
             cc.style.height = mainHeight + 'px';
             this._map.resetSize();
             if (mapwork.resizeListener) {

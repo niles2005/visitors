@@ -60,7 +60,7 @@
            this.socket.onmessage = function (message) {
                var json = JSON.parse(message.data);
 //               console.dir(json);
-               self.module.updateCards(json);
+               self.module.updateDatas(json);
 //               self.module.onPageQueryResult(json);
            };
        }

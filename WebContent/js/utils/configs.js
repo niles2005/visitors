@@ -27,7 +27,7 @@
 	mapwork.serviceAddress = mapwork.serviceAddress3;
 	mapwork.configs = {
 
-        defaultLat:31.271839,
+        defaultLat:31.270839,
         defaultLon:121.827126,
 
         defaultZoom:16,

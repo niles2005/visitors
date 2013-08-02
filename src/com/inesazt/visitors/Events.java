@@ -27,8 +27,12 @@ public class Events {
 	private int m_lastSeqId = -1;
 	private void reloadEvents(boolean doBoardcast) {
 		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId,m_devices,m_dbToday);
+		if(eventList.size() == 0) {
+			return;
+		}
 		//only send changed card
 		Hashtable<String,Card> hash = new Hashtable<String,Card>();
+		
 		for(int i=0;i<eventList.size();i++) {
 			Event event = (Event)eventList.get(i);
 			m_lastSeqId = event.getSeqId();
@@ -44,19 +48,31 @@ public class Events {
 			}
 		}
 		
-		if(doBoardcast && hash.size() > 0) {//boardcast to client
-			ArrayList list = new ArrayList();
-			Iterator iters = hash.values().iterator();
-			while(iters.hasNext()) {
-				list.add(iters.next());
+		if(doBoardcast) {//boardcast to client
+			Hashtable dataHash = new Hashtable();
+			if(hash.size() > 0) {
+				ArrayList list = new ArrayList();
+				Iterator iters = hash.values().iterator();
+				while(iters.hasNext()) {
+					list.add(iters.next());
+				}
+				dataHash.put("cards", list);
 			}
-			String str = JSON.toJSONString(list);
+			dataHash.put("events", eventList);
+			
+//			Hashtable regInfoHash = new Hashtable(); 
+//			m_cards.checkRegInfo(regInfoHash);
+//			m_devices.checkRegInfo(regInfoHash);
+//			
+//			if(regInfoHash.size() > 0) {
+//				dataHash.put("register", regInfoHash);
+//			}
+			
+	
+			String str = JSON.toJSONString(dataHash);
 			Global.getInstance().boardCastClientData(str);
 		}
-		
-		
 	}
-	
 	
 	public void doTaskWork() {
 		reloadEvents(true);

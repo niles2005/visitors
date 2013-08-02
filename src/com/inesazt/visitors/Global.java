@@ -57,8 +57,8 @@ public class Global {
 			m_strToday = DateTimeUtil.getTodayString();
         	DBManager.initInstance(m_configure);
 			
-			m_devices = Devices.buildDevices();
-			m_cards = Cards.buildCards();
+			m_devices = new Devices();
+			m_cards = new Cards();
 			m_feedbacks = Feedbacks.buildFeedback();
 			m_events = new Events(m_cards,m_devices,m_strToday);
 			System.err.println("Global init finished.");
@@ -112,8 +112,15 @@ public class Global {
 	//for client init
 	public String getInitDatas() {
 		Hashtable hash = new Hashtable();
-		m_cards.checkRegInfo(hash);
-		m_devices.checkRegInfo(hash);
+		
+		Hashtable regInfoHash = new Hashtable(); 
+		m_cards.checkRegInfo(regInfoHash);
+		m_devices.checkRegInfo(regInfoHash);
+		
+		if(regInfoHash.size() > 0) {
+			hash.put("register", regInfoHash);
+		}
+		
 		hash.put("today", m_strToday);
 		
 		hash.put("cards", m_cards.getGroup());

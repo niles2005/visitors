@@ -7,7 +7,7 @@
         <script>
             function BindState($scope, $http ) {
                 $scope.doAll = function() {
-                    var url = "work?action=listcards";
+                    var url = "work?action=listcards&t=" + new Date().getTime();
                     //console.dir(url);
                     $http.get(url, {params: {t: "all"}}).success(function(data) {
                         if(data && data.group) {
@@ -18,10 +18,10 @@
                             $scope.cards = theCards;
                         }
                     });
-                }
+                };
                 $scope.setCard = function(card) {
                     $scope.selectCard = card;
-                }
+                };
                 $scope.kk = "role";
                 $scope.doAll();
 
@@ -34,7 +34,7 @@
                         });
 
                     }
-                }
+                };
 
             }
         </script>
