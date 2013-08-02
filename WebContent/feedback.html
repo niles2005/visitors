@@ -102,13 +102,7 @@
         <div class="name">{{feedback.userName}}</div>
         <div class="date" title="Added at 06:18 on 23 Nov 2010"><feedback class="createTime">{{feedback.createTime |date:'yyyy-MM-dd HH:mm:ss'}}</feedback></div>
        <p>
-<<<<<<< HEAD
-           Q:<pre class="proposalcontent">{{feedback.proposal}}</pre>
-            
-=======
-
             <pre class="proposalcontent"><span class="question"><b>Q:</b></span>{{feedback.proposal}}</pre>
->>>>>>> d523acf7a0a9aca413942851f4c024614bc1fda0
         </p>
         <p class="reply" ng-click="showReplyArea($event,feedback.reply)"> reply: </p>
         <div  class="replytext hide">
