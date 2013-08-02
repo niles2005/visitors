@@ -38,10 +38,11 @@ public class Feedbacks {
 		Feedbacks feedbacks = new Feedbacks();
 		try {
 			File feedbackFile = ServerConfig.getInstance().getFeedbackFile();
-//			File feedbackFile = new File("D:\\mywork\\inesazt\\workspace\\visitors\\WebContent\\WEB-INF\\config","feedback.json");
-			JSONReader jReader = new JSONReader(new BufferedReader(new InputStreamReader(new FileInputStream(feedbackFile),"UTF-8")));
 			
 			if(feedbackFile.exists()) {
+//				File feedbackFile = new File("D:\\mywork\\inesazt\\workspace\\visitors\\WebContent\\WEB-INF\\config","feedback.json");
+				JSONReader jReader = new JSONReader(new BufferedReader(new InputStreamReader(new FileInputStream(feedbackFile),"UTF-8")));
+				
 				
 				jReader.startArray();
 				while(jReader.hasNext()){

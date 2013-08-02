@@ -68,7 +68,12 @@
                          if (this.createTime == $event.target.id) {
                              this.reply = replyContent;
                              var url = "work?action=addreply";
-                             $http.get(url, {params: {createtime: this.createTime, reply: this.reply}}).success(function () {
+                             
+                             $http({
+                                url:url,
+                                method: "POST",
+                                data: {createtime: this.createTime, reply: this.reply}
+                             }).success(function () {
                                  $replyTextArea.hide();
                                  $prepart.show();
                                  $prepart.find('>.proposal').text(replyContent);

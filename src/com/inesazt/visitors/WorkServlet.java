@@ -1,5 +1,6 @@
 package com.inesazt.visitors;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 import javax.servlet.ServletConfig;
@@ -9,6 +10,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @WebServlet(name = "WorkServlet", urlPatterns = { "/work" }, loadOnStartup=0)
 public class WorkServlet extends HttpServlet {
@@ -110,9 +115,34 @@ public class WorkServlet extends HttpServlet {
 			
 			return Global.getInstance().getFeedbacks().updateFeedbacks(feedback);
 		}else if(action.equals("addreply")){
-			long createTime = Long.parseLong(request.getParameter("createtime"));
-			String reply = request.getParameter("reply");
-			return Global.getInstance().getFeedbacks().updateReply(createTime,reply);
+			try {
+				BufferedReader reader = request.getReader();
+				String str = reader.readLine();
+				if(str == null) {
+					return null;
+				}
+				StringBuilder strBuff = new StringBuilder();
+				while(str != null) {
+					strBuff.append(str);
+					str = reader.readLine();
+				}
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse(strBuff.toString());
+				
+				long createTime = -1;
+				String reply = null;
+				JsonElement jsonElement = json.get("createtime");
+				if(jsonElement != null) {
+					createTime = jsonElement.getAsLong();
+				}
+				jsonElement = json.get("reply");
+				if(jsonElement != null) {
+					reply = jsonElement.getAsString();
+				}
+				return Global.getInstance().getFeedbacks().updateReply(createTime,reply);
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		return null;
 	}
