@@ -1,40 +1,43 @@
 package com.inesazt.visitors;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
-
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import com.alibaba.fastjson.JSON;
 
 
 public class Devices {
-	private static ObjectMapper fileData_mapper= new ObjectMapper();
-	
-    private Map<String,Device> devices = new Hashtable<String,Device>(); 
-    
-    public Map<String,Device> getGroup() { return devices; }
-    public void setGroup(Map<String,Device> devices) { this.devices = devices; }
+	private DeviceGroup m_deviceGroup = null;
 
-    public void addDevice(Device device) {
-    	devices.put(device.getId(), device);
-    }
+	public Devices() {
+		m_deviceGroup = DeviceGroup.doLoad();
+		if(m_deviceGroup == null) {
+			m_deviceGroup = new DeviceGroup();
+		}
+	}
+	
+	public boolean saveDevices() {
+		return this.m_deviceGroup.doSave();
+	}
     
-    public Device getDevice(String deviceId) {
-    	return devices.get(deviceId);
-    }
-    
+	public Map<String, Device> getGroup() {
+		return this.m_deviceGroup.getGroup();
+	}
+
+	public void addDevice(Device device) {
+		m_deviceGroup.addDevice(device);
+	}
+	
+	public Device getDevice(String deviceId) {
+		return m_deviceGroup.getDevice(deviceId);
+	}
+	
     public Device buildDevice(String deviceId) {
     	if(deviceId == null) {
     		return null;
     	}
-    	Device device = devices.get(deviceId);
+    	Device device = m_deviceGroup.getDevice(deviceId);
     	if(device == null) {
     		device = new Device();
     		device.setId(deviceId);
@@ -43,36 +46,8 @@ public class Devices {
     	return device;
     }
     
-	public static Devices buildDevices() {
-		File deviceFile = ServerConfig.getInstance().getDeviceFile();
-		Devices devices = null;
-		try {
-			if(deviceFile.exists()) {
-				devices = fileData_mapper.readValue(deviceFile, Devices.class);
-			} else {
-				devices = new Devices();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return devices;
-	}
-    
-	public synchronized boolean saveDevices() {
-		try {
-			File deviceFile = ServerConfig.getInstance().getDeviceFile();
-			FileOutputStream fos = new FileOutputStream(deviceFile);
-			JsonGenerator jsonGenerator = fileData_mapper.getJsonFactory().createJsonGenerator(fos, JsonEncoding.UTF8);
-			jsonGenerator.writeObject(this);
-			return true;
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		return false;
-	}
-	
 	public String doList() {
-		String str = JSON.toJSONString(this);
+		String str = JSON.toJSONString(m_deviceGroup);
 //		System.err.println(str);
 		return str;
 	}
@@ -116,26 +91,7 @@ public class Devices {
 	}
 	
 	public void checkRegInfo(Hashtable hash) {
-		Iterator it = devices.values().iterator();
-		int unregCount = 0;
-		int regCount = 0;
-		int deactiveCount = 0;
-		while(it.hasNext()){
-			Device device = (Device)it.next();
-			if(device.getActived()) {
-				if(device.getLocate() == null){
-					unregCount++;
-				} else {
-					regCount++;
-				}
-			} else {
-				deactiveCount++;
-			}
-		}
-		hash.put("deviceNum", regCount + unregCount);
-		hash.put("deviceUnregNum", unregCount);
-		hash.put("deviceDeactiveNum", deactiveCount);
+		this.m_deviceGroup.checkRegInfo(hash);
 	}
-	
 	
 }

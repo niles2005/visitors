@@ -15,12 +15,35 @@ public class Card {
 //	private String lastLocate = null;
 	private long lastTime = 0;
 	private boolean isActived = true;
-
+	
+	private CardGroup m_cardGroup = null;
+	public void settheCardGroup(CardGroup cardGroup) {
+		m_cardGroup = cardGroup;
+	}
+	
 	public boolean getActived() {
 		return isActived;
 	}
 
 	public void setActived(boolean isActived) {
+		if(m_cardGroup != null) {
+//			System.err.println("set active:" + isActived);
+			if(this.isActived != isActived) {//int regNum,int unregNum,int deactiveNum
+				if(isActived) {
+					if(role != null) {
+						this.m_cardGroup.changeRegisterInfo(1, 0, -1);
+					} else {
+						this.m_cardGroup.changeRegisterInfo(0, 1, -1);
+					}
+				} else {
+					if(role != null) {
+						this.m_cardGroup.changeRegisterInfo(-1, 0, 1);
+					} else {
+						this.m_cardGroup.changeRegisterInfo(0, -1, 1);
+					}
+				}
+			}
+		}
 		this.isActived = isActived;
 	}
 
@@ -61,6 +84,20 @@ public class Card {
 	}
 
 	public void setRole(String role) {
+		if(m_cardGroup != null) {
+//			System.err.println("set role:" + role);
+			if(this.isActived) {
+				boolean hasOldRole = this.role != null;
+				boolean hasNewRole = role != null;
+				if(hasOldRole != hasNewRole) {//int regNum,int unregNum,int deactiveNum
+					if(role != null) {
+						this.m_cardGroup.changeRegisterInfo(1, -1, 0);
+					} else {
+						this.m_cardGroup.changeRegisterInfo(-1, 1, 0);
+					}
+				}
+			}
+		}
 		this.role = role;
 	}
 

@@ -11,6 +11,7 @@
         this._roles = {};
         this._cards = {};
         this._selectRole = null;
+        this._$consoleWindow = $("#consoleWindow");
     }
     
     SearchModule.prototype = {
@@ -65,7 +66,7 @@
             this._searchRadius = searchRadius;
         },
         doCardQuery: function() {
-            var url = "work?action=initdatas";
+            var url = "work?action=initdatas&t=" + new Date().getTime();
             var self = this;
 
             mapwork.utils.loadJsonData(url, function(data) {
@@ -73,19 +74,34 @@
                     return;
                 }
 //                console.dir(data);
-                if(data.cards) {
+                if(data.today) {
                     mapwork.today = data.today;
-                    self.onCardQueryResult(data.cards);
-                    
-                    $('#cardsCount').text(data.cardNum);
-                    $('#cardsUnreg').text( data.cardUnregNum);
-                    $('#devicesCount').text ( data.deviceNum);
-                    $('#devicesUnreg').text( data.deviceUnregNum);
-                    
+                }
+                if(data.cards) {
+                    self.updateCardInfo(data.cards);
+                }
+                if(data.register) {
+                    self.updateRegisterInfo(data.register);
                 }
             });
         },
-        onCardQueryResult: function(cards) {
+        updateRegisterInfo: function(data) {
+            if(data) {
+                if(data.cardNum) {
+                    $('#cardsCount').text(data.cardNum);
+                }
+                if(data.cardUnregNum) {
+                    $('#cardsUnreg').text(data.cardUnregNum);
+                }
+                if(data.deviceNum) {
+                    $('#devicesCount').text(data.deviceNum);
+                }
+                if(data.deviceUnregNum) {
+                    $('#devicesUnreg').text(data.deviceUnregNum);
+                }
+            }
+        },
+        updateCardInfo: function(cards) {
             if (cards) {
                 for (var i in cards) {
                     var row = cards[i];
@@ -167,30 +183,84 @@
         setSearchHandler: function(searchHandler) {
             this._searchHandler = searchHandler;
         },
-        updateCards: function(json) {
+        updateDatas: function(json) {
             if (json) {
-                for (var i in json) {
-                    var card = json[i];
-                    var cardItem = this._cards[card.id];
-                    if(!cardItem) {
-                        cardItem = this.buildCardItem(card, i);
-                        this._cards[cardItem._id] = cardItem;
+//                console.dir(json)
+                if(json.register) {
+                    this.updateRegisterInfo(json.register);
+                }
 
-                    }
-                    if(cardItem) {
-                        var strRole = cardItem._json.role;
-                        if(strRole) {
-                            cardItem.setLastEvent(card);
-                            var roleId = strRole.substring(0,1) + "_" + card.lastLocate;
-                            var role = this._roles[roleId];
-                            if(role) {
-                                cardItem.setRole(role);
+                var cards = json.cards;
+                if(cards) {
+                    for (var i in cards) {
+                        var card = cards[i];
+                        var cardItem = this._cards[card.id];
+                        if(!cardItem) {
+                            cardItem = this.buildCardItem(card, i);
+                            this._cards[cardItem._id] = cardItem;
+
+                        }
+                        if(cardItem) {
+                            var strRole = cardItem._json.role;
+                            if(strRole) {
+                                cardItem.setLastEvent(card);
+                                var roleId = strRole.substring(0,1) + "_" + card.lastLocate;
+                                var role = this._roles[roleId];
+                                if(role) {
+                                    cardItem.setRole(role);
+                                }
                             }
                         }
                     }
                 }
+                var events = json.events;
+                if(events) {
+                    var self = this;
+                    var $liWrap = $(".console-log");
+                    for(var e in events) {
+                        var eve = events[e];
+                        var date = new Date(eve.time);
+                        var ss = "<li class='eventli'>" + eve.seqId + "  " + mapwork.utils.formatDate(date, 'day') + " " + mapwork.utils.formatDate(date, 'time') + " " + eve.cardId;
+                        var cardItem = this._cards[eve.cardId];
+                        if(cardItem) {
+                            ss += "[" + cardItem.getName() + "]";
+                        }
+                        ss += "  " + eve.deviceId + "[" + eve.deviceLocate + "]</li>";
+                        var $LI = $(ss);
+                        $LI.get(0).currentEvent = eve;
+                        $LI.click(function(event) {
+                           self.selectLI(this);
+                        });
+                        $liWrap.append($LI);
+                    }
+                    var children = $liWrap.children();
+                    var limitNum = 50;
+                    if(children.length > limitNum) {
+                        for(var i=children.length - limitNum - 1;i>=0;i--) {
+                            $(children.get(i)).remove();
+                        }
+                    }
+                    $('.console-wrapper').scrollTop($('.console-wrapper').height() + 1000);
+                }
             }
         },
+        selectLI: function(li) {
+            if(this._$selectLI) {
+                this._$selectLI.removeClass("selectedLI");
+            }
+            this._$selectLI = $(li);
+            this._$selectLI.addClass("selectedLI");
+            
+            if(li.currentEvent) {
+                var cardItem = this._cards[li.currentEvent.cardId];
+                if(cardItem) {
+                    var arr = [];
+                    arr.push(cardItem);
+                    this._sideBar.onPageQueryResult(arr,this);
+                }
+            }
+        },
+        
         buildCardItem: function(json, index) {
             var cardItem = null;
             if (json.actived) {
@@ -207,52 +277,7 @@
                 cardItem.setMap(this._map);
             }
             return cardItem;
-        },
-        doEventQuery: function() {
-//            var json = [{"user":"g2","locate":"b1","time":124234235},{"user":"g3","locate":"b1","time":124234235},{"user":"g5","locate":"b1","time":124234235}];
-//            console.dir(json);
-//            this.onEventQueryResult(json);
-            
-            var url = "work?action=loadevents";
-            var self = this;
-
-            mapwork.utils.loadJsonData(url, function(data) {
-                if (!data) {
-                    return;
-                }
-                self.onEventQueryResult(data);
-            });
-        },
-        onEventQueryResult: function(jsonResult) {
-            if (!jsonResult) {
-                return;
-            }
-            for (var i in jsonResult) {
-                var event = jsonResult[i];
-                var card = this._cards[event.cardId];
-                if(card) {
-                    var strRole = card._json.role;
-                    var roleId = strRole.substring(0,1) + "_" + event.deviceLocate;
-                    var role = this._roles[roleId];
-                    if(role) {
-                        card.setRole(role);
-                    }
-                }
-            }
-        },                
-//        buildCardByEvent: function(event) {
-//             var cardId = event.cardId;
-//             var cardName = event.cardName;
-//             var cardRole = event.cardRole;
-//             if(!cardId || !cardRole) {
-//                 return null;
-//             }
-//             if(!cardName) {
-//                 cardName = cardId;
-//             }
-//             var cardJson = {"id":cardId,"name":cardName,"role":cardRole,"createTime":-1};
-//             return this.buildCardItem(cardJson,-1);
-//        }        
+        }
     };
 
     if (EXTEND) {

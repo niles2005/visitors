@@ -18,7 +18,7 @@ public class ServerConfig {
 			if (!m_configPath.exists()) {
 				m_configPath.mkdir();
 			}
-			m_configureFile = new File(m_configPath, "configure1.json");
+			m_configureFile = new File(m_configPath, "configure.json");
 			m_deviceFile = new File(m_configPath, "device.json");
 			m_cardFile = new File(m_configPath, "card.json");
 			m_feedbackFile = new File(m_configPath, "feedback.json");

@@ -8,9 +8,10 @@
     <script>
          function feedbackCtrl($scope,$http){
             $scope.showFeedbacks = function(){
-                 $http.get("work?action=listfeedbacks").success(function(data){
+                var url = "work?action=listfeedbacks&t=" + new Date().getTime();
+                 $http.get(url).success(function(data){
                      if(data){
-                         console.dir(data)
+//                         console.dir(data)
                          $scope.feedbacks = data;
                      }
                  });
@@ -19,10 +20,20 @@
              $scope.addFeedback = function(){
 
                  var url = "work?action=addfeedback";
+//                 url += "?username=aa&proposal=bbb";
+//                url = "work?action=addfeedback&proposal=sfsfaf&username=zzzz444&t=" + new Date().getTime();
                  if ($scope.newFeedback) {
-                     console.log('send new feedback')
+//                     console.log('send new feedback')
                      $http.get(url, {params: {username: $scope.newFeedback.username, proposal: $scope.newFeedback.proposal, email: $scope.newFeedback.email}}).success(function (data) {
-                         $scope.showFeedbacks();
+
+//                    $http({
+//                    cache: false,
+//                        url: url,
+//                        method: "POST"
+//                        
+//                    }).success(function (data) {
+                        alert("bbb"+ data.length);
+                         $scope.feedbacks = data;
                          $scope.newFeedback = null;
                      });
                  }

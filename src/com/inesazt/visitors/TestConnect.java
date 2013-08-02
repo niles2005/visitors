@@ -15,9 +15,9 @@ public class TestConnect {
 //		doAtoFactory();
 		
 //		testSqlite();
-		String card = "bbb";
+		String card = "zzz22";
 		String date = "2013/08/01";
-		String device = "00:1B:00:99_1";
+		String device = "00:1B:00:99_2";
 		for(int i=0;i<20;i++) {
 			doAtoFactory_sqlite(date,card,device);
 		}
@@ -50,7 +50,7 @@ public class TestConnect {
 		try {
 			Connection conn = null;
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:E:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test.db","gis","gis");
+			conn = DriverManager.getConnection("jdbc:sqlite:E:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test\\test.db","gis","gis");
 			// 从下面开始，和SQL Server一模一样
 			Statement sm = conn.createStatement();
 			String dateTime = DateFormat.format(new Date());

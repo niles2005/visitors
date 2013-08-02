@@ -177,12 +177,12 @@
                     this._mapIcon.setEarthPos(this._ePos);
                     var self = this;
                     $(this._mapIcon.getHtmlObj()).hover(
-                            function() {
+                            function(event) {
                                 self.doHover();
                                 //显示标签
                                 self.showHoverLabel(event);
                             },
-                            function() {
+                            function(event) {
                                 self.deHover();
                                 //隐藏标签
                                 self.hideHoverLabel();

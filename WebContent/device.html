@@ -10,7 +10,7 @@
         <script>
             function BindState($scope, $http) {
                 $scope.doAll = function() {
-                    var url = "work?action=listdevices";
+                    var url = "work?action=listdevices&t=" + new Date().getTime();
                     //console.dir(url);
                     $http.get(url).success(function(data) {
                         if(data && data.group) {
