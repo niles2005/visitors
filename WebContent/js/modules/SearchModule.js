@@ -203,8 +203,9 @@
                         var cardItem = this._cards[card.id];
                         if(!cardItem) {
                             cardItem = this.buildCardItem(card, i);
-                            this._cards[cardItem._id] = cardItem;
-
+                            if (cardItem) {
+                                this._cards[cardItem._id] = cardItem;
+                            }
                         }
                         if(cardItem) {
                             var strRole = cardItem._json.role;
@@ -246,7 +247,7 @@
                             $(children.get(i)).remove();
                         }
                     }
-                    $('.console-wrapper').scrollTop($('.console-wrapper').height() + 1000);
+                    $('.console-wrapper').scrollTop($('.console-wrapper')[0].scrollHeight);
                 }
             }
         },

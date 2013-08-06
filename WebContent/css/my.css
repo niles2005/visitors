@@ -2059,18 +2059,20 @@ input#searchSubmit {
 	width: 369px;
 }
 
-#panelarrow2 {
+.panelarrow2 {
 	position: absolute;
-	right: 384px;
+    bottom: 0px;
+	/*right: 384px;*/
 	text-align: center;
-	width: 24px;
-	height: 78px;
-	border-radius: 3px 0 0 3px;
+	width: 78px;
+	height: 24px;
+	border-radius: 3px 3px 0 0;
 	border: 1px solid #BBBBBB;
-	border-right: 0;
+	border-bottom: 0;
 	background: #FFFFFF;
-	box-shadow: 1px 1px 1px #999;
-	top: 40%;
+	box-shadow: #999;
+	/*top: 40%;*/
+    left: 33%;
 	z-index: 1;
 }
 
@@ -3311,5 +3313,32 @@ you can use the generic selector below, but it's slower:
 
 .calendar {
    padding-left: 12px;
+}
+
+.console-wrapper{
+    position:absolute;
+    background-color:mediumslateblue;
+    width: 100%;
+    height: 120px;
+
+    bottom: -120px;
+    left: 0px;
+    overflow: auto;
+    z-index: 7;
+    /*display: none;*/
+}
+
+.arrow_img{
+    margin-top: 5px;
+    margin-left: 33px;
+    height: 24px;
+    width: 24px;
+    background-image: url("../images/glyphicons-halflings.png");
+    background-position: -312px  -120px;
+    background-repeat: no-repeat;
+}
+
+.arrow_img_show{
+    background-position: -288px -120px;
 }
 

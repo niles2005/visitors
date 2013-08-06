@@ -23,6 +23,20 @@
             $(document).ready(function() {
                 new mapwork.VisitorPage("cc");
             });
+
+            hideConsole = function (){
+                if ($('#consoleWrapper').css('bottom')=='0px') {
+                    $('#consoleWrapper').width($(document.body).width() - 381);
+                    $('#consoleWrapper').animate({bottom:'-120px'});
+                    $('#panelarrow2').animate({bottom:'0px'});
+                    $('#arrowImg').addClass('arrow_img_show');
+                }else{
+                    $('#consoleWrapper').width($(document.body).width() - 381);
+                    $('#consoleWrapper').animate({bottom:'0px'});
+                    $('#panelarrow2').animate({bottom:'120px'});
+                    $('#arrowImg').removeClass('arrow_img_show');
+                }
+            }
         </script>
     </head>
     <body>
@@ -51,7 +65,7 @@
                 <div class="indexbox" id="indexbox" name="indexDiv" style="height:400px;overflow: auto;border-right: 1px solid #E3E5F4;">
                 </div>            
 
-                <div id="sidebar" class="sidebar" style="display:none;border-right: 1px solid #E3E5F4;">
+                <div id="sidebar" class="sidebar" style="display:none;position:absolute;z-index:3;border-right: 1px solid #E3E5F4;">
                 </div>
             </div>
             <div id="e_hsp" class="hsplit" style="width:0px;height:400px;position: absolute;">
@@ -66,8 +80,11 @@
                 </div>
                 <div id="cc">
                 </div>
-                <div id="cs">
-                    <div class="console-wrapper" style="background-color: black;width: 100%;height: 120px;color: #0DFF00;overflow-y: auto;">
+                <div title="即时消息栏" id="panelarrow2" class="panelarrow2" onclick="hideConsole()">
+                    <div id="arrowImg" class="arrow_img arrow_img_show" ></div>
+                </div>
+                <div id="cs" >
+                    <div class="console-wrapper" id="consoleWrapper">
                         <ol class="console-log" style="margin:0;">
                         </ol>
                     </div>
