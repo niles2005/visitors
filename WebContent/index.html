@@ -23,7 +23,7 @@
                 new mapwork.VisitorPage("cc");
             });
 
-            hideConsole = function (){
+            function toggleConsole() {
                 if ($('#consoleWrapper').css('bottom')=='0px') {
                     $('#consoleWrapper').width($(document.body).width() - 381);
                     $('#consoleWrapper').animate({bottom:'-120px'});
@@ -79,7 +79,7 @@
                 </div>
                 <div id="cc">
                 </div>
-                <div title="即时消息栏" id="panelarrow2" class="panelarrow2" onclick="hideConsole()">
+                <div title="即时消息栏" id="panelarrow2" class="panelarrow2" onclick="toggleConsole()">
                     <div id="arrowImg" class="arrow_img arrow_img_show" ></div>
                 </div>
                 <div id="cs" >
