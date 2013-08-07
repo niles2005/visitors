@@ -36,33 +36,33 @@
 //               console.log('Error: WebSocket is not supported by this browser.');
                return;
            }
-
+           console.dir(this.socket);
            this.socket.onopen = function () {
 //               console.log('Info: WebSocket connection opened.');
-
-//               if (self.module._map._currentModule) {
-//                   self.module._map._currentModule.clean();
-//               }
-//               var searchModule = self.visitorPage._map.getModule(mapwork.Search.ID);
-
-
                self.module = self.visitorPage._map.getModule(mapwork.Search.ID);
-//               self.module.init();
-//               self.module.setSearchType('all');
-
-
            };
 
            this.socket.onclose = function () {
+               console.log("close");
 //               console.log('Info: WebSocket closed.');
            };
+           
+           this.socket.onerror = function(err) {
+               console.log("error");
+               console.dir(err);
+           };   
 
            this.socket.onmessage = function (message) {
                var json = JSON.parse(message.data);
 //               console.dir(json);
                self.module.updateDatas(json);
-//               self.module.onPageQueryResult(json);
+               if(self.timeOut) {
+                   clearTimeOut(self.timeOut);
+               }
+               self.timeOut = setTimeOut(function() {
+                   console.log("aaaaa");
+               }, 25000);
            };
        }
-    }
+    };
 })();

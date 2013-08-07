@@ -25,10 +25,11 @@ public class Events {
 	}
 	
 	private int m_lastSeqId = -1;
-	private void reloadEvents(boolean doBoardcast) {
+	//return boolean doBoardcast
+	private boolean reloadEvents(boolean doBoardcast) {
 		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId,m_devices,m_dbToday);
 		if(eventList.size() == 0) {
-			return;
+			return false;
 		}
 		//only send changed card
 		Hashtable<String,Card> hash = new Hashtable<String,Card>();
@@ -70,11 +71,20 @@ public class Events {
 			
 	
 			String str = JSON.toJSONString(dataHash);
-			Global.getInstance().boardCastClientData(str);
+			Global.getInstance().broadcastClientData(str);
+			return true;
 		}
+		return false;
 	}
 	
 	public void doTaskWork() {
-		reloadEvents(true);
+		try {
+			boolean doBoardcast = reloadEvents(true);
+			if(!doBoardcast) {
+				Global.getInstance().broadcastBeepInfo();
+			}
+		} catch(Exception ex) {
+			Global.getInstance().broadcastBeepInfo();
+		}
 	}
 }

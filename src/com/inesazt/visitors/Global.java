@@ -3,6 +3,7 @@ package com.inesazt.visitors;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -180,7 +181,7 @@ public class Global {
 		}
 	}
 	
-	public void boardCastClientData(String jsonData) {
+	public void broadcastClientData(String jsonData) {
 		if(jsonData != null) {
 			for (ChatMessageInbound connection : m_connections) {
 				try {
@@ -193,4 +194,10 @@ public class Global {
 		}
 	}
 
+	private Hashtable m_beepInfoHash = new Hashtable();
+	public void broadcastBeepInfo() {
+		m_beepInfoHash.put("beeptime", new Date().getTime());
+		String str = JSON.toJSONString(m_beepInfoHash);
+		Global.getInstance().broadcastClientData(str);
+	}
 }

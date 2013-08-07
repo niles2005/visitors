@@ -115,7 +115,7 @@ public class CardGroup {
 			this.checkRegInfo(regInfoHash);
 			dataHash.put("register", regInfoHash);
 			String str = JSON.toJSONString(dataHash);
-			Global.getInstance().boardCastClientData(str);
+			Global.getInstance().broadcastClientData(str);
 		}
 	}
 
