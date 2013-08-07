@@ -42,11 +42,11 @@
                 this._map._div.oncontextmenu = menuFunc;
             }
             this._map._div.onclick = function(){
-                self.hideMenu()
+                self.hideMenu();
             };
         },
         showMenu: function(event) {
-            if(this._map.getMode() != 0) {
+            if(this._map.getMode() !== 0) {
                 return;
             }
             var pageX,pageY;
@@ -70,7 +70,7 @@
         hideMenu: function() {
             this._div.style.display = "none";
         }
-    }
+    };
 
     if(EXTEND) {
         mapwork.utils.inherits(MenuControl, EXTEND);
