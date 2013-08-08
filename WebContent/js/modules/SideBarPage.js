@@ -49,8 +49,6 @@
 
     SideBarPage.prototype = {
         init: function() {
-            $("#indexbox").hide();
-
             this._$SideBarDiv = $("#sidebar");
             this._pageQuery = this._module.doPageQuery;
             this._$SideBarDiv.empty();
@@ -96,11 +94,11 @@
         },
         //调整左边菜单内容的实际高度,以适应浏览器的窗口大小
         adjustSideBarHeight: function() {
-            var westHeight = $("#w").height();
+            var westHeight = $("#e").height();
             var titleHeight = $(".search_title").outerHeight();
-            var mbLineHeight = $(".mb_line").height();
+//            var mbLineHeight = $(".mb_line").height();
             var pageHeight = this._$Page.outerHeight();
-            this._$Content.height(westHeight - mbLineHeight - titleHeight - pageHeight);
+            this._$Content.height(westHeight);
         },
         //文档窗口改变大小时触发
         //由每个业务的来实现

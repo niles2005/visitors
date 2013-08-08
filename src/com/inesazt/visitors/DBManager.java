@@ -73,7 +73,7 @@ public class DBManager {
 			if(m_connection == null) {
 				return list;
 			}
-			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where  t.up_date='" + strDBToday + "' and t.trans_seq > " + seqId;
+			String sql = "select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where  t.up_date>='" + strDBToday + "' and t.trans_seq > " + seqId;
 //			System.err.println(sql);
 			rs = m_statement.executeQuery(sql);
 			

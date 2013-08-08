@@ -39,7 +39,6 @@
 
     RouterSideBar.prototype = {
 		init: function() {
-	    	$("#indexbox").hide();
 	    	var self = this;
 	    	
 	    	//返回按钮单击事件

@@ -191,7 +191,10 @@
         },
         updateDatas: function(json) {
             if (json) {
-//                console.dir(json)
+//                console.log(json);
+                if(json.today) {
+                    mapwork.today = json.today;
+                }
                 if(json.register) {
                     this.updateRegisterInfo(json.register);
                 }

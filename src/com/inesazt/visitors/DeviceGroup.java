@@ -114,8 +114,7 @@ public class DeviceGroup {
 			Hashtable regInfoHash = new Hashtable(); 
 			this.checkRegInfo(regInfoHash);
 			dataHash.put("register", regInfoHash);
-			String str = JSON.toJSONString(dataHash);
-			Global.getInstance().broadcastClientData(str);
+			Global.getInstance().broadcastClientData(dataHash);
 		}
 	}
 

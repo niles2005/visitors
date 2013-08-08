@@ -1,8 +1,32 @@
 package com.inesazt.visitors;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class DateTimeUtil {
+
+	public static String getDayString(Date date) {
+		return getDayString(date.getTime());
+	}
+
+	public static String getDayString(long millisTime) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(millisTime);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		String retDate = "" + year;
+		if(month < 10) {
+			retDate += "0";
+		}
+		retDate += month;
+		if(day < 10) {
+			retDate += "0";
+		}
+		retDate += day;
+		return retDate;
+	}
+
 
 	public static String getTodayString() {
 		Calendar cal = Calendar.getInstance();

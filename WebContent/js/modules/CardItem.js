@@ -113,9 +113,6 @@
             var $cardDetail = this._$Content.find(".cardDetail");
             $cardDetail.empty();
             var url = "work?action=loadevents&cardid=" + this._id + "&date=" + date + "&t=" + new Date().getTime();
-            if (date) {
-                url += "&date=" + date;
-            }
             var self = this;
             mapwork.utils.loadJsonData(url, function(data) {
                 if (!data) {

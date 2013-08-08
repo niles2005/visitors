@@ -70,8 +70,7 @@ public class Events {
 //			}
 			
 	
-			String str = JSON.toJSONString(dataHash);
-			Global.getInstance().broadcastClientData(str);
+			Global.getInstance().broadcastClientData(dataHash);
 			return true;
 		}
 		return false;

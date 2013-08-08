@@ -36,7 +36,7 @@
 //               console.log('Error: WebSocket is not supported by this browser.');
                return;
            }
-           console.dir(this.socket);
+//           console.dir(this.socket);
            this.socket.onopen = function () {
 //               console.log('Info: WebSocket connection opened.');
                self.module = self.visitorPage._map.getModule(mapwork.Search.ID);
@@ -56,11 +56,11 @@
                var json = JSON.parse(message.data);
 //               console.dir(json);
                self.module.updateDatas(json);
-               if(self.timeOut) {
-                   clearTimeOut(self.timeOut);
+               if(self.timeout) {
+                   clearTimeout(self.timeout);
                }
-               self.timeOut = setTimeOut(function() {
-                   console.log("aaaaa");
+               self.timeout = setTimeout(function() {
+                   console.log("reconnect...");
                }, 25000);
            };
        }

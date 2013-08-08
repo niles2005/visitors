@@ -56,7 +56,7 @@ public class Event {
 	public void setTime(long time) {
 		this.time = time;
 	}
-
+	
 	public String getCardRole() {
 		return cardRole;
 	}
