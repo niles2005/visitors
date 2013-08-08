@@ -13,6 +13,7 @@
         this.socket = null;
         this.module = null;
         this.visitorPage = page;
+        this.timer = null;
     }
 
     WSMessage.prototype = {
@@ -37,8 +38,10 @@
                return;
            }
 
+
+
            this.socket.onopen = function () {
-//               console.log('Info: WebSocket connection opened.');
+               console.log('Info: WebSocket connection opened.');
 
 //               if (self.module._map._currentModule) {
 //                   self.module._map._currentModule.clean();
@@ -47,21 +50,44 @@
 
 
                self.module = self.visitorPage._map.getModule(mapwork.Search.ID);
+               $('#connectSign').text('网络已连接');
+               $('#connectSign').removeClass('label-disconnetct ');
+//               $('#connectSign').addClass('qiuorchu label label-chuzu');
 //               self.module.init();
 //               self.module.setSearchType('all');
-
-
            };
 
            this.socket.onclose = function () {
-//               console.log('Info: WebSocket closed.');
+               console.log("reconnect when old socket closed... " );
+               setTimeout(function() {
+                   self.initialize();
+               },5000);
            };
 
+            this.socket.onerror = function () {
+                console.log("reconnect when old socket error... " );
+                setTimeout(function() {
+                    self.initialize();
+                },5000);
+            };
+
            this.socket.onmessage = function (message) {
+
                var json = JSON.parse(message.data);
-//               console.dir(json);
+               console.log(json);
                self.module.updateDatas(json);
-//               self.module.onPageQueryResult(json);
+               if(self.timer)  {
+                   clearTimeout(self.timer);
+               }
+
+               self.timer = setTimeout(function (){
+                   if(self.socket){
+                       console.log('client side close socket interval')
+                       self.socket.close();
+                       $('#connectSign').text('网络已断开,系统正在重连...');
+                       $('#connectSign').addClass('label-disconnetct');
+                   }
+               },8000);
            };
        }
     }

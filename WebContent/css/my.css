@@ -2265,7 +2265,7 @@ input#searchSubmit {
 }
 
 .qiuorchu {
-	float: left;
+	float: right;
 }
 
 .list_footer .left {
@@ -2301,6 +2301,13 @@ input#searchSubmit {
 .label-chuzu {
 	border: 1px solid #719b28;
 	background-color: #85B62E;
+    margin-right: 20px;
+    padding: 6px 8px;
+}
+
+.label-disconnetct {
+    border: 1px solid #9b0e36;
+    background-color:  #b61851;
 }
 
 .label-ru {

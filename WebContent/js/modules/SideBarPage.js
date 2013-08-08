@@ -3,6 +3,7 @@
 
     var EXTEND = mapwork.BaseSideBar;
 
+
     var pageHtml =
 //            '<div>' +
 //            '<div class="search_title" style="background:red;height:40px;">' +
@@ -13,7 +14,7 @@
 //            '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>' +
 //            '</div>';
 
-         '<div class="map-tool">'
+        '<div class="map-tool">'
             +'<div class="row">'
             +'          <div class="span5">     '
 //            +'            <div class="btn-group pull-left">'
@@ -22,22 +23,22 @@
 //            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">W</i></button>'
 //            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">G</i></button>'
 //            +'            </div>'
-            +'            <div class="map-search pull-left">'
-            +'              <form> '
-            +'                <div class="input-append"> '
-            +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="输入你要查找的卡ID或名称" autocomplete="off"> '
+        +'            <div class="map-search pull-left">'
+        +'              <form> '
+        +'                <div class="input-append"> '
+        +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="输入你要查找的卡ID或名称" autocomplete="off"> '
 //            +'<span style="padding-left: 60px"></span>'
 //             +'                  <span id="refresh" class="btn btn-primary searchInputBtn"><i>刷新</i></span>'
-            +'                </div> '
-            +'              </form> '
-            +'            </div>   '
-            +'          </div>   '
-            +'        </div>   '
-            +'        </div>   '
-            +'<div class="public-listings stretch scroll">'
-            +    '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>'
-            +'</div>';
-
+        +'                </div> '
+        +'              </form> '
+        +'            </div>   '
+        +'<div id="connectSign" class="qiuorchu label label-chuzu"></div>'
+        +'          </div>   '
+        +'        </div>   '
+        +'        </div>   '
+        +'<div class="public-listings stretch scroll">'
+        +    '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>'
+        +'</div>';
 
 
 
