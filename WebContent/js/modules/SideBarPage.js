@@ -32,7 +32,7 @@
         +'                </div> '
         +'              </form> '
         +'            </div>   '
-        +'<div id="connectSign" class="qiuorchu label label-chuzu"></div>'
+
         +'          </div>   '
         +'        </div>   '
         +'        </div>   '
