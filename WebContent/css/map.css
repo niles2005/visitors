@@ -326,7 +326,7 @@ h3.no2 {
 .search_title a{color:#00a0e9;}
 .search_title a:hover{color:#ff0000;}
 .padlr5{padding:0 5px;}
-.result_search{height:400px;overflow:auto; padding:0;position:relative;}
+.result_search{overflow:auto; padding:0;position:relative;}
 .result_search .list{height:auto;overflow:hidden;margin:0;padding:10px 10px 6px;clear:both;border-bottom:1px solid #E5EBF3; border-top:1px solid white; cursor: pointer;}
 .result_search .list .list_num{float:left;width:22px;line-height:24px;height:31px;color:#fff;font-weight:bold;line-height:31px;text-align:center;}
 .result_search .on{background: #F3F7FD;}

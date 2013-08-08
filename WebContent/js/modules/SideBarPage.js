@@ -96,10 +96,9 @@
         //调整左边菜单内容的实际高度,以适应浏览器的窗口大小
         adjustSideBarHeight: function() {
             var westHeight = $("#e").height();
-            var titleHeight = $(".search_title").outerHeight();
-//            var mbLineHeight = $(".mb_line").height();
-            var pageHeight = this._$Page.outerHeight();
-            this._$Content.height(westHeight);
+            var mapToolHeight = $(".map-tool").outerHeight();
+            var publicListings = $(".public-listings");
+            publicListings.height(westHeight - mapToolHeight);
         },
         //文档窗口改变大小时触发
         //由每个业务的来实现

@@ -1,7 +1,6 @@
 package com.inesazt.visitors;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.alibaba.fastjson.JSON;
 
@@ -13,7 +12,6 @@ public class Card {
 	private long createTime;
 	private String info;
 	
-//	private String lastLocate = null;
 	private long lastTime = 0;
 	private boolean isActived = true;
 	
@@ -24,6 +22,21 @@ public class Card {
 	
 	public boolean getActived() {
 		return isActived;
+	}
+	
+	//remove last date events
+	public void changeDate() {
+		String today = Global.getInstance().getToday();
+		while(m_eventList.size() > 0) {
+			Event event = m_eventList.get(0);
+			long time = event.getTime();
+			String theDate = DateTimeUtil.getDayString(time);
+			if(today.equals(theDate)) {
+				break;
+			} else {
+				m_eventList.remove(0);
+			}
+		}
 	}
 
 	public void setActived(boolean isActived) {
@@ -86,7 +99,6 @@ public class Card {
 
 	public void setRole(String role) {
 		if(m_cardGroup != null) {
-//			System.err.println("set role:" + role);
 			if(this.isActived) {
 				boolean hasOldRole = this.role != null;
 				boolean hasNewRole = role != null;
@@ -103,9 +115,8 @@ public class Card {
 	}
 
 	public String getLastLocate() {
-		if(m_eventList.size() > 0) {
-			Event lastEvent = m_eventList.get(m_eventList.size() - 1);
-			return lastEvent.getDeviceLocate();
+		if(m_lastEvent != null) {
+			return m_lastEvent.getDeviceLocate();
 		}
 		return "";
 	}
@@ -115,9 +126,8 @@ public class Card {
 	}
 
 	public String getLastDeviceId() {
-		if(m_eventList.size() > 0) {
-			Event lastEvent = m_eventList.get(m_eventList.size() - 1);
-			return lastEvent.getDeviceId();
+		if(m_lastEvent != null) {
+			return m_lastEvent.getDeviceId();
 		}
 		return "";
 	}
@@ -127,9 +137,8 @@ public class Card {
 	}
 	
 	public long getLastTime() {
-		if(m_eventList.size() > 0) {
-			Event lastEvent = m_eventList.get(m_eventList.size() - 1);
-			return lastEvent.getTime();
+		if(m_lastEvent != null) {
+			return m_lastEvent.getTime();
 		}
 		return -1;
 	}
@@ -137,20 +146,11 @@ public class Card {
 	public void setLastTime(long lastTime) {
 	}
 	
+	private Event m_lastEvent = null;
 	private ArrayList<Event> m_eventList = new ArrayList<Event>();
 	public void appendEvent(Event event) {
+		m_lastEvent = event;
 		m_eventList.add(event);
-		while(m_eventList.size() > 100) {//超出100时处理
-			event = m_eventList.get(0);
-			long time = event.getTime();
-			String theDate = DateTimeUtil.getDayString(time);
-			String today = Global.getInstance().getToday();
-			if(today.equals(theDate)) {
-				break;
-			} else {
-				m_eventList.remove(0);
-			}
-		}
 	}
 	
 	public String loadHistoryEvents(String date) {

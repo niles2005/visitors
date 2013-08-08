@@ -61,7 +61,10 @@ public class Global {
 			m_devices = new Devices();
 			m_cards = new Cards();
 			m_feedbacks = Feedbacks.buildFeedback();
-			m_events = new Events(m_cards,m_devices,m_strToday);
+
+			//为了保证查询后的卡，都有具体的位置，倒数7天查询events
+			String back7Day = DateTimeUtil.getDayString(new Date().getTime(),-7);
+			m_events = new Events(m_cards,m_devices,back7Day);
 			System.err.println("Global init finished.");
 		} catch(Exception ex) {
 			ex.printStackTrace();
@@ -135,6 +138,9 @@ public class Global {
 		String today = DateTimeUtil.getTodayString();
 		if(today != null && !today.equals(m_strToday)) {
 			m_strToday = today;
+			
+			m_cards.changeDate();
+			
 			Hashtable hash = new Hashtable();
 			hash.put("today", m_strToday);
 			broadcastClientData(hash);

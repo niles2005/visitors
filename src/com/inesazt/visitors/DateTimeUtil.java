@@ -11,7 +11,30 @@ public class DateTimeUtil {
 
 	public static String getDayString(long millisTime) {
 		Calendar cal = Calendar.getInstance();
+		
 		cal.setTimeInMillis(millisTime);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		String retDate = "" + year;
+		if(month < 10) {
+			retDate += "0";
+		}
+		retDate += month;
+		if(day < 10) {
+			retDate += "0";
+		}
+		retDate += day;
+		return retDate;
+	}
+
+
+	public static String getDayString(long millisTime,int offsetDays) {
+		Calendar cal = Calendar.getInstance();
+		
+		cal.setTimeInMillis(millisTime);
+		
+		cal.add(Calendar.DATE, offsetDays);
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH) + 1;
 		int day = cal.get(Calendar.DAY_OF_MONTH);

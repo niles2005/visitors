@@ -191,7 +191,8 @@
             this._$SidebarContent.find("#cardRole").html(this._json.role);
 
             var self = this;
-            var today = mapwork.utils.formatDate(new Date(), "day");
+            var today = mapwork.utils.date8ToDate10(mapwork.today,'-');
+            
             this._refreshButton = this._$SidebarContent.find("#detailRefresh");
             this._refreshButton.click(function() {
                 var queryToday = mapwork.utils.date10ToDate8(today);
@@ -231,6 +232,10 @@
 //                console.dir(strDate);
                 this.loadCardEvents(strDate);
             }
+        },
+        changeToday: function(today) {//do from broadcast
+            var jQdatepicker = this._$SidebarContent.find('#dp3');
+            jQdatepicker.datepicker('update', today);
         }
 
     };
