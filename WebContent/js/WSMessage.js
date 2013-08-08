@@ -17,7 +17,6 @@
     }
 
     WSMessage.prototype = {
-
         initialize:function(){
             if (window.location.protocol == 'http:') {
                 this.connect('ws://' + window.location.host + '/ws');
@@ -31,30 +30,16 @@
            if ('WebSocket' in window) {
                this.socket = new WebSocket(host);
            } else if ('MozWebSocket' in window) {
-//               console.dir(this.socket)
                this.socket = new MozWebSocket(host);
            } else {
-//               console.log('Error: WebSocket is not supported by this browser.');
                return;
            }
 
-
-
            this.socket.onopen = function () {
                console.log('Info: WebSocket connection opened.');
-
-//               if (self.module._map._currentModule) {
-//                   self.module._map._currentModule.clean();
-//               }
-//               var searchModule = self.visitorPage._map.getModule(mapwork.Search.ID);
-
-
                self.module = self.visitorPage._map.getModule(mapwork.Search.ID);
                $('#connectSign').text('网络已连接');
                $('#connectSign').removeClass('label-disconnetct ');
-//               $('#connectSign').addClass('qiuorchu label label-chuzu');
-//               self.module.init();
-//               self.module.setSearchType('all');
            };
 
            this.socket.onclose = function () {
@@ -72,14 +57,11 @@
             };
 
            this.socket.onmessage = function (message) {
-
                var json = JSON.parse(message.data);
-               console.log(json);
                self.module.updateDatas(json);
                if(self.timer)  {
                    clearTimeout(self.timer);
                }
-
                self.timer = setTimeout(function (){
                    if(self.socket){
                        console.log('client side close socket interval')
@@ -89,6 +71,7 @@
                    }
                },8000);
            };
+
        }
-    }
+    };
 })();

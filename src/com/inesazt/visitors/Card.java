@@ -1,6 +1,7 @@
 package com.inesazt.visitors;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.alibaba.fastjson.JSON;
 
@@ -139,6 +140,17 @@ public class Card {
 	private ArrayList<Event> m_eventList = new ArrayList<Event>();
 	public void appendEvent(Event event) {
 		m_eventList.add(event);
+		while(m_eventList.size() > 100) {//超出100时处理
+			event = m_eventList.get(0);
+			long time = event.getTime();
+			String theDate = DateTimeUtil.getDayString(time);
+			String today = Global.getInstance().getToday();
+			if(today.equals(theDate)) {
+				break;
+			} else {
+				m_eventList.remove(0);
+			}
+		}
 	}
 	
 	public String loadHistoryEvents(String date) {
@@ -148,9 +160,19 @@ public class Card {
 	
 	public String loadEvents(String date) {
 		if(date == null) {//return today events
-			return JSON.toJSONString(m_eventList);
+			date = Global.getInstance().getToday();
 		}
 		if(Global.getInstance().isToday(date)) {
+			while(m_eventList.size() > 0) {
+				Event event = m_eventList.get(0);
+				long time = event.getTime();
+				String theDate = DateTimeUtil.getDayString(time);
+				if(date.equals(theDate)) {
+					break;
+				} else {
+					m_eventList.remove(0);
+				}
+			}
 			return JSON.toJSONString(m_eventList);
 		}
 		ArrayList list = DBManager.getInstance().queryHistoryEvents(id, date);
