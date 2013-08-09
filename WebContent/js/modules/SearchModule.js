@@ -19,7 +19,41 @@
     SearchModule.prototype = {
         doInit: function() {
             this.init();
+            var locations = ["building1","building2","factory","outside"];
+            var roles = [{abb:'W',name:'Worker',css:'worker',icon:'images/Worker1.png'},{abb:'O',name:'Officer',css:'worker',icon:'images/Officer1.png'},{abb:'S',name:'Security',css:'worker',icon:'images/Security1.png'},{abb:'V',name:'VIP',css:'worker',icon:'images/VIP1.png'}];
+            var jRoleTable = $(".roleTable");
+            for(var row in locations){
+                var location = locations[row];
+                var jTr = $('<tr id='+location+'></tr>');
+                jRoleTable.append(jTr) ;
+
+                jTr.append($('<td class="positionName">'+location+'</td>'));
+                for(var col in roles){
+                    var role = roles[col];
+                    var jTd =  $('<td/>');
+//                    var jIconDiv = $('<div class="roleIcon '+role.css+'"></div>');
+//                    jIconDiv.append($('<div class="roleHead">0</div>'));
+//                    jIconDiv.append($('<div class="roleBody"><img class="roleImg" src="'+role.icon+'"></div>'));
+//                    jIconDiv.append($('<div class="roleFooter">'+role.name+'</div>'));
+
+                    var roleItem = new mapwork.RoleItem(this);
+                    var jIconDiv = roleItem.getPageContent();
+                    jIconDiv.find('.roleBody').append($('<img class="roleImg" src="'+role.icon+'">'));
+                    jIconDiv.find('.roleFooter').text(role.name);
+                    jTd.append(jIconDiv);
+                    jTr.append(jTd);
+                    roleItem.setSidebar(this._sideBar);
+                    roleItem._id = role.abb + '_' + location;
+                    roleItem._name = role.name;
+                    this._roles[roleItem._id] = roleItem;
+                }
+            }
+
+        },
+        doInit0: function() {
+            this.init();
             var roles = {"group":{"O_building1":{"count":0,"id":"O_building1","label":"Officer","locate":"building1","name":"Officer","pos":{"lat":312727030,"lon":1218229820},"warn":true},"O_building2":{"count":0,"id":"O_building2","label":"Officer","locate":"building2","name":"Officer","pos":{"lat":312727030,"lon":1218285250},"warn":false},"O_factory":{"count":0,"id":"O_factory","label":"Officer","locate":"factory","name":"Officer","pos":{"lat":312697630,"lon":1218285250},"warn":false},"O_outside":{"count":0,"id":"O_outside","label":"Officer","locate":"outside","name":"Officer","pos":{"lat":312683510,"lon":1218318360},"warn":false},"S_building1":{"count":0,"id":"S_building1","label":"Security","locate":"building1","name":"Security","pos":{"lat":312727030,"lon":1218241820},"warn":true},"S_building2":{"count":0,"id":"S_building2","label":"Security","locate":"building2","name":"Security","pos":{"lat":312727030,"lon":1218297250},"warn":true},"S_factory":{"count":0,"id":"S_factory","label":"Security","locate":"factory","name":"Security","pos":{"lat":312697630,"lon":1218297250},"warn":false},"S_outside":{"count":0,"id":"S_outside","label":"Security","locate":"outside","name":"Security","pos":{"lat":312683510,"lon":1218330360},"warn":false},"V_building1":{"count":0,"id":"V_building1","label":"VIP","locate":"building1","name":"VIP","pos":{"lat":312727030,"lon":1218253820},"warn":false},"V_building2":{"count":0,"id":"V_building2","label":"VIP","locate":"building2","name":"VIP","pos":{"lat":312727030,"lon":1218309250},"warn":false},"V_factory":{"count":0,"id":"V_factory","label":"VIP","locate":"factory","name":"VIP","pos":{"lat":312697630,"lon":1218309250},"warn":false},"V_outside":{"count":0,"id":"V_outside","label":"VIP","locate":"outside","name":"VIP","pos":{"lat":312683510,"lon":1218342360},"warn":false},"W_building1":{"count":0,"id":"W_building1","label":"Worker","locate":"building1","name":"Worker","pos":{"lat":312727030,"lon":1218217820},"warn":false},"W_building2":{"count":0,"id":"W_building2","label":"Worker","locate":"building2","name":"Worker","pos":{"lat":312727030,"lon":1218273250},"warn":true},"W_factory":{"count":0,"id":"W_factory","label":"Worker","locate":"factory","name":"Worker","pos":{"lat":312697630,"lon":1218273250},"warn":false},"W_outside":{"count":0,"id":"W_outside","label":"Worker","locate":"outside","name":"Worker","pos":{"lat":312683510,"lon":1218306360},"warn":false}}};
+
             var listLayer = this._map.getLayer("moduleListLayer");
             if (!listLayer) {
                 listLayer = new mapwork.MapIconLayer("moduleListLayer");
@@ -38,6 +72,7 @@
             }
             listLayer.initLayer();
         },
+
         buildRoleItem: function(json, index) {
             var roleItem = new mapwork.RoleItem(this, index);
             roleItem.setJsonData(json);
@@ -202,6 +237,7 @@
 
                 var cards = json.cards;
                 if(cards) {
+                    console.log('accept cards')
                     for (var i in cards) {
                         var card = cards[i];
                         var cardItem = this._cards[card.id];
@@ -213,13 +249,13 @@
                         }
                         if(cardItem) {
                             var strRole = cardItem._json.role;
-                            if(strRole) {
-                                cardItem.setLastEvent(card);
-                                var roleId = strRole.substring(0,1) + "_" + card.lastLocate;
-                                var role = this._roles[roleId];
-                                if(role) {
-                                    cardItem.setRole(role);
-                                }
+                                if(strRole) {
+                                    cardItem.setLastEvent(card);
+                                    var roleId = strRole.substring(0,1) + "_" + card.lastLocate;
+                                    var role = this._roles[roleId];
+                                    if(role) {
+                                        cardItem.setRole(role);
+                                    }
                             }
                         }
                     }

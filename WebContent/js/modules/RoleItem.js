@@ -1,6 +1,12 @@
 (function() {
     mapwork.RoleItem = RoleItem;
 
+    var pageContentHtml = '<div class="roleIcon">'+
+            '<div class="roleHead">0</div>'+
+            '<div class="roleBody"></div>'+
+            '<div class="roleFooter"></div>' +
+            '</div>';
+
     var EXTEND = mapwork.ModuleItem;
     RoleItem.ID = "RoleItem";
     RoleItem.selectRoleItem = null;
@@ -10,9 +16,15 @@
         }
         this._cards = {};
         this._cardCount = 0;
+        this._$PageContent = $(pageContentHtml);
+
+        this.$countTitle = this._$PageContent.find(".roleHead");
     }
 
     RoleItem.prototype = {
+        getPageContent: function() {
+            return this._$PageContent;
+        },
         setJsonData: function(json) {
             this._json = json;
             
@@ -56,8 +68,8 @@
             return this._cardCount;
         },
         updateCount: function() {
-            if(this._moduleLabel) {
-                this._moduleLabel.setLabel(this._json.label,this._cardCount);
+            if(this.$countTitle) {
+                this.$countTitle.html("" + this._cardCount);
             }
         },
         doFocus: function() {

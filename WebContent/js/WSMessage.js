@@ -39,7 +39,7 @@
                console.log('Info: WebSocket connection opened.');
                self.module = self.visitorPage._map.getModule(mapwork.SearchModule.ID);
                $('#connectSign').text('网络已连接');
-               $('#connectSign').removeClass('label-disconnetct ');
+               $('#connectSign').removeClass('label-disconnetct');
                
                self.module.initDataQuery();
            };
@@ -61,7 +61,6 @@
            this.socket.onmessage = function (message) {
                var json = JSON.parse(message.data);
                self.module.updateDatas(json);
-               $('#building1 .worker>.roleHead').text('100');
                if(self.timer)  {
                    clearTimeout(self.timer);
                }

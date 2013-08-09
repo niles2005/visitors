@@ -10,16 +10,16 @@
         this._mapWrapDiv = mapWrapDiv;
         this.initFrame();
         this.buildFrame();
+        this.buildPage();
         this.onPageLoad();
     }
 
     VisitorPage.prototype = {
+        buildPage: function() {
+            var jRoleTable = $(".roleTable");
+        },
         createMap: function() {
-            this._map = new mapwork.Map(this._mapWrapDiv, {
-//                lat: 32.049818,
-//                lon: 118.895858,
-//                zoom: 12
-            });
+            this._map = new mapwork.Map(this._mapWrapDiv, {});
 
 
 //            this._map.addHandler(new mapwork.KeyHandler());
@@ -29,7 +29,7 @@
 
             this._searchModule = new mapwork.SearchModule();
             this._map.addModule(this._searchModule);
-            
+
             this._msg = new mapwork.WSMessage(this);
         },
         buildFrame: function() {
