@@ -237,7 +237,6 @@
 
                 var cards = json.cards;
                 if(cards) {
-                    console.log('accept cards')
                     for (var i in cards) {
                         var card = cards[i];
                         var cardItem = this._cards[card.id];

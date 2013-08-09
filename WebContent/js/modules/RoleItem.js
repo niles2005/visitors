@@ -19,6 +19,10 @@
         this._$PageContent = $(pageContentHtml);
 
         this.$countTitle = this._$PageContent.find(".roleHead");
+        var self = this;
+        this._$PageContent.click(function() {
+            self.doFocus();
+        });
     }
 
     RoleItem.prototype = {
@@ -76,13 +80,15 @@
             if( RoleItem.selectRoleItem) {
                 RoleItem.selectRoleItem.clearFocus();
             }
-            this._moduleLabel.doFocus();
+//            this._moduleLabel.doFocus();
+            // TODO 添加选中样式
             this._sideBar.onPageQueryResult(this._cards);
             RoleItem.selectRoleItem = this;
             this._module._selectRole = this;
         },
         clearFocus: function() {
-            this._moduleLabel.clearFocus();
+//            this._moduleLabel.clearFocus();
+            // TODO 清除选中样式
         }
     };
 

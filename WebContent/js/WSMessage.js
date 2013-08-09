@@ -9,10 +9,9 @@
     mapwork.WSMessage = WSMessage;
     var EXTEND = null;
 
-    function  WSMessage(page){
+    function  WSMessage(searchModule){
         this.socket = null;
-        this.module = null;
-        this.visitorPage = page;
+        this.module = searchModule;
         this.timer = null;
     }
 
@@ -37,7 +36,6 @@
 
            this.socket.onopen = function () {
                console.log('Info: WebSocket connection opened.');
-               self.module = self.visitorPage._map.getModule(mapwork.SearchModule.ID);
                $('#connectSign').text('网络已连接');
                $('#connectSign').removeClass('label-disconnetct');
                

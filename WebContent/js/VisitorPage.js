@@ -19,7 +19,7 @@
             var jRoleTable = $(".roleTable");
         },
         createMap: function() {
-            this._map = new mapwork.Map(this._mapWrapDiv, {});
+//            this._map = new mapwork.Map(this._mapWrapDiv, {});
 
 
 //            this._map.addHandler(new mapwork.KeyHandler());
@@ -28,9 +28,9 @@
 //            this._map.addControl(new mapwork.SimpleZoomControl());
 
             this._searchModule = new mapwork.SearchModule();
-            this._map.addModule(this._searchModule);
+//            this._map.addModule(this._searchModule);
 
-            this._msg = new mapwork.WSMessage(this);
+            this._msg = new mapwork.WSMessage(this._searchModule);
         },
         buildFrame: function() {
             this.createMap();
@@ -42,7 +42,9 @@
             var cc = document.getElementById('cc');
             var mainHeight = mapwork.utils.getClientSize().height - headHeight - cnHeight - csHeight;
             cc.style.height = mainHeight + 'px';
-            this._map.resetSize();
+            if ( this._map) {
+                this._map.resetSize();
+            }
             if (mapwork.resizeListener) {
                 mapwork.resizeListener();
             }
