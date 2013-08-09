@@ -647,7 +647,7 @@ input.hide {
 }
 
 .modal-footer,.modal-header,.modal-body {
-	padding: 8px 20px;
+	padding: 5px 5px;
 }
 .modal-header{
 	border-bottom: 1px solid #ddd;
@@ -1218,7 +1218,7 @@ height: 384px;
 	overflow: auto;
 }
 .popuplist-main .chu_descr{
-	max-height: 200px;
+	max-height: 250px;
 	overflow: auto;
 }
 
@@ -3320,7 +3320,7 @@ you can use the generic selector below, but it's slower:
 }
 
 .calendar {
-   padding-left: 12px;
+   padding-left: 25px;
 }
 
 .console-wrapper{

@@ -1,12 +1,14 @@
 (function() {
     mapwork.SearchModule = SearchModule;
+    SearchModule.ID = "SearchModule";
 
     var EXTEND = mapwork.Module;
 
-    function SearchModule(setting) {
+    function SearchModule() {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
+        this._moduleId = SearchModule.ID;
         this._searchType = "all";
         this._roles = {};
         this._cards = {};
@@ -15,7 +17,7 @@
     }
     
     SearchModule.prototype = {
-        initRoles: function() {
+        doInit: function() {
             this.init();
             var roles = {"group":{"O_building1":{"count":0,"id":"O_building1","label":"Officer","locate":"building1","name":"Officer","pos":{"lat":312727030,"lon":1218229820},"warn":true},"O_building2":{"count":0,"id":"O_building2","label":"Officer","locate":"building2","name":"Officer","pos":{"lat":312727030,"lon":1218285250},"warn":false},"O_factory":{"count":0,"id":"O_factory","label":"Officer","locate":"factory","name":"Officer","pos":{"lat":312697630,"lon":1218285250},"warn":false},"O_outside":{"count":0,"id":"O_outside","label":"Officer","locate":"outside","name":"Officer","pos":{"lat":312683510,"lon":1218318360},"warn":false},"S_building1":{"count":0,"id":"S_building1","label":"Security","locate":"building1","name":"Security","pos":{"lat":312727030,"lon":1218241820},"warn":true},"S_building2":{"count":0,"id":"S_building2","label":"Security","locate":"building2","name":"Security","pos":{"lat":312727030,"lon":1218297250},"warn":true},"S_factory":{"count":0,"id":"S_factory","label":"Security","locate":"factory","name":"Security","pos":{"lat":312697630,"lon":1218297250},"warn":false},"S_outside":{"count":0,"id":"S_outside","label":"Security","locate":"outside","name":"Security","pos":{"lat":312683510,"lon":1218330360},"warn":false},"V_building1":{"count":0,"id":"V_building1","label":"VIP","locate":"building1","name":"VIP","pos":{"lat":312727030,"lon":1218253820},"warn":false},"V_building2":{"count":0,"id":"V_building2","label":"VIP","locate":"building2","name":"VIP","pos":{"lat":312727030,"lon":1218309250},"warn":false},"V_factory":{"count":0,"id":"V_factory","label":"VIP","locate":"factory","name":"VIP","pos":{"lat":312697630,"lon":1218309250},"warn":false},"V_outside":{"count":0,"id":"V_outside","label":"VIP","locate":"outside","name":"VIP","pos":{"lat":312683510,"lon":1218342360},"warn":false},"W_building1":{"count":0,"id":"W_building1","label":"Worker","locate":"building1","name":"Worker","pos":{"lat":312727030,"lon":1218217820},"warn":false},"W_building2":{"count":0,"id":"W_building2","label":"Worker","locate":"building2","name":"Worker","pos":{"lat":312727030,"lon":1218273250},"warn":true},"W_factory":{"count":0,"id":"W_factory","label":"Worker","locate":"factory","name":"Worker","pos":{"lat":312697630,"lon":1218273250},"warn":false},"W_outside":{"count":0,"id":"W_outside","label":"Worker","locate":"outside","name":"Worker","pos":{"lat":312683510,"lon":1218306360},"warn":false}}};
             var listLayer = this._map.getLayer("moduleListLayer");
@@ -35,7 +37,6 @@
                 }
             }
             listLayer.initLayer();
-            this.doCardQuery();
         },
         buildRoleItem: function(json, index) {
             var roleItem = new mapwork.RoleItem(this, index);
@@ -52,24 +53,13 @@
             }
             roleItem.setMap(this._map);
             this._roles[roleItem._id] = roleItem;
-//            this._mapRectManager.addModuleItem(moduleItem);
             return roleItem;
         },
-        //searchType: a: all   b: bounds   r:range
-        setSearchType: function(searchType) {
-            this._searchType = searchType;
-        },
-        setSearchCenterEPos: function(searchEPos) {
-            this._searchEPos = searchEPos;
-        },
-        setSearchRadius: function(searchRadius) {
-            this._searchRadius = searchRadius;
-        },
-        doCardQuery: function() {
-            var url = "work?action=initdatas&t=" + new Date().getTime();
+        initDataQuery: function() {
+            var url = "work?action=initdatas";
             var self = this;
-
-            mapwork.utils.loadJsonData(url, function(data) {
+            
+            function loadResult(data) {
                 if (!data) {
                     return;
                 }
@@ -83,6 +73,13 @@
                 if(data.register) {
                     self.updateRegisterInfo(data.register);
                 }
+            }
+            
+            $.ajax({
+                url: url,
+                dataType: "json", //这里的dataType就是返回回来的数据格式了html,xml,json 
+                cache: false, //设置是否缓存，默认设置成为true，当需要每次刷新都需要执行数据库操作的话，需要设置成为false 
+                success: loadResult
             });
         },
         updateRegisterInfo: function(data) {
@@ -126,7 +123,6 @@
                     }
                 }
             }
-//            this.doEventQuery();
         },
                 
         findCards: function(name) {
@@ -185,9 +181,6 @@
                 this._searchHandler.doClose();
                 this._searchHandler.closePin();
             }
-        },
-        setSearchHandler: function(searchHandler) {
-            this._searchHandler = searchHandler;
         },
         updateDatas: function(json) {
             if (json) {

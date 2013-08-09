@@ -3,12 +3,10 @@
 
     var EXTEND = null;
 
-    function Module(setting) {
+    function Module() {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
-        this._setting = setting;
-        this._isPageFitBounds = true;
     }
 
     Module.prototype = {
@@ -17,16 +15,12 @@
             this._sideBar.init();
         },
         getModuleId: function() {
-            return this._setting.ID;
+            return this._moduleId;
         },
         setMap: function(map) {
             this._map = map;
         },
         buildSideBar: function() {
-            if (this._setting.newSidebar) {
-                return this._setting.newSidebar(this);
-            }
-            //default is sidebarPage
             return new mapwork.SideBarPage(this);
         },
         buildModuleItem: function(json, index) {
@@ -184,9 +178,6 @@
 //            this._sideBar.onPageQueryResult(jsonResult);
 
             mapPopLayer.initLayer();
-//            if (this._isPageFitBounds) {
-//                this._map.fitBounds(bounds);
-//            }
         },
         onListQueryResult: function(jsonResult) {
             var listLayer = this._map.getLayer("moduleListLayer");
