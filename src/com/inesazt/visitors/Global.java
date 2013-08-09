@@ -1,7 +1,11 @@
 package com.inesazt.visitors;
 
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.CharBuffer;
 import java.util.Date;
 import java.util.Hashtable;
@@ -10,7 +14,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
 import com.alibaba.fastjson.JSON;
+import com.yihaomen.mybatis.inter.IUserOperation;
+import com.yihaomen.mybatis.model.User;
 
 
 
@@ -33,8 +43,6 @@ public class Global {
 		initGlobal();
 	}
 
-	private Configure m_configure = null;
-	
 	private Devices m_devices = null;
 	
 	private Cards m_cards = null;
@@ -50,13 +58,7 @@ public class Global {
 				return;
 			}
 			m_init = true;
-			m_configure = Configure.buildConfigure();
-			if(m_configure == null) {
-				System.err.println("xxxxxxxxxxxxx: Configure init error! xxxxxxxxxxxxxxx");
-				return;
-			}
 			m_strToday = DateTimeUtil.getTodayString();
-        	DBManager.initInstance(m_configure);
 			
 			m_devices = new Devices();
 			m_cards = new Cards();
@@ -66,6 +68,22 @@ public class Global {
 			String back7Day = DateTimeUtil.getDayString(new Date().getTime(),-7);
 			m_events = new Events(m_cards,m_devices,back7Day);
 			System.err.println("Global init finished.");
+			
+//			Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ServerConfig.getInstance().getMybatisConfigureFile()),"UTF-8"));
+//			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+//			
+//	        SqlSession session = sqlSessionFactory.openSession();
+//	        try {
+//	            IUserOperation userOperation=session.getMapper(IUserOperation.class);           
+//	            List<User> users = userOperation.selectUsers("%");
+//	            for(User user:users){
+//	                System.out.println(user.getId()+":"+user.getUserName()+":"+user.getUserAddress());
+//	            }
+//	            
+//	        } finally {
+//	            session.close();
+//	        }
+			
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -97,10 +115,6 @@ public class Global {
 
 	public Events getEvents() {
 		return m_events;
-	}
-	
-	public Configure getConfigure() {
-		return m_configure;
 	}
 	
 	private final Set<ChatMessageInbound> m_connections = new CopyOnWriteArraySet<ChatMessageInbound>();

@@ -8,6 +8,7 @@ public class ServerConfig {
 	private File m_WEBINFPath = null;
 	private File m_datasPath = null;
 	private File m_configPath = null;
+	private File m_mybatis_configureFile = null;
 
 	private ServerConfig(File appPath) {
 		m_appPath = appPath;
@@ -18,7 +19,7 @@ public class ServerConfig {
 			if (!m_configPath.exists()) {
 				m_configPath.mkdir();
 			}
-			m_configureFile = new File(m_configPath, "configure.json");
+			m_mybatis_configureFile = new File(m_configPath, "Configuration.xml");
 			m_deviceFile = new File(m_configPath, "device.json");
 			m_cardFile = new File(m_configPath, "card.json");
 			m_feedbackFile = new File(m_configPath, "feedback.json");
@@ -58,13 +59,12 @@ public class ServerConfig {
 		return m_cardFile;
 	}
 
-	File m_configureFile = null;
-	public File getConfigureFile() {
-		return m_configureFile;
-	}
-	
 	File m_feedbackFile = null;
 	public File getFeedbackFile(){
 		return m_feedbackFile;
+	}
+	
+	public File getMybatisConfigureFile() {
+		return m_mybatis_configureFile;
 	}
 }

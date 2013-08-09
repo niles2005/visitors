@@ -3,6 +3,10 @@ package com.inesazt.visitors;
 public class Event {
 	private int seqId = 0;
 	private String cardId = null;
+	private String macAddress = null;
+	private String antId = null;
+	private String upDate = null;
+	private String upTime = null;
 	private String cardName = null;
 	private String cardRole = null;
 	private String deviceId = null;
@@ -71,5 +75,41 @@ public class Event {
 
 	public void setSeqId(int seqId) {
 		this.seqId = seqId;
+	}
+
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
+	}
+
+	public String getAntId() {
+		return antId;
+	}
+
+	public void setAntId(String antId) {
+		this.antId = antId;
+	}
+
+	public String getUpDate() {
+		return upDate;
+	}
+
+	public void setUpDate(String upDate) {
+		this.upDate = upDate;
+	}
+
+	public String getUpTime() {
+		return upTime;
+	}
+
+	public void setUpTime(String upTime) {
+		this.upTime = upTime;
+	}
+	
+	public void doInit() {
+		
 	}
 }
