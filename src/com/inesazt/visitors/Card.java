@@ -1,6 +1,7 @@
 package com.inesazt.visitors;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 
@@ -154,7 +155,7 @@ public class Card {
 	}
 	
 	public String loadHistoryEvents(String date) {
-		ArrayList list = DBManager.getInstance().queryHistoryEvents(id, date);
+		List list = Global.getInstance().getEvents().queryHistoryEvents(id, date);
 		return JSON.toJSONString(list);
 	}
 	
@@ -175,7 +176,7 @@ public class Card {
 			}
 			return JSON.toJSONString(m_eventList);
 		}
-		ArrayList list = DBManager.getInstance().queryHistoryEvents(id, date);
+		List list = Global.getInstance().getEvents().queryHistoryEvents(id, date);
 		return JSON.toJSONString(list);
 	}
 	
