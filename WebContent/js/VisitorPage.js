@@ -27,11 +27,10 @@
 //            this._map.addHandler(new mapwork.WheelHandler());
 //            this._map.addControl(new mapwork.SimpleZoomControl());
 
-            this._searchModule = new mapwork.SearchModule(mapwork.Search.setting);
+            this._searchModule = new mapwork.SearchModule();
             this._map.addModule(this._searchModule);
             
             this._msg = new mapwork.WSMessage(this);
-            this._msg.initialize();
         },
         buildFrame: function() {
             this.createMap();
@@ -96,7 +95,8 @@
             return false;
         },
         onPageLoad: function() {
-            this._searchModule.initRoles();
+            this._searchModule.doInit();
+            this._msg.initialize();
         }
     };
 

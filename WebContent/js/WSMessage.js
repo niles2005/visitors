@@ -37,9 +37,11 @@
 
            this.socket.onopen = function () {
                console.log('Info: WebSocket connection opened.');
-               self.module = self.visitorPage._map.getModule(mapwork.Search.ID);
+               self.module = self.visitorPage._map.getModule(mapwork.SearchModule.ID);
                $('#connectSign').text('网络已连接');
                $('#connectSign').removeClass('label-disconnetct ');
+               
+               self.module.initDataQuery();
            };
 
            this.socket.onclose = function () {

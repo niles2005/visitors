@@ -230,9 +230,6 @@
         },
         getModule: function(moduleId) {
             var module = this._modules[moduleId];
-            if (!module) {
-                return this._modules[mapwork.UserItem.ID];
-            }
             return module;
         },
         openModule: function(moduleId) {
