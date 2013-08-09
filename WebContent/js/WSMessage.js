@@ -59,6 +59,7 @@
            this.socket.onmessage = function (message) {
                var json = JSON.parse(message.data);
                self.module.updateDatas(json);
+               $('#building1 .worker>.roleHead').text('100');
                if(self.timer)  {
                    clearTimeout(self.timer);
                }
