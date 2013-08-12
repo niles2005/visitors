@@ -2,6 +2,7 @@
     mapwork.RoleItem = RoleItem;
 
     var pageContentHtml = '<div class="roleIcon">'+
+            '<div class="roleCaution"><img src="images/caution.gif" style="display: none"/></div>'+
             '<div class="roleHead">0</div>'+
             '<div class="roleBody"></div>'+
             '<div class="roleFooter"></div>' +
@@ -19,6 +20,7 @@
         this._$PageContent = $(pageContentHtml);
 
         this.$countTitle = this._$PageContent.find(".roleHead");
+        this.$cautionTitle = this._$PageContent.find(".roleCaution>img");
         var self = this;
         this._$PageContent.click(function() {
             self.doFocus();
@@ -33,6 +35,7 @@
             this._json = json;
             
             this.setZIndex(100 - parseInt(this._index));
+            console.dir(this._json.name)
             this.setIcon("images/" + this._json.name + "2.png");
 //            this.setHoverIcon("images/" + this._json.authority + "1.png");
             this.setOffsetPos([11, 31]);
@@ -62,6 +65,11 @@
             this._cards[card._id] = card;
             this._cardCount++;
             this.updateCount();
+            if ( !this.$cautionTitle.is(':visible')) {
+                this.$cautionTitle.show();
+                var self = this;
+                setTimeout(function(){self.$cautionTitle.hide()},4000)
+            }
         },
         removeCard: function(card) {
             delete this._cards[card._id];
@@ -74,6 +82,11 @@
         updateCount: function() {
             if(this.$countTitle) {
                 this.$countTitle.html("" + this._cardCount);
+//                if (this._cardCount > 0 && !this.$cautionTitle.is(":visible")) {
+//                    this.$cautionTitle.show();
+//                    var self = this;
+//                    setTimeout(function(){self.$cautionTitle.hide()},4000)
+//                }
             }
         },
         doFocus: function() {
@@ -81,14 +94,14 @@
                 RoleItem.selectRoleItem.clearFocus();
             }
 //            this._moduleLabel.doFocus();
-            // TODO 添加选中样式
+            this._$PageContent.addClass('roleselected');
             this._sideBar.onPageQueryResult(this._cards);
             RoleItem.selectRoleItem = this;
             this._module._selectRole = this;
         },
         clearFocus: function() {
 //            this._moduleLabel.clearFocus();
-            // TODO 清除选中样式
+            this._$PageContent.removeClass('roleselected');
         }
     };
 
