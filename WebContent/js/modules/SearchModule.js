@@ -19,31 +19,25 @@
     SearchModule.prototype = {
         doInit: function() {
             this.init();
-            var locations = ["building1","building2","factory","outside"];
+            var locations = [{name:"building1",top:"250px",left:"215px"},{name:"building2",top:"250px",left:"475px"},{name:"factory",top:"418px",left:"350px"},{name:"outside",top:"491px",left:"631px"}];
             var roles = [{abb:'W',name:'Worker',css:'worker',icon:'images/Worker1.png'},{abb:'O',name:'Officer',css:'worker',icon:'images/Officer1.png'},{abb:'F',name:'Facility',css:'worker',icon:'images/Facility1.png'},{abb:'V',name:'VIP',css:'worker',icon:'images/VIP1.png'}];
-            var jRoleTable = $(".roleTable");
+            var jMainStageDiv = $(".mainStage");
             for(var row in locations){
-                var location = locations[row];
-                var jTr = $('<tr id='+location+'></tr>');
-                jRoleTable.append(jTr) ;
-
-                jTr.append($('<td>'+location+'</td>'));
+                var jPosition = $('<div id='+locations[row].name+' style="position:absolute;z-index:50;top:'+locations[row].top+';left:'+locations[row].left+';"><ul class="roleRow"></ul></div>');
+                var jUl =  jPosition.find('.roleRow');
+                jMainStageDiv.append(jPosition);
                 for(var col in roles){
                     var role = roles[col];
-                    var jTd =  $('<td/>');
-//                    var jIconDiv = $('<div class="roleIcon '+role.css+'"></div>');
-//                    jIconDiv.append($('<div class="roleHead">0</div>'));
-//                    jIconDiv.append($('<div class="roleBody"><img class="roleImg" src="'+role.icon+'"></div>'));
-//                    jIconDiv.append($('<div class="roleFooter">'+role.name+'</div>'));
+                    var jLi =  $('<li/>');
 
                     var roleItem = new mapwork.RoleItem(this);
                     var jIconDiv = roleItem.getPageContent();
                     jIconDiv.find('.roleBody').append($('<img class="roleImg" src="'+role.icon+'" title="'+role.name+'">'));
                     jIconDiv.find('.roleFooter').text(role.name);
-                    jTd.append(jIconDiv);
-                    jTr.append(jTd);
+                    jLi.append(jIconDiv);
+                    jUl.append(jLi);
                     roleItem.setSidebar(this._sideBar);
-                    roleItem._id = role.abb + '_' + location;
+                    roleItem._id = role.abb + '_' + locations[row].name;
                     roleItem._name = role.name;
                     this._roles[roleItem._id] = roleItem;
                 }
