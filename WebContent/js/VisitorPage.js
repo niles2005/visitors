@@ -105,7 +105,6 @@
         },
 
         toggleConsole :function() {
-            console.log('dfd');
             if ($('#consoleWrapper').css('bottom')=='0px') {
                 $('#consoleWrapper').width($(document.body).width() - 381);
                 $('#consoleWrapper').animate({bottom:'-120px'});
