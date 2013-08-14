@@ -19,11 +19,11 @@
     SearchModule.prototype = {
         doInit: function() {
             this.init();
-            var locations = [{name:"building1",top:"250px",left:"215px"},{name:"building2",top:"250px",left:"475px"},{name:"factory",top:"418px",left:"350px"},{name:"outside",top:"491px",left:"631px"}];
+            var locations = [{name:"building1",top:"170px",left:"215px"},{name:"building2",top:"170px",left:"475px"},{name:"factory",top:"326px",left:"350px"},{name:"outside",top:"403px",left:"631px"}];
             var roles = [{abb:'W',name:'Worker',css:'worker',icon:'images/Worker1.png'},{abb:'O',name:'Officer',css:'worker',icon:'images/Officer1.png'},{abb:'F',name:'Facility',css:'worker',icon:'images/Facility1.png'},{abb:'V',name:'VIP',css:'worker',icon:'images/VIP1.png'}];
             var jMainStageDiv = $(".viewcontainer");
             for(var row in locations){
-                var jPosition = $('<div id='+locations[row].name+' style="position:absolute;white-space:nowrap;top:'+locations[row].top+';left:'+locations[row].left+';"><ul class="roleRow"></ul></div>');
+                var jPosition = $('<div id='+locations[row].name+' style="position:absolute;z-index:50;white-space:nowrap;top:'+locations[row].top+';left:'+locations[row].left+';"><ul class="roleRow"></ul></div>');
                 var jUl =  jPosition.find('.roleRow');
                 jMainStageDiv.append(jPosition);
                 for(var col in roles){
