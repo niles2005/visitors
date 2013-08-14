@@ -31,6 +31,7 @@
             this._w_hsp.style.left =  (this._w.offsetWidth + 2)+ "px";
             this._e_hsp.style.right = (this._e.offsetWidth)+ "px";
 
+
             var self = this;
             var resetWindow = function() {
                 self.resetSize();
@@ -85,10 +86,39 @@
         },
         buildFrame: function() {
             this._visitorManager = new visitors.VisitorManager();
-            this._msg = new visitors.WSMessage(this._visitorManager);
-            var jRoleTable = $(".roleTable");
             this._visitorManager.doInit();
+            this._msg = new visitors.WSMessage(this._visitorManager);
             this._msg.initialize();
+
+            if(getCookie("msgConsole")=="show"){
+                $('#consoleWrapper').width($(document.body).width() - 381);
+                $('#consoleWrapper').css({bottom:'0px'});
+                $('#panelarrow2').css({bottom:'120px'});
+                $('#arrowImg').removeClass('arrow_img_show');
+            }else{
+                $('#consoleWrapper').width($(document.body).width() - 381);
+                $('#consoleWrapper').css({bottom:'-120px'});
+                $('#panelarrow2').css({bottom:'0px'});
+                $('#arrowImg').addClass('arrow_img_show');
+            }
+            $('#panelarrow2').click(this.toggleConsole);
+        },
+
+        toggleConsole :function() {
+            console.log('dfd');
+            if ($('#consoleWrapper').css('bottom')=='0px') {
+                $('#consoleWrapper').width($(document.body).width() - 381);
+                $('#consoleWrapper').animate({bottom:'-120px'});
+                $('#panelarrow2').animate({bottom:'0px'});
+                $('#arrowImg').addClass('arrow_img_show');
+                setCookie("msgConsole","hide");
+            }else{
+                $('#consoleWrapper').width($(document.body).width() - 381);
+                $('#consoleWrapper').animate({bottom:'0px'});
+                $('#panelarrow2').animate({bottom:'120px'});
+                $('#arrowImg').removeClass('arrow_img_show');
+                setCookie("msgConsole","show");
+            }
         }
     };
 

@@ -20,36 +20,8 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-                new mapwork.VisitorPage("cc");
-                if(getCookie("msgConsole")=="show"){
-                    $('#consoleWrapper').width($(document.body).width() - 381);
-                    $('#consoleWrapper').css({bottom:'0px'});
-                    $('#panelarrow2').css({bottom:'120px'});
-                    $('#arrowImg').removeClass('arrow_img_show');
-                }else{
-                    $('#consoleWrapper').width($(document.body).width() - 381);
-                    $('#consoleWrapper').css({bottom:'-120px'});
-                    $('#panelarrow2').css({bottom:'0px'});
-                    $('#arrowImg').addClass('arrow_img_show');
-                }
+                new visitors.VisitorPage("cc");
             });
-
-            function toggleConsole() {
-                if ($('#consoleWrapper').css('bottom')=='0px') {
-                    $('#consoleWrapper').width($(document.body).width() - 381);
-                    $('#consoleWrapper').animate({bottom:'-120px'});
-                    $('#panelarrow2').animate({bottom:'0px'});
-                    $('#arrowImg').addClass('arrow_img_show');
-                    setCookie("msgConsole","hide");
-                }else{
-                    $('#consoleWrapper').width($(document.body).width() - 381);
-                    $('#consoleWrapper').animate({bottom:'0px'});
-                    $('#panelarrow2').animate({bottom:'120px'});
-                    $('#arrowImg').removeClass('arrow_img_show');
-                    setCookie("msgConsole","show");
-                }
-            }
-
         </script>
     </head>
     <body>
@@ -89,7 +61,7 @@
                     <div class="viewcontainer" style="width: 100%; height: 100%; position: relative; cursor: default; overflow: hidden;">
                     </div>
                 </div>
-                <div title="即时消息栏" id="panelarrow2" class="panelarrow2" onclick="toggleConsole()">
+                <div title="即时消息栏" id="panelarrow2" class="panelarrow2">
                     <div id="arrowImg" class="arrow_img arrow_img_show" ></div>
                 </div>
                 <div id="cs" >
