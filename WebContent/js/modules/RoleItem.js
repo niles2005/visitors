@@ -35,7 +35,6 @@
             this._json = json;
             
             this.setZIndex(100 - parseInt(this._index));
-            console.dir(this._json.name)
             this.setIcon("images/" + this._json.name + "2.png");
 //            this.setHoverIcon("images/" + this._json.authority + "1.png");
             this.setOffsetPos([11, 31]);
@@ -65,11 +64,6 @@
             this._cards[card._id] = card;
             this._cardCount++;
             this.updateCount();
-            if ( !this.$cautionTitle.is(':visible')) {
-                this.$cautionTitle.show();
-                var self = this;
-                setTimeout(function(){self.$cautionTitle.hide()},4000)
-            }
         },
         removeCard: function(card) {
             delete this._cards[card._id];
@@ -82,11 +76,15 @@
         updateCount: function() {
             if(this.$countTitle) {
                 this.$countTitle.html("" + this._cardCount);
-//                if (this._cardCount > 0 && !this.$cautionTitle.is(":visible")) {
-//                    this.$cautionTitle.show();
-//                    var self = this;
-//                    setTimeout(function(){self.$cautionTitle.hide()},4000)
-//                }
+                if (this._cardCount > 0) {
+                    if (this._id == "O_building1" || this._id == "F_building1" || this._id == "W_building2"  || this._id == "F_building2" ) {
+                        this.$cautionTitle.show();
+                        this.$countTitle.addClass('warn');
+                    }
+                }else{
+                    this.$cautionTitle.hide();
+                    this.$countTitle.removeClass('warn');
+                }
             }
         },
         doFocus: function() {
