@@ -23,7 +23,7 @@
             var roles = [{abb:'W',name:'Worker',css:'worker',icon:'images/Worker1.png'},{abb:'O',name:'Officer',css:'worker',icon:'images/Officer1.png'},{abb:'F',name:'Facility',css:'worker',icon:'images/Facility1.png'},{abb:'V',name:'VIP',css:'worker',icon:'images/VIP1.png'}];
             var jMainStageDiv = $(".mainStage");
             for(var row in locations){
-                var jPosition = $('<div id='+locations[row].name+' style="position:absolute;z-index:50;top:'+locations[row].top+';left:'+locations[row].left+';"><ul class="roleRow"></ul></div>');
+                var jPosition = $('<div id='+locations[row].name+' style="position:absolute;top:'+locations[row].top+';left:'+locations[row].left+';"><ul class="roleRow"></ul></div>');
                 var jUl =  jPosition.find('.roleRow');
                 jMainStageDiv.append(jPosition);
                 for(var col in roles){

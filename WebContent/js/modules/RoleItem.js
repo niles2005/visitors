@@ -34,7 +34,6 @@
         setJsonData: function(json) {
             this._json = json;
             
-            this.setZIndex(100 - parseInt(this._index));
             this.setIcon("images/" + this._json.name + "2.png");
 //            this.setHoverIcon("images/" + this._json.authority + "1.png");
             this.setOffsetPos([11, 31]);

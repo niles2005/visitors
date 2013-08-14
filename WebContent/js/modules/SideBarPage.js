@@ -5,32 +5,13 @@
 
 
     var pageHtml =
-//            '<div>' +
-//            '<div class="search_title" style="background:red;height:40px;">' +
-//            '<span id="btnReturn" class="left back"><a href="javascript:void(0);">返回</a></span>' +
-//            '<div class="right">共有<span class="padlr5"></span>条搜索记录</div>' +
-//            '</div>' +
-//            '<div class="public-listings stretch scroll">'+
-//            '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>' +
-//            '</div>';
-
         '<div class="map-tool">'
             +'<div class="row">'
             +'          <div class="span5">     '
-//            +'            <div class="btn-group pull-left">'
-//            +'              <button id="polygon_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">A</i> </button> '
-//            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">S</i></button>'
-//            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">W</i></button>'
-//            +'              <button id="circle_button" class="btn polygon drawing_mode pull-left" data-toggle="tooltip" data-placement="bottom" title=""><i class="icon-circle-blank">G</i></button>'
-//            +'            </div>'
         +'            <div class="map-search pull-left">'
-        +'              <form> '
         +'                <div class="input-append"> '
         +'                  <input name="searchInput" class="searchInput pull-left" size="10" type="text" placeholder="搜索…" data-toggle="tooltip" data-placement="bottom" title="输入你要查找的卡ID或名称" autocomplete="off"> '
-//            +'<span style="padding-left: 60px"></span>'
-//             +'                  <span id="refresh" class="btn btn-primary searchInputBtn"><i>刷新</i></span>'
         +'                </div> '
-        +'              </form> '
         +'            </div>   '
 
         +'          </div>   '
@@ -39,8 +20,6 @@
         +'<div class="public-listings stretch scroll">'
         +    '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>'
         +'</div>';
-
-
 
     function SideBarPage(module) {
         if (EXTEND) {
@@ -63,8 +42,14 @@
             this._$searchInput = this._$ConentDiv.find(".searchInput");
             var self = this;
             this._$searchInput.keyup(function(event) {
-                if (event.which === 13) {
-                    event.preventDefault();
+                if (event.which === 13 || event.which === 10) {
+                    if (event.stopPropagation) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                    } else {//IE
+                        event.cancelBubble = true;
+                        event.returnValue = false;
+                    }
                 }
                 var cards = self._module.findCards(this.value);
                 if(cards) {

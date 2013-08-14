@@ -40,6 +40,12 @@
             var cnHeight = document.getElementById('cn').clientHeight;
             var csHeight = document.getElementById('cs').clientHeight;
             var cc = document.getElementById('cc');
+
+            var consoleWrapper = document.getElementById("consoleWrapper");
+            consoleWrapper.style.width = (cc.clientWidth + 2) + "px";
+            var panelarrow2 = document.getElementById("panelarrow2");
+            panelarrow2.style.left = (cc.clientWidth - 80) / 2 + "px";
+
             var mainHeight = mapwork.utils.getClientSize().height - headHeight - cnHeight - csHeight;
             cc.style.height = mainHeight + 'px';
             if ( this._map) {
