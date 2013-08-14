@@ -2,7 +2,7 @@
     function Base() {
     }
 
-    mapwork.utils = {
+    visitors.utils = {
         inherits: function(subClass, superClass) {
             var sub = subClass.prototype;
             Base.prototype = superClass.prototype;
@@ -33,7 +33,7 @@
             }
         },
         loadJsonData: function(url, listener, param) {
-            if (mapwork.ajaxtype == 0) {
+            if (visitors.ajaxtype == 0) {
                 $.ajax({
                     url: url,
                     data: param,
@@ -139,34 +139,6 @@
             }
             return myHeight;
         },
-        getPageX: function(event) {
-            if (event.pageX || event.pageY) {
-                return event.pageX;
-            } else {
-                return event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-            }
-        },
-        getPageY: function(event) {
-            if (event.pageX || event.pageY) {
-                return event.pageY;
-            } else {
-                return event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-            }
-        },
-        getMapLayerX: function(event, mapLocation) {
-            if (mapwork.isIE) {
-                return event.x;
-            } else {
-                return event.clientX - mapLocation._map._div.offsetLeft;
-            }
-        },
-        getMapLayerY: function(event, mapLocation) {
-            if (mapwork.isIE) {
-                return event.y;
-            } else {
-                return event.clientY - mapLocation._map._div.offsetTop;
-            }
-        },
         getOffset: function(event) {//for firefox bug
             var target = event.target;
             if (target.offsetLeft == undefined)
@@ -198,18 +170,6 @@
                     return {width: document.body.clientWidth, height: document.body.clientHeight};
                 }
             }
-        },
-        getFitZoom: function(tileEdgeLen) {
-            var maxZoom = mapwork.MapLocation.LIMIT_MAX_ZOOM;
-            var minZoom = mapwork.MapLocation.LIMIT_MIN_ZOOM;
-
-            for (var i = maxZoom; i >= minZoom; i--) {
-                var zoomTileLen = Math.pow(2.0, 8 + i);
-                if (tileEdgeLen > zoomTileLen) {
-                    return i;
-                }
-            }
-            return minZoom;
         },
         formatDate: function(now, form) {
             var year = now.getYear() + 1900;

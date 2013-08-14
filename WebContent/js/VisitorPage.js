@@ -1,101 +1,98 @@
 (function() {
-    mapwork.VisitorPage = VisitorPage;
+    visitors.VisitorPage = VisitorPage;
 
-    var EXTEND = mapwork.WebFrame;
+    var EXTEND = null;
 
-    function VisitorPage(mapWrapDiv) {
+    function VisitorPage() {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
-        this._mapWrapDiv = mapWrapDiv;
         this.initFrame();
         this.buildFrame();
-        this.buildPage();
-        this.onPageLoad();
     }
 
     VisitorPage.prototype = {
-        buildPage: function() {
-            var jRoleTable = $(".roleTable");
+        initFrame: function() {
+            this._c = document.getElementById("c");
+            this._n = document.getElementById("n");
+            this._cn = document.getElementById("cn");
+            this._cs = document.getElementById("cs");
+            this._cc = document.getElementById("cc");
+            this._w = document.getElementById("w");
+            this._e = document.getElementById("e");
+            this._s = document.getElementById("s");
+            this._w_hsp = document.getElementById("w_hsp");
+            this._e_hsp = document.getElementById("e_hsp");
+            this._dd = document.getElementById("dd");
+
+            this._w_hsp.style.display = this._w.style.display;
+            this._e_hsp.style.display = this._e.style.display;
+
+            this._w_hsp.style.left =  (this._w.offsetWidth + 2)+ "px";
+            this._e_hsp.style.right = (this._e.offsetWidth)+ "px";
+
+            var self = this;
+            var resetWindow = function() {
+                self.resetSize();
+            };
+            window.onload = resetWindow;
+            window.onresize = resetWindow;
         },
-        buildFrame: function() {
-            this._searchModule = new mapwork.SearchModule();
-            this._msg = new mapwork.WSMessage(this._searchModule);
-        },
-        onWindowResize: function() {
-            var headHeight = document.getElementById('n').clientHeight;
-            var cnHeight = document.getElementById('cn').clientHeight;
-            var csHeight = document.getElementById('cs').clientHeight;
-            var cc = document.getElementById('cc');
+        resetSize: function () {
+            var cOffsetTop = this._c.offsetTop;
+            var marginLeft = 0;
+            if(this._w.style.display !== "none") {
+                marginLeft = this._w.offsetWidth;
+                if(this._w_hsp.offsetWidth > 0) {
+                    marginLeft = this._w.offsetWidth + this._w_hsp.offsetWidth + 2;
+                }
+            }
+            this._c.style["marginLeft"] = marginLeft + "px";
+            
+            var marginRight = 0;
+            if(this._e.style.display !== "none") {
+                marginRight = this._e.offsetWidth + this._e_hsp.offsetWidth + 2;
+            }
+            
+            this._c.style["marginRight"] = marginRight + "px";
+            
+            var newHeight = visitors.utils.getWindowHeight() - cOffsetTop - this._s.offsetHeight;
+            this._w.style.height = newHeight + "px";
+            this._e.style.height = newHeight + "px";
+            this._c.style.height = newHeight + "px";
+            this._w_hsp.style.height = newHeight + "px";
+            this._e_hsp.style.height = newHeight + "px";
+
+            var headHeight = this._n.clientHeight;
+            var cnHeight = this._cn.clientHeight;
+            var csHeight = this._cs.clientHeight;
 
             var consoleWrapper = document.getElementById("consoleWrapper");
-            consoleWrapper.style.width = (cc.clientWidth + 2) + "px";
+            consoleWrapper.style.width = (this._cc.clientWidth + 2) + "px";
             var panelarrow2 = document.getElementById("panelarrow2");
-            panelarrow2.style.left = (cc.clientWidth - 80) / 2 + "px";
+            panelarrow2.style.left = (this._cc.clientWidth - 80) / 2 + "px";
 
-            var mainHeight = mapwork.utils.getClientSize().height - headHeight - cnHeight - csHeight;
-            cc.style.height = mainHeight + 'px';
-            if ( this._map) {
-                this._map.resetSize();
-            }
-            if (mapwork.resizeListener) {
-                mapwork.resizeListener();
-            }
-            //每个业务的resize事件
+            var mainHeight = visitors.utils.getClientSize().height - headHeight - cnHeight - csHeight;
+            this._cc.style.height = mainHeight + 'px';
+
             this.sideBarResize();
         },
-        //每个业务的sideBar的resize事件
         sideBarResize: function() {
-            var sideBar = this._searchModule._sideBar;
-            sideBar.resize();
-        },
-        //测距
-        doMeasure: function() {
-            var measureHandler = this._map.getHandler(mapwork.MeasureHandler.ID);
-            if (measureHandler) {
-                measureHandler.beginMeasure();
+            if(this._visitorManager) {
+                var sideBar = this._visitorManager._sideBar;
+                sideBar.resize();
             }
         },
-        doVectorTest: function() {
-            var vectorLayer = this._map.getLayer(mapwork.MapVectorLayer.ID);
-            if (vectorLayer) {
-                vectorLayer.doTest();
-            }
-        },
-        moveToDefaultPos: function() {
-            var lat = mapwork.configs.defaultLat;
-            var lon = mapwork.configs.defaultLon;
-//			var zoom = mapwork.configs.defaultZoom;
-
-            var ePos = new mapwork.EarthPos(lat, lon);
-            this._map.movedToMapCenter(ePos);
-        },
-        changeMapStyle: function() {
-            if (mapwork.mapStyle === mapwork.mapStyle1) {
-                mapwork.mapStyle = mapwork.mapStyle2;
-            } else {
-                mapwork.mapStyle = mapwork.mapStyle1;
-            }
-            setCookie("mapStyle", mapwork.mapStyle, 999999);
-            var tileLayer = this._map.getLayer(mapwork.TileLayer.ID);
-            if (tileLayer) {
-                tileLayer.changeUrl();
-            }
-        },
-        toggleMapTraffic: function() {
-            var trafficControl = this._map.getControl(mapwork.TrafficControl.ID);
-            if (trafficControl) {
-                return trafficControl.toggleTraffic();
-            }
-            return false;
-        },
-        onPageLoad: function() {
-            this._searchModule.doInit();
+        buildFrame: function() {
+            this._visitorManager = new visitors.VisitorManager();
+            this._msg = new visitors.WSMessage(this._visitorManager);
+            var jRoleTable = $(".roleTable");
+            this._visitorManager.doInit();
             this._msg.initialize();
         }
     };
 
     if (EXTEND) {
-        mapwork.utils.inherits(VisitorPage, EXTEND);
+        visitors.utils.inherits(VisitorPage, EXTEND);
     }
 })();

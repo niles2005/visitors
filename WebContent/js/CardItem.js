@@ -1,8 +1,7 @@
 (function() {
-    mapwork.CardItem = CardItem;
+    visitors.CardItem = CardItem;
 
-    var EXTEND = mapwork.ModuleItem;
-    CardItem.ID = "CardItem";
+    var EXTEND = visitors.ModuleItem;
 
     var sidebarContentHtml = '<div  class="listing"> '
             + ' <div class="main viewed on">'
@@ -55,7 +54,7 @@
             + '</div> '
             + '</div>';
 
-    function CardItem(module, index, roles) {
+    function CardItem(manager, index, roles) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
@@ -75,24 +74,6 @@
 
             this.setZIndex(100 - parseInt(this._index));
             this.setOffsetPos([11, 31]);
-        },
-        getTipTitle: function() {
-            return this._json.name;
-        },
-        getTipContent: function() {
-            return "<p>" + this._json.name + "</p>";
-        },
-        isNeedItemQuery: function() {
-            return false;
-        },
-        createMapIcon: function() {
-            var id = this._id;
-            var icon = this._icon;
-            var hoverIcon = null;//this._hoverIcon;
-            var iconOffset = this._offsetPos;
-            var moduleLabel = new mapwork.CommonItemLabel(id, icon, hoverIcon, iconOffset, this._zIndex, this);
-            moduleLabel.setLabel(this._json.label, this._json.count);
-            return moduleLabel;
         },
         setRole: function(role) {
             if (this._role) {
@@ -114,7 +95,7 @@
             $cardDetail.empty();
             var url = "work?action=loadevents&cardid=" + this._id + "&date=" + date + "&t=" + new Date().getTime();
             var self = this;
-            mapwork.utils.loadJsonData(url, function(data) {
+            visitors.utils.loadJsonData(url, function(data) {
                 if (!data) {
                     return;
                 }
@@ -126,10 +107,10 @@
                             + (i + 1)
                             + '</td>'
                             + '<td>'
-                            + mapwork.utils.formatDate(new Date(data[i]['time']), 'day')
+                            + visitors.utils.formatDate(new Date(data[i]['time']), 'day')
                             + '</td>'
                             + '<td>'
-                            + mapwork.utils.formatDate(new Date(data[i]['time']), 'time')
+                            + visitors.utils.formatDate(new Date(data[i]['time']), 'time')
                             + '</td>'
                             + '<td>'
                             + '<span class="metadata"'
@@ -142,7 +123,7 @@
             });
         },
         afterExpandDetail: function() {
-            this.loadCardEvents(mapwork.today);
+            this.loadCardEvents(visitors.today);
         },
         getName: function() {
             return this._json.name;
@@ -168,15 +149,12 @@
             this._json.lastDeviceId = eventJson.lastDeviceId;
 
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate);
-            this._$SidebarContent.find("#cardTime").html(mapwork.utils.formatDate(new Date(this._json.lastTime), 'time'));
+            this._$SidebarContent.find("#cardTime").html(visitors.utils.formatDate(new Date(this._json.lastTime), 'time'));
             var self = this;
             setTimeout(function() {
                 self._$SidebarContent.find("#cardLocate").css("background", "#efefef");
                 self._$SidebarContent.find("#cardTime").css("background", "#efefef");
             }, 1500);
-        },
-        reset: function() {
-            this._$detailPage.hide();
         },
         getSidebarContent: function() {
             this._$detailPage = this._$SidebarContent.find(".popuplist-main");
@@ -186,16 +164,16 @@
                 this._$SidebarContent.find("#cardInfo").html(this._json.info).attr("title", this._json.info);
             }
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate).attr('title', this._json.lastDeviceId);
-            this._$SidebarContent.find("#cardTime").html(mapwork.utils.formatDate(new Date(this._json.lastTime), 'time'))
-                    .attr('title', mapwork.utils.formatDate(new Date(this._json.lastTime), 'day'));
+            this._$SidebarContent.find("#cardTime").html(visitors.utils.formatDate(new Date(this._json.lastTime), 'time'))
+                    .attr('title', visitors.utils.formatDate(new Date(this._json.lastTime), 'day'));
             this._$SidebarContent.find("#cardRole").html(this._json.role);
 
             var self = this;
-            var today = mapwork.utils.date8ToDate10(mapwork.today,'-');
+            var today = visitors.utils.date8ToDate10(visitors.today,'-');
             
             this._refreshButton = this._$SidebarContent.find("#detailRefresh");
             this._refreshButton.click(function() {
-                var queryToday = mapwork.utils.date10ToDate8(today);
+                var queryToday = visitors.utils.date10ToDate8(today);
                 self.loadCardEvents(queryToday);
             });
 
@@ -224,7 +202,7 @@
                     strDate += "0";
                 }
                 strDate += date.getDate();
-                if (strDate === mapwork.today) {
+                if (strDate === visitors.today) {
                     this._refreshButton.show();
                 } else {
                     this._refreshButton.hide();
@@ -241,6 +219,6 @@
     };
 
     if (EXTEND) {
-        mapwork.utils.inherits(CardItem, EXTEND);
+        visitors.utils.inherits(CardItem, EXTEND);
     }
 })();

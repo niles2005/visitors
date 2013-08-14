@@ -1,22 +1,24 @@
 (function() {
-    mapwork.SearchModule = SearchModule;
-    SearchModule.ID = "SearchModule";
+    visitors.VisitorManager = VisitorManager;
 
-    var EXTEND = mapwork.Module;
+    var EXTEND = null;
 
-    function SearchModule() {
+    function VisitorManager() {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
-        this._moduleId = SearchModule.ID;
-        this._searchType = "all";
         this._roles = {};
         this._cards = {};
         this._selectRole = null;
         this._$consoleWindow = $("#consoleWindow");
     }
     
-    SearchModule.prototype = {
+    VisitorManager.prototype = {
+        init: function() {
+            this._sideBar = new visitors.SideBarPage(this);
+            this._sideBar.init();
+        },
+                
         doInit: function() {
             this.init();
             var locations = [{name:"building1",top:"170px",left:"215px"},{name:"building2",top:"170px",left:"475px"},{name:"factory",top:"326px",left:"350px"},{name:"outside",top:"403px",left:"631px"}];
@@ -30,7 +32,7 @@
                     var role = roles[col];
                     var jLi =  $('<li/>');
 
-                    var roleItem = new mapwork.RoleItem(this);
+                    var roleItem = new visitors.RoleItem(this);
                     var jIconDiv = roleItem.getPageContent();
                     jIconDiv.find('.roleBody').append($('<img class="roleImg" src="'+role.icon+'" title="'+role.name+'">'));
                     jIconDiv.find('.roleFooter').text(role.name);
@@ -44,31 +46,9 @@
             }
 
         },
-        doInit0: function() {
-            this.init();
-            var roles = {"group":{"O_building1":{"count":0,"id":"O_building1","label":"Officer","locate":"building1","name":"Officer","pos":{"lat":312727030,"lon":1218229820},"warn":true},"O_building2":{"count":0,"id":"O_building2","label":"Officer","locate":"building2","name":"Officer","pos":{"lat":312727030,"lon":1218285250},"warn":false},"O_factory":{"count":0,"id":"O_factory","label":"Officer","locate":"factory","name":"Officer","pos":{"lat":312697630,"lon":1218285250},"warn":false},"O_outside":{"count":0,"id":"O_outside","label":"Officer","locate":"outside","name":"Officer","pos":{"lat":312683510,"lon":1218318360},"warn":false},"S_building1":{"count":0,"id":"S_building1","label":"Facility","locate":"building1","name":"Facility","pos":{"lat":312727030,"lon":1218241820},"warn":true},"S_building2":{"count":0,"id":"S_building2","label":"Facility","locate":"building2","name":"Facility","pos":{"lat":312727030,"lon":1218297250},"warn":true},"S_factory":{"count":0,"id":"S_factory","label":"Facility","locate":"factory","name":"Facility","pos":{"lat":312697630,"lon":1218297250},"warn":false},"S_outside":{"count":0,"id":"S_outside","label":"Facility","locate":"outside","name":"Facility","pos":{"lat":312683510,"lon":1218330360},"warn":false},"V_building1":{"count":0,"id":"V_building1","label":"VIP","locate":"building1","name":"VIP","pos":{"lat":312727030,"lon":1218253820},"warn":false},"V_building2":{"count":0,"id":"V_building2","label":"VIP","locate":"building2","name":"VIP","pos":{"lat":312727030,"lon":1218309250},"warn":false},"V_factory":{"count":0,"id":"V_factory","label":"VIP","locate":"factory","name":"VIP","pos":{"lat":312697630,"lon":1218309250},"warn":false},"V_outside":{"count":0,"id":"V_outside","label":"VIP","locate":"outside","name":"VIP","pos":{"lat":312683510,"lon":1218342360},"warn":false},"W_building1":{"count":0,"id":"W_building1","label":"Worker","locate":"building1","name":"Worker","pos":{"lat":312727030,"lon":1218217820},"warn":false},"W_building2":{"count":0,"id":"W_building2","label":"Worker","locate":"building2","name":"Worker","pos":{"lat":312727030,"lon":1218273250},"warn":true},"W_factory":{"count":0,"id":"W_factory","label":"Worker","locate":"factory","name":"Worker","pos":{"lat":312697630,"lon":1218273250},"warn":false},"W_outside":{"count":0,"id":"W_outside","label":"Worker","locate":"outside","name":"Worker","pos":{"lat":312683510,"lon":1218306360},"warn":false}}};
-
-            var listLayer = this._map.getLayer("moduleListLayer");
-            if (!listLayer) {
-                listLayer = new mapwork.MapIconLayer("moduleListLayer");
-                this._map.addLayer(listLayer);
-            } else {
-                listLayer.empty();
-            }
-            if (roles.group) {
-                for (var i in roles.group) {
-                    var row = roles.group[i];
-                    //封装moduleItem
-                    var roleItem = this.buildRoleItem(row);
-                    roleItem.setMap(this._map);
-                    listLayer.addElement(roleItem.getMapIcon());
-                }
-            }
-            listLayer.initLayer();
-        },
 
         buildRoleItem: function(json, index) {
-            var roleItem = new mapwork.RoleItem(this, index);
+            var roleItem = new visitors.RoleItem(this, index);
             roleItem.setJsonData(json);
             roleItem.setSidebar(this._sideBar);
             roleItem.setIcon("images/" + json.name + "1.png");
@@ -77,10 +57,9 @@
             roleItem.setZIndex(100 - parseInt(index));
             roleItem.setOffsetPos([11, 31]);
             if (json.pos) {
-                var ePos = new mapwork.EarthPos(json.pos.lat, json.pos.lon, true);
+                var ePos = new visitors.EarthPos(json.pos.lat, json.pos.lon, true);
                 roleItem.setEarthPos(ePos);
             }
-            roleItem.setMap(this._map);
             this._roles[roleItem._id] = roleItem;
             return roleItem;
         },
@@ -94,7 +73,7 @@
                 }
 //                console.dir(data);
                 if(data.today) {
-                    mapwork.today = data.today;
+                    visitors.today = data.today;
                 }
                 if(data.cards) {
                     self.updateCardInfo(data.cards);
@@ -175,48 +154,12 @@
             return arr;
         },
 
-        buildModuleItem: function(json, index) {
-            var moduleId = json.type;
-            var module = this._map.getModule(moduleId);
-            var moduleItem = module._setting.newModuleItem(module, index);
-            moduleItem.setJsonData(json);
-            moduleItem.setSidebar(this._sideBar);
-
-            moduleItem._id = json.id;
-            moduleItem._name = json.name;
-            moduleItem.setDescribe("");
-            moduleItem.setZIndex(100 - parseInt(index));
-            moduleItem.setOffsetPos([11, 31]);
-            if (json.pos) {
-                var ePos = new mapwork.EarthPos(json.pos.lat, json.pos.lon, true);
-                moduleItem.setEarthPos(ePos);
-            }
-            moduleItem.setMap(this._map);
-//            this._mapRectManager.addModuleItem(moduleItem);
-            return moduleItem;
-        },
-        clean: function() {
-            this._sideBar.clean();
-            //清空大图标
-            this.doRemoveIconList();
-            //清空tip层
-            this.doHideTip();
-            //清空小图标
-            var listLayer = this._map.getLayer("moduleListLayer");
-            if (listLayer) {
-                listLayer.empty();
-            }
-            if (this._searchHandler) {
-                this._searchHandler.doClose();
-                this._searchHandler.closePin();
-            }
-        },
         updateDatas: function(json) {
             if (json) {
 //                console.log(json);
                 if(json.today) {
-                    mapwork.today = json.today;
-                    var today = mapwork.utils.date8ToDate10(mapwork.today,'-');
+                    visitors.today = json.today;
+                    var today = visitors.utils.date8ToDate10(visitors.today,'-');
 
                     for (var i in this._cards) {
                         var card = this._cards[i];
@@ -260,7 +203,7 @@
                     for(var e in events) {
                         var eve = events[e];
                         var date = new Date(eve.time);
-                        var ss = "<li class='eventli'>" + eve.seqId + "  " + mapwork.utils.formatDate(date, 'day') + " " + mapwork.utils.formatDate(date, 'time') + " " + eve.cardId;
+                        var ss = "<li class='eventli'>" + eve.seqId + "  " + visitors.utils.formatDate(date, 'day') + " " + visitors.utils.formatDate(date, 'time') + " " + eve.cardId;
                         var cardItem = this._cards[eve.cardId];
                         if(cardItem) {
                             ss += "[" + cardItem.getName() + "]";
@@ -304,23 +247,21 @@
         buildCardItem: function(json, index) {
             var cardItem = null;
             if (json.actived) {
-                var cardItem = new mapwork.CardItem(this, index, this._roles);
+                var cardItem = new visitors.CardItem(this, index, this._roles);
                 cardItem.setJsonData(json);
                 cardItem.setSidebar(this._sideBar);
 
                 cardItem._id = json.id;
                 cardItem._name = json.name;
                 cardItem.setIcon("images/" + json.role + "2.png");
-                cardItem.setDescribe("");
                 cardItem.setZIndex(100 - parseInt(index));
                 cardItem.setOffsetPos([11, 31]);
-                cardItem.setMap(this._map);
             }
             return cardItem;
         }
     };
 
     if (EXTEND) {
-        mapwork.utils.inherits(SearchModule, EXTEND);
+        visitors.utils.inherits(VisitorManager, EXTEND);
     }
 })();

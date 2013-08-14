@@ -6,12 +6,12 @@
  * To change this template use File | Settings | File Templates.
  */
 (function(){
-    mapwork.WSMessage = WSMessage;
+    visitors.WSMessage = WSMessage;
     var EXTEND = null;
 
-    function  WSMessage(searchModule){
+    function  WSMessage(visitorManager){
         this.socket = null;
-        this.module = searchModule;
+        this.manager = visitorManager;
         this.timer = null;
     }
 
@@ -39,7 +39,7 @@
                $('#connectSign').text('网络已连接');
                $('#connectSign').removeClass('label-disconnetct');
                
-               self.module.initDataQuery();
+               self.manager.initDataQuery();
            };
 
            this.socket.onclose = function () {
@@ -58,13 +58,13 @@
 
            this.socket.onmessage = function (message) {
                var json = JSON.parse(message.data);
-               self.module.updateDatas(json);
+               self.manager.updateDatas(json);
                if(self.timer)  {
                    clearTimeout(self.timer);
                }
                self.timer = setTimeout(function (){
                    if(self.socket){
-                       console.log('client side close socket interval')
+                       console.log('client side close socket interval');
                        self.socket.close();
                        $('#connectSign').text('网络已断开,系统正在重连...');
                        $('#connectSign').addClass('label-disconnetct');

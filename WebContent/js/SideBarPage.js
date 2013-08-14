@@ -1,8 +1,7 @@
 (function() {
-    mapwork.SideBarPage = SideBarPage;
+    visitors.SideBarPage = SideBarPage;
 
-    var EXTEND = mapwork.BaseSideBar;
-
+    var EXTEND = null;
 
     var pageHtml =
         '<div class="map-tool">'
@@ -21,16 +20,16 @@
         +    '<ul id="listings" class="listings"><div class="result_search lists_has_weibo"></div></ul>'
         +'</div>';
 
-    function SideBarPage(module) {
+    function SideBarPage(visitorManager) {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
         }
+        this._manager = visitorManager;
     }
 
     SideBarPage.prototype = {
         init: function() {
             this._$SideBarDiv = $("#sidebar");
-            this._pageQuery = this._module.doPageQuery;
             this._$SideBarDiv.empty();
 
             this._$ConentDiv = $(pageHtml);
@@ -51,47 +50,29 @@
                         event.returnValue = false;
                     }
                 }
-                var cards = self._module.findCards(this.value);
+                var cards = self._manager.findCards(this.value);
                 if(cards) {
                     self.onPageQueryResult(cards,self);
                 }
             });
             this._$refresh = this._$ConentDiv.find("#refresh");
 
-
             this._$SideBarDiv.append(this._$ConentDiv);
 
             this._$SideBarDiv.show();
-            if (this._pageQuery) {
-                var self = this;
-                this._$A.each(function(index) {
-                    this.onclick = function() {
-                        if (this.pageInfo) {
-                            self._pageQuery.call(self._module, this.pageInfo.pageIndex, this.pageInfo.pageSize);
-                        }
-                    };
-                });
-            }
             this.adjustSideBarHeight();
-
-            $("#btnReturn").click(function() {
-                self.doReturn();
-            });
         },
-        //调整左边菜单内容的实际高度,以适应浏览器的窗口大小
+        //调整菜单内容的实际高度,以适应浏览器的窗口大小
         adjustSideBarHeight: function() {
             var westHeight = $("#e").height();
             var mapToolHeight = $(".map-tool").outerHeight();
             var publicListings = $(".public-listings");
             publicListings.height(westHeight - mapToolHeight);
         },
-        //文档窗口改变大小时触发
-        //由每个业务的来实现
         resize: function() {
             this.adjustSideBarHeight();
         },
-        //由各个业务类实现此方法
-        //被module的onPageQueryResult调用
+                
         onPageQueryResult: function(json,caller) {
             this.reset();
             if(caller !== this) {
@@ -105,48 +86,17 @@
                     for (var i in json) {
                         this._$Content.prepend(json[i].getSidebarElement());
                     }
-                } else {
-                    this._$Right.hide();
-                    this._$Content.html('<td colspan="5" style="text-align:center;">' + json.m_message + '</td>');
                 }
-
-            } else {
-                this._$Right.hide();
-                this._$Content.html('<td colspan="5" style="text-align:center;">无相关信息</td>');
-            }
-        },
-        //点击返回时做的清空操作
-        clean: function() {
-            this._$SideBarDiv.empty();
-            //reset page bar
-            for (var i = 0; i <= 5; i++) {
-                if (i >= 1 && i < 5) {
-                    this._$A.eq(i).html("");
-                    this._$A.eq(i).removeClass("selected");
-                }
-                this._$A.get(i).pageInfo = null;
-                this._$A.get(i).onclick = null;
             }
         },
         //分页时做的清空操作
         reset: function() {
-            if(this._json) {
-                for (var i in this._json) {
-                    this._json[i].reset();
-                }
-            }
-            
             this._$Content.empty();
             this._$RecordCount.empty();
-        },
-        doReturn: function() {
-            $("div[name='indexDiv']").show();
-            this._$SideBarDiv.hide();
-            this._module.clean();
         }
     };
 
     if (EXTEND) {
-        mapwork.utils.inherits(SideBarPage, EXTEND);
+        visitors.utils.inherits(SideBarPage, EXTEND);
     }
 })();

@@ -1,30 +1,30 @@
-var mapwork = window.mapwork = {};
+var visitors = window.visitors = {};
 
-mapwork.ajaxtype = 0; //0:default,use jquery ajax,   1: use jsonP
-mapwork.actions = {};
+visitors.ajaxtype = 0; //0:default,use jquery ajax,   1: use jsonP
+visitors.actions = {};
 
-mapwork.isIE = (navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0);
-mapwork.IEVersion = 0;
-if(mapwork.isIE) {
+visitors.isIE = (navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0);
+visitors.IEVersion = 0;
+if(visitors.isIE) {
     if(navigator.appName == "Microsoft Internet Explorer") {
         if(navigator.appVersion.match(/7./i)=="7.") {
-            mapwork.IEVersion = 7;
+            visitors.IEVersion = 7;
         } else if(navigator.appVersion.match(/8./i)=="8.") {
-            mapwork.IEVersion = 8;
+            visitors.IEVersion = 8;
         } else if(navigator.appVersion.match(/9./i)=="9.") {
-            mapwork.IEVersion = 9;
+            visitors.IEVersion = 9;
         } else {
-            mapwork.IEVersion = 6;
+            visitors.IEVersion = 6;
         }
     }
 }
-mapwork.isIELess9 = (navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0);
-mapwork.isFirefox = navigator.userAgent.indexOf('Firefox') >= 0;
-mapwork.isOpera = navigator.userAgent.indexOf('Opera') >= 0 ;
+visitors.isIELess9 = (navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0);
+visitors.isFirefox = navigator.userAgent.indexOf('Firefox') >= 0;
+visitors.isOpera = navigator.userAgent.indexOf('Opera') >= 0 ;
 
-mapwork.supportSVG = document.createElementNS != null;
+visitors.supportSVG = document.createElementNS != null;
 
-if(!mapwork.supportSVG) {//VML
+if(!visitors.supportSVG) {//VML
         document.namespaces.add("v", "urn:schemas-microsoft-com:vml");
         var style = document.createStyleSheet();
         var VMLel = ['line','stroke','path','polyline','fill','oval','shape'];
