@@ -171,37 +171,37 @@
         //创建并获得mapIcon对象
         //设置图片资源,设置坐标,绑定徘徊及单击事件
         getMapIcon: function() {
-            if (!this._mapIcon) {
-                this._mapIcon = this.createMapIcon();
-                if (this._mapIcon) {
-                    this._mapIcon.setEarthPos(this._ePos);
-                    var self = this;
-                    $(this._mapIcon.getHtmlObj()).hover(
-                            function(event) {
-                                self.doHover();
-                                //显示标签
-                                self.showHoverLabel(event);
-                            },
-                            function(event) {
-                                self.deHover();
-                                //隐藏标签
-                                self.hideHoverLabel();
-                            }
-                    );
-                    this._mapIcon.getHtmlObj().onclick = function(event) {
-                        self.doFocus();
-                    };
-                    this._mapIcon.getHtmlObj().ondblclick = function(event) {
-                        if (event.stopPropagation) {
-                            event.stopPropagation();
-                            event.preventDefault();
-                        } else {//IE
-                            event.cancelBubble = true;
-                            event.returnValue = false;
-                        }
-                    };
-                }
-            }
+//            if (!this._mapIcon) {
+//                this._mapIcon = this.createMapIcon();
+//                if (this._mapIcon) {
+//                    this._mapIcon.setEarthPos(this._ePos);
+//                    var self = this;
+//                    $(this._mapIcon.getHtmlObj()).hover(
+//                            function(event) {
+//                                self.doHover();
+//                                //显示标签
+//                                self.showHoverLabel(event);
+//                            },
+//                            function(event) {
+//                                self.deHover();
+//                                //隐藏标签
+//                                self.hideHoverLabel();
+//                            }
+//                    );
+//                    this._mapIcon.getHtmlObj().onclick = function(event) {
+//                        self.doFocus();
+//                    };
+//                    this._mapIcon.getHtmlObj().ondblclick = function(event) {
+//                        if (event.stopPropagation) {
+//                            event.stopPropagation();
+//                            event.preventDefault();
+//                        } else {//IE
+//                            event.cancelBubble = true;
+//                            event.returnValue = false;
+//                        }
+//                    };
+//                }
+//            }
             return this._mapIcon;
         },
         getDetailUrl: function() {
@@ -330,13 +330,13 @@
             //div中的图标高亮
             this.setHoverImage();
             //地图中的图标高亮
-            this.getMapIcon().setHoverImage();
+//            this.getMapIcon().setHoverImage();
         },
         deHover: function() {
             this.setDefaultDiv();
             if (this !== ModuleItem.selectItem) {
                 this.setDefaultImage();
-                this.getMapIcon().setDefaultImage();
+//                this.getMapIcon().setDefaultImage();
             }
         },
         doFocus: function() {

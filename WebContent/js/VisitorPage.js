@@ -18,22 +18,9 @@
         buildPage: function() {
             var jRoleTable = $(".roleTable");
         },
-        createMap: function() {
-//            this._map = new mapwork.Map(this._mapWrapDiv, {});
-
-
-//            this._map.addHandler(new mapwork.KeyHandler());
-//            this._map.addHandler(new mapwork.DragHandler());
-//            this._map.addHandler(new mapwork.WheelHandler());
-//            this._map.addControl(new mapwork.SimpleZoomControl());
-
-            this._searchModule = new mapwork.SearchModule();
-//            this._map.addModule(this._searchModule);
-
-            this._msg = new mapwork.WSMessage(this._searchModule);
-        },
         buildFrame: function() {
-            this.createMap();
+            this._searchModule = new mapwork.SearchModule();
+            this._msg = new mapwork.WSMessage(this._searchModule);
         },
         onWindowResize: function() {
             var headHeight = document.getElementById('n').clientHeight;
