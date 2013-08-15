@@ -7,26 +7,14 @@
  */
 (function(){
     visitors.WSMessage = WSMessage;
-    var EXTEND = null;
 
     function  WSMessage(visitorManager){
         this.socket = null;
         this.manager = visitorManager;
     }
     WSMessage.prototype = {
-//        doCheck: function() {
-//            console.log('check' + (index++ ));
-//            if(this.socket){
-//                console.log('client side close socket interval');
-//                this.socket.close();
-//                $('#connectSign').text('网络已断开,系统正在重连...');
-//                $('#connectSign').addClass('label-disconnetct');
-//            }
-//            
-//        },
         initialize:function(){
-            console.log(new Date().getTime() / 1000);
-            if (window.location.protocol == 'http:') {
+            if (window.location.protocol === 'http:') {
                 this.connect('ws://' + window.location.host + '/ws');
             } else {
                 this.connect('wss://' + window.location.host + '/ws');
@@ -70,8 +58,6 @@
                     self.manager.updateDatas(json);
                 };
            }
-
-
        }
     };
 })();
