@@ -54,8 +54,17 @@
                  };
 
                 socket.onmessage = function (message) {
+                    console.dir(message);
                     var json = JSON.parse(message.data);
                     self.manager.updateDatas(json);
+                    if(self.timer)  {
+                        clearTimeout(self.timer);
+                    }
+                    var ss = this;
+                    self.timer = setTimeout(function (){
+                        ss.close();
+                        console.log('client side close socket interval');
+                   },8000);                    
                 };
            }
        }
