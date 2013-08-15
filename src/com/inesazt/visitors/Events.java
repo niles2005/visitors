@@ -52,8 +52,8 @@ public class Events {
         try {
             session = m_sqlSessionFactory.openSession();
             IEventQuery eventQuery = session.getMapper(IEventQuery.class);           
-            EventParam param = new EventParam();
-            param.setDate(m_dbToday);
+            Event param = new Event();
+            param.setUpDate(m_dbToday);
             param.setSeqId(m_lastSeqId);
             List<Event> eventList = eventQuery.selectEvents(param);
     		if(eventList.size() == 0) {
@@ -192,9 +192,9 @@ public class Events {
         	String dbDate = DateTimeUtil.date8ToDate10(theDate);
             session = m_sqlSessionFactory.openSession();
             IEventQuery eventQuery = session.getMapper(IEventQuery.class);           
-            EventParam param = new EventParam();
+            Event param = new Event();
             param.setCardId(cardId);
-            param.setDate(dbDate);
+            param.setUpDate(dbDate);
             List<Event> eventList = eventQuery.selectCardEvents(param);
     		for(int i=0;i<eventList.size();i++) {
     			Event event = (Event)eventList.get(i);

@@ -9,7 +9,6 @@
     visitors.WSMessage = WSMessage;
 
     function  WSMessage(visitorManager){
-        this.socket = null;
         this.manager = visitorManager;
     }
     WSMessage.prototype = {
@@ -54,7 +53,6 @@
                  };
 
                 socket.onmessage = function (message) {
-                    console.dir(message);
                     var json = JSON.parse(message.data);
                     self.manager.updateDatas(json);
                     if(self.timer)  {

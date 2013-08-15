@@ -13,11 +13,11 @@
         <result column="up_time" property="upTime" />
     </resultMap>    
 
-     <select id="selectEvents" parameterType="com.inesazt.visitors.EventParam" resultMap="resultListEvent">
-		select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where  t.up_date>=#{date} and t.trans_seq > #{seqId};
+     <select id="selectEvents" parameterType="com.inesazt.visitors.Event" resultMap="resultListEvent">
+		select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where  t.up_date>=#{upDate} and t.trans_seq > #{seqId};
     </select>
 
-     <select id="selectCardEvents" parameterType="com.inesazt.visitors.EventParam" resultMap="resultListEvent">
-		select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.card_id=#{cardId} and t.up_date=#{date};
+     <select id="selectCardEvents" parameterType="com.inesazt.visitors.Event" resultMap="resultListEvent">
+		select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.card_id=#{cardId} and t.up_date=#{upDate};
     </select>
 </mapper>
