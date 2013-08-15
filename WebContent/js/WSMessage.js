@@ -53,6 +53,7 @@
                  };
 
                 socket.onmessage = function (message) {
+                    console.dir(message);
                     var json = JSON.parse(message.data);
                     self.manager.updateDatas(json);
                     if(self.timer)  {
