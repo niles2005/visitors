@@ -90,7 +90,7 @@
             this._msg = new visitors.WSMessage(this._visitorManager);
             this._msg.initialize();
 
-            if(getCookie("msgConsole")=="show"){
+            if(getCookie("msgConsole")==="show"){
                 $('#consoleWrapper').width($(document.body).width() - 381);
                 $('#consoleWrapper').css({bottom:'0px'});
                 $('#panelarrow2').css({bottom:'120px'});
@@ -105,7 +105,7 @@
         },
 
         toggleConsole :function() {
-            if ($('#consoleWrapper').css('bottom')=='0px') {
+            if ($('#consoleWrapper').css('bottom')==='0px') {
                 $('#consoleWrapper').width($(document.body).width() - 381);
                 $('#consoleWrapper').animate({bottom:'-120px'});
                 $('#panelarrow2').animate({bottom:'0px'});

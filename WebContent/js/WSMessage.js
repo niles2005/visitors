@@ -12,11 +12,20 @@
     function  WSMessage(visitorManager){
         this.socket = null;
         this.manager = visitorManager;
-        this.timer = null;
     }
-
     WSMessage.prototype = {
+//        doCheck: function() {
+//            console.log('check' + (index++ ));
+//            if(this.socket){
+//                console.log('client side close socket interval');
+//                this.socket.close();
+//                $('#connectSign').text('网络已断开,系统正在重连...');
+//                $('#connectSign').addClass('label-disconnetct');
+//            }
+//            
+//        },
         initialize:function(){
+            console.log(new Date().getTime() / 1000);
             if (window.location.protocol == 'http:') {
                 this.connect('ws://' + window.location.host + '/ws');
             } else {
@@ -25,52 +34,43 @@
         },
 
         connect:function(host){
-           var self = this;
+            var self = this;
+            var socket = null;
            if ('WebSocket' in window) {
-               this.socket = new WebSocket(host);
+               socket = new WebSocket(host);
            } else if ('MozWebSocket' in window) {
-               this.socket = new MozWebSocket(host);
+               socket = new MozWebSocket(host);
            } else {
                return;
            }
 
-           this.socket.onopen = function () {
-               console.log('Info: WebSocket connection opened.');
-               $('#connectSign').text('网络已连接');
-               $('#connectSign').removeClass('label-disconnetct');
-               
-               self.manager.initDataQuery();
-           };
+           if(socket) {
+                socket.onopen = function () {
+                    console.log('Info: WebSocket connection opened.');
+                    $('#connectSign').text('网络已连接');
+                    $('#connectSign').removeClass('label-disconnetct');
+                    self.manager.initDataQuery();
+                };
+                socket.onclose = function () {
+                    console.log("reconnect when old socket closed... " );
+                     $('#connectSign').text('网络已断开,系统正在重连...');
+                     $('#connectSign').addClass('label-disconnetct');
 
-           this.socket.onclose = function () {
-               console.log("reconnect when old socket closed... " );
-               setTimeout(function() {
-                   self.initialize();
-               },5000);
-           };
+                     setTimeout(function() {
+                         self.initialize();
+                     },10000);
 
-            this.socket.onerror = function () {
-                console.log("reconnect when old socket error... " );
-                setTimeout(function() {
-                    self.initialize();
-                },5000);
-            };
+                };
 
-           this.socket.onmessage = function (message) {
-               var json = JSON.parse(message.data);
-               self.manager.updateDatas(json);
-               if(self.timer)  {
-                   clearTimeout(self.timer);
-               }
-               self.timer = setTimeout(function (){
-                   if(self.socket){
-                       console.log('client side close socket interval');
-                       self.socket.close();
-                       $('#connectSign').text('网络已断开,系统正在重连...');
-                       $('#connectSign').addClass('label-disconnetct');
-                   }
-               },8000);
-           };
+                 socket.onerror = function () {
+                 };
+
+                socket.onmessage = function (message) {
+                    var json = JSON.parse(message.data);
+                    self.manager.updateDatas(json);
+                };
+           }
+
 
        }
     };

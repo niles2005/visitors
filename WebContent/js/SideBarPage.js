@@ -89,7 +89,6 @@
                 }
             }
         },
-        //分页时做的清空操作
         reset: function() {
             this._$Content.empty();
             this._$RecordCount.empty();

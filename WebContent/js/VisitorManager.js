@@ -66,11 +66,12 @@
         initDataQuery: function() {
             var url = "work?action=initdatas";
             var self = this;
-            
+//            console.log(url);
             function loadResult(data) {
                 if (!data) {
                     return;
                 }
+                
 //                console.dir(data);
                 if(data.today) {
                     visitors.today = data.today;
@@ -112,8 +113,15 @@
                 }
             }
         },
+        resetRoles: function() {
+            for(var k in this._roles) {
+                var role = this._roles[k];
+                role.reset();
+            }
+        },
         updateCardInfo: function(cards) {
             if (cards) {
+                this.resetRoles();
                 for (var i in cards) {
                     var row = cards[i];
                     var cardItem = this.buildCardItem(row, i);

@@ -74,6 +74,11 @@
         },
         clearFocus: function() {
             this._$PageContent.removeClass('roleselected');
+        },
+        reset: function() {
+            this._cards = {};
+            this._cardCount = 0;
+            this.updateCount();
         }
     };
 
