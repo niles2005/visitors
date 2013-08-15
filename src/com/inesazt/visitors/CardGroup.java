@@ -10,7 +10,6 @@ import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.alibaba.fastjson.JSON;
 
 public class CardGroup {
 	private static ObjectMapper fileData_mapper = new ObjectMapper();
