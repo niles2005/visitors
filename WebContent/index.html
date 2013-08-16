@@ -20,7 +20,7 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 new visitors.VisitorPage("cc");
-                popPage = function (page){
+                popPage = function (page,event){
                     if ( $('#visitorMask').is(":visible")) {
                         $('#modalPanel').animate({opacity:'0'},function(){
                             $('#modalPanel').removeClass('showdialog');
@@ -51,13 +51,13 @@
         <div id="container" style="position: relative;">
             <div id="n">
                 <div class="map_link" style="cursor: pointer">
-                    <a onclick="popPage('card.html')" title="">卡设置(<span id="cardReg" title="active cards,has role" style="color:#0F0;padding-right: 1px">0</span> /
+                    <a onclick="popPage('card.html',event)" title="">卡设置(<span id="cardReg" title="active cards,has role" style="color:#0F0;padding-right: 1px">0</span> /
                         <span id="cardUnreg"  title="active cards,no role" style="color:orange;padding-right: 1px">0</span> /
                         <span id="cardDeactive" title="deactive cards" style="color:#df8505;padding-right: 1px">0</span>)</a>
-                    <a  onclick="popPage('device.html')" title="">设备设置(<span id="deviceReg" title="active devices,has location"  style="color:#0F0;padding-right: 1px">0</span> /
+                    <a  onclick="popPage('device.html',event)" title="">设备设置(<span id="deviceReg" title="active devices,has location"  style="color:#0F0;padding-right: 1px">0</span> /
                         <span id="deviceUnreg" title="active devices,no location"  style="color:orange;padding-right: 1px">0</span> /
                         <span id="deviceDeactive" title="deactive devices"  style="color:#df8505;padding-right: 1px">0</span>)</a>
-                    <span><a onclick="popPage('feedback.html')" title="">意见反馈</a></span>
+                    <span><a onclick="popPage('feedback.html',event)" title="">意见反馈</a></span>
                 </div>
                 <div class="mh_main">
                     <div class="map_logo"><img src="images/logo.gif"></div>
