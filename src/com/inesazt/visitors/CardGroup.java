@@ -149,4 +149,11 @@ public class CardGroup {
 		hash.put("cardDeactiveNum", "" + deactiveCount);
 	}
 	
+	public void changeDate() {
+		Iterator it = cards.values().iterator();
+		while (it.hasNext()) {
+			Card card = (Card) it.next();
+			card.changeDate();
+		}
+	}
 }

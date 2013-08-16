@@ -102,9 +102,11 @@ public class Cards {
 		}
 	}
 
-
 	public void checkRegInfo(Hashtable hash) {
 		this.m_cardGroup.checkRegInfo(hash);
 	}
 	
+	public void changeDate() {
+		m_cardGroup.changeDate();
+	}
 }

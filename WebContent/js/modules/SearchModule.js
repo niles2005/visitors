@@ -194,6 +194,14 @@
 //                console.log(json);
                 if(json.today) {
                     mapwork.today = json.today;
+                    var today = mapwork.utils.date8ToDate10(mapwork.today,'-');
+
+                    for (var i in this._cards) {
+                        var card = this._cards[i];
+                        if(card) {
+                            card.changeToday(today);
+                        }
+                    }                    
                 }
                 if(json.register) {
                     this.updateRegisterInfo(json.register);
