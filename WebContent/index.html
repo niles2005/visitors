@@ -22,14 +22,16 @@
                 new visitors.VisitorPage("cc");
                 popPage = function (page){
                     if ( $('#visitorMask').is(":visible")) {
-                        $('#visitorMask').removeClass('showdialog');
                         $('#modalPanel').removeClass('showdialog');
+                        $('#visitorMask').animate({opacity:'0'},function(){
+                            $('#visitorMask').removeClass('showdialog');
+                        });
                     }else{
                         $('#visitorMask').addClass('showdialog');
-                        $('#modalPanel').addClass('showdialog');
-                        $('#interactive').attr('src',page);
-
-
+                        $('#visitorMask').animate({opacity:'0.7'},function(){
+                            $('#modalPanel').addClass('showdialog');
+                            $('#interactive').attr('src',page);
+                        }) ;
                     }
                 };
                 $('#visitorMask').click(popPage);
