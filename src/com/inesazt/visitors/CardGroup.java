@@ -1,18 +1,20 @@
 package com.inesazt.visitors;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.alibaba.fastjson.JSON;
 
 
 public class CardGroup {
-	private static ObjectMapper fileData_mapper = new ObjectMapper();
 	private Map<String, Card> cards = null;
 
 	public Map<String, Card> getGroup() {
@@ -45,7 +47,15 @@ public class CardGroup {
 		File cardFile = ServerConfig.getInstance().getCardFile();
 		try {
 			if (cardFile.exists()) {
-				CardGroup cardGroup = fileData_mapper.readValue(cardFile, CardGroup.class);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(cardFile),"UTF-8"));
+				StringBuffer strBuff = new StringBuffer();
+				String line = reader.readLine();
+				while(line != null) {
+					strBuff.append(line);
+					line = reader.readLine();
+				}
+				reader.close();
+				CardGroup cardGroup = JSON.parseObject(strBuff.toString(), CardGroup.class);
 				cardGroup.initRegInfo();
 				return cardGroup;
 			}
@@ -58,10 +68,12 @@ public class CardGroup {
 	public synchronized boolean doSave() {
 		try {
 			File cardFile = ServerConfig.getInstance().getCardFile();
-			FileOutputStream fos = new FileOutputStream(cardFile);
-			JsonGenerator jsonGenerator = fileData_mapper.getJsonFactory()
-					.createJsonGenerator(fos, JsonEncoding.UTF8);
-			jsonGenerator.writeObject(this);
+			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(cardFile),"UTF-8"));
+			String jsonTxt = JSON.toJSONString(this);
+			writer.write(jsonTxt);
+			writer.flush();
+			writer.close();
+			
 			return true;
 		} catch (Exception ex) {
 			ex.printStackTrace();

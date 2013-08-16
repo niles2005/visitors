@@ -1,19 +1,19 @@
 package com.inesazt.visitors;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import com.alibaba.fastjson.JSON;
 
 public class DeviceGroup {
-	private static ObjectMapper fileData_mapper = new ObjectMapper();
 	private Map<String, Device> devices = null;
 
 	public Map<String, Device> getGroup() {
@@ -46,7 +46,15 @@ public class DeviceGroup {
 		File deviceFile = ServerConfig.getInstance().getDeviceFile();
 		try {
 			if (deviceFile.exists()) {
-				DeviceGroup deviceGroup = fileData_mapper.readValue(deviceFile, DeviceGroup.class);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(deviceFile),"UTF-8"));
+				StringBuffer strBuff = new StringBuffer();
+				String line = reader.readLine();
+				while(line != null) {
+					strBuff.append(line);
+					line = reader.readLine();
+				}
+				reader.close();
+				DeviceGroup deviceGroup = JSON.parseObject(strBuff.toString(), DeviceGroup.class);
 				deviceGroup.initRegInfo();
 				return deviceGroup;
 			}
@@ -59,10 +67,13 @@ public class DeviceGroup {
 	public synchronized boolean doSave() {
 		try {
 			File deviceFile = ServerConfig.getInstance().getDeviceFile();
-			FileOutputStream fos = new FileOutputStream(deviceFile);
-			JsonGenerator jsonGenerator = fileData_mapper.getJsonFactory()
-					.createJsonGenerator(fos, JsonEncoding.UTF8);
-			jsonGenerator.writeObject(this);
+			
+			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(deviceFile),"UTF-8"));
+			String jsonTxt = JSON.toJSONString(this);
+			writer.write(jsonTxt);
+			writer.flush();
+			writer.close();
+			
 			return true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
