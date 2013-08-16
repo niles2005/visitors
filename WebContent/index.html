@@ -15,27 +15,41 @@
         <script type="text/javascript" src="scripts/jquery.scrollintoview.min.js" ></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.21.custom.min.js"></script>
         <script type="text/javascript" src="scripts/bootstrap-datepicker.js"></script>
-        <script type="text/javascript" src="js/jsall.js"></script> 
+        <script type="text/javascript" src="scripts/bootstrap-modal.js"></script>
+        <script type="text/javascript" src="scripts/bootstrap-modalmanager.js"></script>
+        <script type="text/javascript" src="js/jsall.js"></script>
 
         <script type="text/javascript">
             $(document).ready(function() {
                 new visitors.VisitorPage("cc");
+                popPage = function (page){
+                    if ( $('#visitorMask').is(":visible")) {
+                        $('#visitorMask').removeClass('showdialog');
+                        $('#modalPanel').removeClass('showdialog');
+                    }else{
+                        $('#visitorMask').addClass('showdialog');
+                        $('#modalPanel').addClass('showdialog');
+                        $('#interactive').attr('src',page);
+
+
+                    }
+                };
+                $('#visitorMask').click(popPage);
+                $('.visitorModal-header>button').click(popPage);
             });
         </script>
     </head>
     <body>
         <div id="container" style="position: relative;">
             <div id="n">
-                <div class="map_link">
-                    <a href="card.html" title="">卡设置(<span id="cardReg" title="active cards,has role" style="color:#0F0;padding-right: 1px">0</span> /
+                <div class="map_link" style="cursor: pointer">
+                    <a onclick="popPage('card.html')" title="">卡设置(<span id="cardReg" title="active cards,has role" style="color:#0F0;padding-right: 1px">0</span> /
                         <span id="cardUnreg"  title="active cards,no role" style="color:orange;padding-right: 1px">0</span> /
                         <span id="cardDeactive" title="deactive cards" style="color:#df8505;padding-right: 1px">0</span>)</a>
-                    <a href="device.html" title="">设备设置(<span id="deviceReg" title="active devices,has location"  style="color:#0F0;padding-right: 1px">0</span> /
+                    <a  onclick="popPage('device.html')" title="">设备设置(<span id="deviceReg" title="active devices,has location"  style="color:#0F0;padding-right: 1px">0</span> /
                         <span id="deviceUnreg" title="active devices,no location"  style="color:orange;padding-right: 1px">0</span> /
                         <span id="deviceDeactive" title="deactive devices"  style="color:#df8505;padding-right: 1px">0</span>)</a>
-                    <span><a href="feedback.html" title="">意见反馈</a></span>
-
-
+                    <span><a onclick="popPage('feedback.html')" title="">意见反馈</a></span>
                 </div>
                 <div class="mh_main">
                     <div class="map_logo"><a href="#" title=""><img src="images/logo.gif"></a></div>
@@ -75,6 +89,14 @@
 
             <div id="dd" style="position:absolute;display: none;background: #000; z-index: 10000;">
             </div>
+        </div>
+
+        <div id="visitorMask" class="visitorMask"></div>
+        <div id="modalPanel" class="modalPanel">
+            <div class="visitorModal-header">
+                <button type="button" class="close" aria-hidden="true">&times;</button>
+            </div>
+            <iframe id="interactive" />
         </div>
     </body>
 </html>

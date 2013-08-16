@@ -43,27 +43,6 @@
          <div style="margin-top: 20px"></div>
         <div class="container-fluid" ng-controller="BindState">
             <div class="row-fluid">
-                <div class="span3" style="width: 258px;">
-                <form ng-submit="doUpdate()" style="position:fixed;background: white; ">
-                    Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.id" /><br>
-                    name:<input ng-model="selectCard.name" /><br>
-                    role&nbsp;&nbsp;&nbsp;:<select ng-model="selectCard.role">
-                    <option value='Worker'>Worker</option>
-                    <option value='Officer'>Officer</option>
-                    <option value='Facility'>Facility</option>
-                    <option value='VIP'>VIP</option>
-                    </select><br>
-                    info&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.info"><br>
-                    isActived&nbsp;&nbsp;&nbsp;:
-                    <input type="radio" ng-model="selectCard.actived" ng-value="true"> true
-                    <input type="radio" ng-model="selectCard.actived" ng-value="false"> false <br>
-                    date&nbsp;&nbsp;:{{ selectCard.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
-                    lastLocate:{{ selectCard.lastLocate}} <br>
-                    lastTime:{{ selectCard.lastTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
-                    <input type="submit" value="新增/更新"/>
-                </form>
-                <p><p>
-                </div>
                 <div class="span9">
                     <pre>Display:<select ng-model="displayDeactive">
                     <option value=''>All item</option>
@@ -94,6 +73,27 @@
                         <td>{{card.lastTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     </tr>
                 </table>
+                </div>
+                <div class="span3" style="width: 258px;">
+                    <form ng-submit="doUpdate()" style="position:fixed;right:20px;top:15;background: white; ">
+                        Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.id" /><br>
+                        name:<input ng-model="selectCard.name" /><br>
+                        role&nbsp;&nbsp;&nbsp;:<select ng-model="selectCard.role">
+                        <option value='Worker'>Worker</option>
+                        <option value='Officer'>Officer</option>
+                        <option value='Facility'>Facility</option>
+                        <option value='VIP'>VIP</option>
+                    </select><br>
+                        info&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.info"><br>
+                        isActived&nbsp;&nbsp;&nbsp;:
+                        <input type="radio" ng-model="selectCard.actived" ng-value="true"> true
+                        <input type="radio" ng-model="selectCard.actived" ng-value="false"> false <br>
+                        date&nbsp;&nbsp;:{{ selectCard.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
+                        lastLocate:{{ selectCard.lastLocate}} <br>
+                        lastTime:{{ selectCard.lastTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
+                        <input type="submit" value="新增/更新"/>
+                    </form>
+                    <p><p>
                 </div>
             </div>
         </div>

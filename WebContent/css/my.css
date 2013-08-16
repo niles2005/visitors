@@ -3414,3 +3414,56 @@ table.roleTable td{
     font-weight: bolder;
 }
 
+.visitorMask{
+    position:absolute;
+    z-index:100;
+    top:0px;left:0px;
+    width: 100%;
+    height:100%;
+    display: none;
+    background-color:#000000;
+    opacity: 0.6;
+    -moz-opacity:0.6;
+    -khtml-opacity: 0.6;
+}
+
+
+.modalPanel{
+    position: absolute;
+    z-index:101;
+    display: none;
+    top: 8%;
+    left: 7%;
+    width: 86%;
+    height: 80%;
+    margin: auto;
+    background-color: #ffffff;
+    padding: 6px;
+    border-radius:5px ;
+    -moz-border-radius: 5px ;
+    -moz-border-radius: 5px ;
+    box-shadow: 0 0 5px rgba(124, 238, 82,1);
+    -webkit-box-shadow: 0 0 5px rgba(124, 238, 82,1);
+    -moz-box-shadow: 0 0 5px rgba(124, 238, 82,1);
+}
+
+.showdialog{
+    display: block;
+}
+
+.visitorModal-header{
+   display: inline-block;
+   width: 100%;
+   height: 30px;
+}
+
+#interactive{
+    display: table-cell;
+    width: 100%;
+    height: 90%;
+    border: 0;
+}
+
+
+
+
