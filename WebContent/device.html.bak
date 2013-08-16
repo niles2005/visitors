@@ -75,7 +75,7 @@
                 </table>
                 </div>
                 <div class="span3" style="width:260px;">
-                    <form ng-submit="doUpdate()" style="position:fixed;right:20px;top:15px;background: white; ">
+                    <form ng-submit="doUpdate()" style="position:fixed;right:20px;top:15;background: white; ">
                         Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectDevice.id" /><br>
                         locate:<select ng-model="selectDevice.locate">
                         <option  value ='building1'> building1 </option>

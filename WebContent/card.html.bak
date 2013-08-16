@@ -89,8 +89,8 @@
                         <input type="radio" ng-model="selectCard.actived" ng-value="true"> true
                         <input type="radio" ng-model="selectCard.actived" ng-value="false"> false <br>
                         date&nbsp;&nbsp;:{{ selectCard.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
-<!--                        lastLocate:{{ selectCard.lastLocate}} <br>
-                        lastTime:{{ selectCard.lastTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>-->
+                        lastLocate:{{ selectCard.lastLocate}} <br>
+                        lastTime:{{ selectCard.lastTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
                         <input type="submit" value="新增/更新"/>
                     </form>
                     <p><p>
