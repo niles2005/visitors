@@ -3433,10 +3433,16 @@ table.roleTable td{
     position: absolute;
     z-index:101;
     display: none;
-    top: 8%;
-    left: 7%;
-    width: 86%;
-    height: 80%;
+
+    /*top: 8%;*/
+    /*left: 7%;*/
+    /*width: 86%;*/
+    /*height: 80%;*/
+
+    opacity: 1;
+    -moz-opacity:1;
+    -khtml-opacity: 1;
+
     margin: auto;
     background-color: #ffffff;
     padding: 6px;

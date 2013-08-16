@@ -22,16 +22,24 @@
                 new visitors.VisitorPage("cc");
                 popPage = function (page){
                     if ( $('#visitorMask').is(":visible")) {
-                        $('#modalPanel').removeClass('showdialog');
+                        $('#modalPanel').animate({opacity:'0'},function(){
+                            $('#modalPanel').removeClass('showdialog');
+                            $('#modalPanel').animate({opacity:'1'});
+                        });
                         $('#visitorMask').animate({opacity:'0'},function(){
                             $('#visitorMask').removeClass('showdialog');
                         });
                     }else{
                         $('#visitorMask').addClass('showdialog');
-                        $('#visitorMask').animate({opacity:'0.7'},function(){
-                            $('#modalPanel').addClass('showdialog');
-                            $('#interactive').attr('src',page);
-                        }) ;
+                        $('#visitorMask').animate({opacity:'0.7'}) ;
+                        $('#modalPanel').addClass('showdialog');
+                        var left = event.pageX;
+                        var top = event.pageY;
+                        var height = $(document.body).height() * 0.8;
+                        var width =   $(document.body).width() * 0.86;
+                        $('#modalPanel').css({top:top,left:left,width:'0',height:'0'});
+                        $('#modalPanel').animate({top:'8%',left:'7%',width:width,height:height});
+                        $('#interactive').attr('src',page);
                     }
                 };
                 $('#visitorMask').click(popPage);
