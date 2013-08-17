@@ -2301,7 +2301,8 @@ input#searchSubmit {
 .label-chuzu {
 	border: 1px solid #719b28;
 	background-color: #85B62E;
-    margin-right: 20px;
+    margin-right: 25px;
+    margin-top: 45px;
     padding: 6px 8px;
 }
 
