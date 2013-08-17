@@ -64,7 +64,7 @@
                }
                self.timer = setTimeout(function (){
                    if(self.socket){
-                       console.log('client side close socket interval')
+                       console.log('client side close socket interval');
                        self.socket.close();
                        $('#connectSign').text('网络已断开,系统正在重连...');
                        $('#connectSign').addClass('label-disconnetct');
