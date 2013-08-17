@@ -3428,7 +3428,6 @@ table.roleTable td{
     -khtml-opacity: 0;
 }
 
-
 .modalPanel{
     position: absolute;
     z-index:101;
@@ -3449,9 +3448,9 @@ table.roleTable td{
     border-radius:5px ;
     -moz-border-radius: 5px ;
     -moz-border-radius: 5px ;
-    box-shadow: 0 0 5px rgba(124, 238, 82,1);
-    -webkit-box-shadow: 0 0 5px rgba(124, 238, 82,1);
-    -moz-box-shadow: 0 0 5px rgba(124, 238, 82,1);
+    box-shadow: 0 0 15px rgba(124, 238, 82,1);
+    -webkit-box-shadow: 0 0 15px rgba(124, 238, 82,1);
+    -moz-box-shadow: 0 0 15px rgba(124, 238, 82,1);
 }
 
 .showdialog{

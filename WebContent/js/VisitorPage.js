@@ -102,6 +102,42 @@
                 $('#arrowImg').addClass('arrow_img_show');
             }
             $('#panelarrow2').click(this.toggleConsole);
+
+            $('#visitorMask').click(this.popPage);
+            $('.visitorModal-header>button').click(this.popPage);
+            var self = this;
+            $('#cardPage').click(function(event){
+                self.popPage.call(self,"card.html",event);
+            });
+            $('#devicePage').click(function(event){
+                self.popPage.call(self,"device.html",event);
+            });
+            $('#feedbackPage').click(function(event){
+                self.popPage.call(self,"feedback.html",event);
+            });
+        },
+
+        popPage : function (page,event){
+            if ( $('#visitorMask').is(":visible")) {
+                $('#modalPanel').animate({opacity:'0'},function(){
+                    $('#modalPanel').removeClass('showdialog');
+                    $('#modalPanel').css({opacity:'1'});
+                });
+                $('#visitorMask').animate({opacity:'0'},function(){
+                    $('#visitorMask').removeClass('showdialog');
+                });
+            }else{
+                $('#interactive').attr('src',page);
+                $('#visitorMask').addClass('showdialog');
+                $('#visitorMask').animate({opacity:'0.7'}) ;
+                $('#modalPanel').addClass('showdialog');
+                var left = event.pageX;
+                var top = event.pageY;
+                var height = $(document.body).height() * 0.8;
+                var width =   $(document.body).width() * 0.86;
+                $('#modalPanel').css({top:top,left:left,width:'0',height:'0'});
+                $('#modalPanel').animate({top:'10%',left:'7%',width:width,height:height});
+            }
         },
 
         toggleConsole :function() {
