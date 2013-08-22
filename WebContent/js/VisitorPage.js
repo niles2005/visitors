@@ -72,7 +72,12 @@
             consoleWrapper.style.width = (this._cc.clientWidth + 2) + "px";
             var panelarrow2 = document.getElementById("panelarrow2");
             panelarrow2.style.left = (this._cc.clientWidth - 80) / 2 + "px";
-
+            
+            var jViewcontainer = $(".viewcontainer");
+            var fitWidth = 1150;
+            var offsetLeft = (this._cc.clientWidth - fitWidth) / 2;
+            jViewcontainer.css('left',offsetLeft + 'px');
+            
             var mainHeight = visitors.utils.getClientSize().height - headHeight - cnHeight - csHeight;
             this._cc.style.height = mainHeight + 'px';
 
