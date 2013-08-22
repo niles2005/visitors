@@ -1,5 +1,7 @@
 package com.inesazt.visitors;
 
+import java.io.File;
+
 import org.apache.catalina.core.AprLifecycleListener;
 import org.apache.catalina.core.StandardServer;
 import org.apache.catalina.startup.Tomcat;
@@ -18,12 +20,13 @@ public class TestTomcat {
 
 	public void startTomcat1() {
 		try {
+			File f = new File(".");
 			Tomcat tomcat = new Tomcat();
 			tomcat.setBaseDir(CATALINA_HOME);
 			tomcat.setPort(8081);
 			tomcat.getConnector().setURIEncoding("UTF-8");
 			tomcat.addWebapp("/visitors",
-					"WebContent");
+					f.getAbsolutePath() + "/WebContent");
 			System.out.println(tomcat.getConnector().getURIEncoding());
 			tomcat.getConnector().setURIEncoding("UTF-8");
 			System.out.println(tomcat.getConnector().getURIEncoding());
