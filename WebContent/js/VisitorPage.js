@@ -74,7 +74,7 @@
             panelarrow2.style.left = (this._cc.clientWidth - 80) / 2 + "px";
             
             var jViewcontainer = $(".viewcontainer");
-            var fitWidth = 1150;
+            var fitWidth = 1000;
             var offsetLeft = (this._cc.clientWidth - fitWidth) / 2;
             jViewcontainer.css('left',offsetLeft + 'px');
             
