@@ -150,11 +150,12 @@
             var arr = [];
             name = $.trim(name);
             if(name.length !== 0) {
+                name = name.toLowerCase();
                 for(c in this._cards) {
                     card = this._cards[c];
-                    if(card.getId().indexOf(name) !== -1) {
+                    if(card.getId().toLowerCase().indexOf(name) !== -1) {
                         arr.push(card);
-                    } else if(card.getName().indexOf(name) !== -1) {
+                    } else if(card.getName().toLowerCase().indexOf(name) !== -1) {
                         arr.push(card);
                     }
                 }
