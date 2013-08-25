@@ -9,7 +9,6 @@
     <script>
          function feedbackCtrl($scope,$http){
             $scope.showFeedbacks = function(){
-
                  $http.get("work?action=listfeedbacks&t="+new Date().getTime()).success(function(data){
                      if(data){
                          $scope.feedbacks = data;
@@ -81,7 +80,6 @@
 
             $scope.showFeedbacks();
          }
-
     </script>
     <title>FeedBack</title>
 </head>
