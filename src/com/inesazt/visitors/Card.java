@@ -83,7 +83,9 @@ public class Card {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		if (name != null) {
+			this.name = name.trim();
+		}
 	}
 
 	public String getId() {
@@ -91,7 +93,9 @@ public class Card {
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		if (id != null) {
+			this.id = id.trim();
+		}
 	}
 
 	public String getRole() {
@@ -105,10 +109,12 @@ public class Card {
 				boolean hasNewRole = role != null;
 				if(hasOldRole != hasNewRole) {//int regNum,int unregNum,int deactiveNum
 					if(role != null) {
+						role = role.trim();
 						this.m_cardGroup.changeRegisterInfo(1, -1, 0);
 					} else {
 						this.m_cardGroup.changeRegisterInfo(-1, 1, 0);
 					}
+					
 				}
 			}
 		}

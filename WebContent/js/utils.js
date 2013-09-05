@@ -193,6 +193,9 @@
             if(second < 10) {
                 second = "0" + second;
             }
+            if(year == 1970){
+                return "";
+            }
             if (form === 'day') {
                 return year + "-" + month + "-" + day;
             } else if (form === 'time') {

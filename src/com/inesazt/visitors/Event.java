@@ -27,7 +27,9 @@ public class Event {
 	}
 
 	public void setCardId(String cardId) {
-		this.cardId = cardId;
+		if (cardId != null) {
+			this.cardId = cardId.trim();
+		}
 	}
 
 	public String getCardName() {
@@ -35,7 +37,9 @@ public class Event {
 	}
 
 	public void setCardName(String cardName) {
-		this.cardName = cardName;
+		if (cardName != null) {
+			this.cardName = cardName.trim();
+		}
 	}
 
 	public String getDeviceId() {
@@ -43,7 +47,9 @@ public class Event {
 	}
 
 	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+		if (deviceId != null) {
+			this.deviceId = deviceId.trim();
+		}
 	}
 
 	public String getDeviceLocate() {
@@ -66,7 +72,9 @@ public class Event {
 	}
 
 	public void setCardRole(String cardRole) {
-		this.cardRole = cardRole;
+		if (cardRole != null) {
+			this.cardRole = cardRole.trim();
+		}
 	}
 
 	public int getSeqId() {
@@ -82,7 +90,9 @@ public class Event {
 	}
 
 	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+		if (macAddress != null) {
+			this.macAddress = macAddress.trim();
+		}
 	}
 
 	public String getAntId() {
@@ -90,7 +100,9 @@ public class Event {
 	}
 
 	public void setAntId(String antId) {
-		this.antId = antId;
+		if (antId != null) {
+			this.antId = antId;
+		}
 	}
 
 	public String getUpDate() {
@@ -98,7 +110,9 @@ public class Event {
 	}
 
 	public void setUpDate(String upDate) {
-		this.upDate = upDate;
+		if (upDate != null) {
+			this.upDate = upDate;
+		}
 	}
 
 	public String getUpTime() {
@@ -106,7 +120,9 @@ public class Event {
 	}
 
 	public void setUpTime(String upTime) {
-		this.upTime = upTime;
+		if (upTime != null) {
+			this.upTime = upTime;
+		}
 	}
 	
 	public void doInit() {

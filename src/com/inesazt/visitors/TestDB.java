@@ -18,7 +18,10 @@ public class TestDB {
     private static final String DBURL = "jdbc:oracle:thin:@" + IP + ":" + PORT + ":" + SID + "";
 
     public TestDB() {
-    	search();
+//    	search();
+    	ServerConfig.initInstance("D:/mywork/inesazt/workspace/visitors/tomcat/deploy/visitors_deploy20130903/WebContent");
+    	Global.initInstance();
+    	Global.getInstance().getDevices().doList();
 	}
     private Connection getConnection() {
 		Connection conn = null;

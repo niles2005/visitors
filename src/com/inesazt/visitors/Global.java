@@ -50,6 +50,8 @@ public class Global {
 			m_init = true;
 			m_strToday = DateTimeUtil.getTodayString();
 			
+			
+			
 			m_devices = new Devices();
 			m_cards = new Cards();
 			m_feedbacks = Feedbacks.buildFeedback();

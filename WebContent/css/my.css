@@ -2239,7 +2239,7 @@ input#searchSubmit {
 
 .public-listings .listings .listing .main .info {
 	float: left;
-	width: 240px;
+	width: 180px;
 }
 
 .public-listings .listing .mypost_tag {
@@ -2386,9 +2386,10 @@ position: relative;
 }
 
 .public-listings .listings .listing .main ul.meta-three-block {
+    display: inline-block;
 	float: right;
 	margin: 0 8px;
-	width: 90px;
+	width: 150px;
 }
 
 .public-listings .listings .listing .main ul.meta-three-block li.price {

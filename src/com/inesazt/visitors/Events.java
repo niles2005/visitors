@@ -28,6 +28,8 @@ public class Events {
 		m_cards = cards;
 		m_devices = devices;
 		m_dbToday = DateTimeUtil.date8ToDate10(today);
+		System.out.println("----------------"+ m_dbToday);
+
 
         try {
     		Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ServerConfig.getInstance().getMybatisConfigureFile()),"UTF-8"));

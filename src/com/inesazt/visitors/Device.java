@@ -43,7 +43,9 @@ public class Device {
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		if (id != null) {
+			this.id = id.trim();
+		}
 	}
 
 	public String getLocate() {
@@ -58,10 +60,12 @@ public class Device {
 				boolean hasNewRole = locate != null;
 				if(hasOldRole != hasNewRole) {//int regNum,int unregNum,int deactiveNum
 					if(locate != null) {
+						locate = locate.trim();
 						this.m_deviceGroup.changeRegisterInfo(1, -1, 0);
 					} else {
 						this.m_deviceGroup.changeRegisterInfo(-1, 1, 0);
 					}
+					
 				}
 			}
 		}
