@@ -18,6 +18,6 @@
     </select>
 
      <select id="selectCardEvents" parameterType="com.inesazt.visitors.Event" resultMap="resultListEvent">
-		select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where t.card_id=#{cardId} and t.up_date=#{upDate}
+		select t.trans_seq,t.card_id,t.mac_address,t.ant_id,t.up_date,t.up_time from CARDPOSITIONTRANS t where trim(t.card_id) = #{cardId} and t.up_date=#{upDate}
     </select>
 </mapper>

@@ -28,7 +28,6 @@ public class Events {
 		m_cards = cards;
 		m_devices = devices;
 		m_dbToday = DateTimeUtil.date8ToDate10(today);
-		System.out.println("----------------"+ m_dbToday);
 
 
         try {
@@ -55,9 +54,13 @@ public class Events {
             session = m_sqlSessionFactory.openSession();
             IEventQuery eventQuery = session.getMapper(IEventQuery.class);           
             Event param = new Event();
+//            System.err.println("|" + m_dbToday + "|");
+//            System.err.println("|" + m_lastSeqId + "|");
             param.setUpDate(m_dbToday);
             param.setSeqId(m_lastSeqId);
             List<Event> eventList = eventQuery.selectEvents(param);
+            
+//            System.err.println("init:" + eventList.size());
     		if(eventList.size() == 0) {
     			return false;
     		}
@@ -191,6 +194,7 @@ public class Events {
     public List queryHistoryEvents(String cardId,String theDate) {
 		SqlSession session = null;
         try {
+
         	String dbDate = DateTimeUtil.date8ToDate10(theDate);
             session = m_sqlSessionFactory.openSession();
             IEventQuery eventQuery = session.getMapper(IEventQuery.class);           
