@@ -170,7 +170,7 @@
 
             var self = this;
             var today = visitors.utils.date8ToDate10(visitors.today,'-');
-            
+
             this._refreshButton = this._$SidebarContent.find("#detailRefresh");
             this._refreshButton.click(function() {
                 var queryToday = visitors.utils.date10ToDate8(today);
@@ -187,7 +187,8 @@
             });
             jQdatepicker.datepicker('update', today);
             jQdatepicker.on('changeDate', function(ev) {
-                self.changeDate(ev.date);
+                var newDate = self.changeDate(ev.date);
+                today = visitors.utils.date8ToDate10(newDate,'-');
             });
             return this._$SidebarContent;
         },
@@ -207,8 +208,9 @@
                 } else {
                     this._refreshButton.hide();
                 }
-//                console.dir(strDate);
+
                 this.loadCardEvents(strDate);
+                return  strDate;
             }
         },
         changeToday: function(today) {//do from broadcast
