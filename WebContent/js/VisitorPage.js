@@ -131,6 +131,7 @@
                 $('#visitorMask').animate({opacity:'0'},function(){
                     $('#visitorMask').removeClass('showdialog');
                 });
+                window.location.reload();
             }else{
                 $('#interactive').attr('src',page);
                 $('#visitorMask').addClass('showdialog');
