@@ -205,6 +205,7 @@
                         }
                     }
                 }
+
                 var events = json.events;
                 if(events) {
                     var self = this;

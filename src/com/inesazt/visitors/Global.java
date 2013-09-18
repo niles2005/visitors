@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,7 +60,8 @@ public class Global {
 			//为了保证查询后的卡，都有具体的位置，倒数7天查询events
 			String back7Day = DateTimeUtil.getDayString(new Date().getTime(),-7);
 			m_events = new Events(m_cards,m_devices,back7Day);
-			System.err.println("Global init finished.");
+			System.err.println("Global init finished***************");
+			
 			
 //			Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ServerConfig.getInstance().getMybatisConfigureFile()),"UTF-8"));
 //			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
@@ -143,10 +145,13 @@ public class Global {
 	public void doTaskWork() {
 		String today = DateTimeUtil.getTodayString();
 		if(today != null && !today.equals(m_strToday)) {
-			m_strToday = today;
+			if(m_events != null) {
+				System.err.println("insert go out events!");
+				m_events.generateGoOutEvents();
+			}
 			
-			m_cards.changeDate();
-			
+			m_strToday = today;			
+			m_cards.changeDate();			
 			Hashtable hash = new Hashtable();
 			hash.put("today", m_strToday);
 			broadcastClientData(hash);

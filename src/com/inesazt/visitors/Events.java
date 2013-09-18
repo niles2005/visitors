@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -228,5 +229,51 @@ public class Events {
         return null;
     }
 
+    public void generateGoOutEvents(){
+    	String antId = null;
+    	String macAddress = null;
+    	Map<String,Device> deviceMap = m_devices.getGroup();
+    	Iterator deviceIt = deviceMap.keySet().iterator();
+    	while(deviceIt.hasNext()){
+    		Device device = deviceMap.get((String)(deviceIt.next()));
+    		if(device.getActived() && "outside".equals(device.getLocate()) ){
+    			String deviceID = device.getId();
+    			macAddress = deviceID.substring(0, deviceID.lastIndexOf("_"));
+    			antId = deviceID.substring(deviceID.lastIndexOf("_") + 1);
+    			break;
+    		}
+    	}
+    	String [] upDateTime = DateFormat.format(new Date()).split(" ");
+    	System.err.println("macAddress  "+macAddress+"  antId  "+antId);
+    	
+    	SqlSession session = null;
+    	try {
+			session = m_sqlSessionFactory.openSession();
+			IEventQuery insertSQL = session.getMapper(IEventQuery.class);      
+			Map<String,Card> cardMap = m_cards.getGroup();
+			Iterator it = cardMap.keySet().iterator();
+			while(it.hasNext()){
+				Card card = cardMap.get((String)(it.next()));
+				System.err.println("card id "+ card.getId() + "  card locate "+ card.getLastLocate());
+				if (!"outside".equals(card.getLastLocate())) {
+					Event param = new Event();
+					param.setCardId(card.getId());
+					param.setMacAddress(macAddress);
+					param.setAntId(antId);
+					param.setUpDate(upDateTime[0]);
+					param.setUpTime(upDateTime[1]);
+					insertSQL.insertGoOutEvents(param);
+				}
+			}
+			session.commit();  
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+        	if(session != null) {
+                session.close();
+        	}
+        }
+    	
+    }
 	
 }

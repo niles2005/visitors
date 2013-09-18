@@ -8,5 +8,6 @@ public interface IEventQuery {
     
     public List<Event> selectEvents(Event param); 
     public List<Event> selectCardEvents(Event param); 
+    public void insertGoOutEvents(Event param);
     
 }
