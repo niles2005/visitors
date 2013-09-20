@@ -13,6 +13,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
+import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -24,6 +27,7 @@ public class Events {
 	private Devices m_devices;
 	private String m_dbToday;
 	private SqlSessionFactory m_sqlSessionFactory = null;
+	private String DBType;
 	
 	public Events(Cards cards,Devices devices,String today) {
 		m_cards = cards;
@@ -34,6 +38,18 @@ public class Events {
         try {
     		Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ServerConfig.getInstance().getMybatisConfigureFile()),"UTF-8"));
     		m_sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    		
+    		Environment environment = m_sqlSessionFactory.getConfiguration().getEnvironment();
+    		DataSource dataSource = environment.getDataSource();
+    		//org.sqlite.MetaData@1028607     oracle.jdbc.driver.OracleDatabaseMetaData@1fb9d58
+    		String metaDataClass = dataSource.getConnection().getMetaData().toString().toLowerCase();
+    		if(metaDataClass.indexOf("oracle") != -1) {
+    			DBType = "oracle";
+    		} else if(metaDataClass.indexOf("sqlite") != -1){
+    			DBType = "sqlite";
+    		} else {
+    			throw new RuntimeException("DBType is not find!");
+    		}
         } catch(Exception ex) {
             ex.printStackTrace();
         }
@@ -254,7 +270,7 @@ public class Events {
 			Iterator it = cardMap.keySet().iterator();
 			while(it.hasNext()){
 				Card card = cardMap.get((String)(it.next()));
-				System.err.println("card id "+ card.getId() + "  card locate "+ card.getLastLocate());
+				System.err.println(" now all cards go out!"); 
 				if (!"outside".equals(card.getLastLocate())) {
 					Event param = new Event();
 					param.setCardId(card.getId());
@@ -262,7 +278,11 @@ public class Events {
 					param.setAntId(antId);
 					param.setUpDate(upDateTime[0]);
 					param.setUpTime(upDateTime[1]);
-					insertSQL.insertGoOutEvents(param);
+					if ("oracle".equals(DBType)) {
+						insertSQL.insertGoOutEventsOracle(param);
+					}else if("sqlite".equals(DBType)){
+						insertSQL.insertGoOutEventsSqlite(param);
+					}
 				}
 			}
 			session.commit();  
