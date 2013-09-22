@@ -92,8 +92,9 @@
         buildFrame: function() {
             this._visitorManager = new visitors.VisitorManager();
             this._visitorManager.doInit();
-            this._msg = new visitors.WSMessage(this._visitorManager);
-            this._msg.initialize();
+
+//            this._msg = new visitors.WSMessage(this._visitorManager);
+//            this._msg.initialize();
 
             if(getCookie("msgConsole")==="show"){
                 $('#consoleWrapper').width($(document.body).width() - 381);

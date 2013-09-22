@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,249 +29,213 @@ public class Events {
 	private String m_dbToday;
 	private SqlSessionFactory m_sqlSessionFactory = null;
 	private String DBType;
-	
-	public Events(Cards cards,Devices devices,String today) {
+	private List<Event> todayEventList = new ArrayList<Event>();
+
+	public Events(Cards cards, Devices devices, String today) {
 		m_cards = cards;
 		m_devices = devices;
 		m_dbToday = DateTimeUtil.date8ToDate10(today);
 
+		try {
+			Reader reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(ServerConfig.getInstance()
+							.getMybatisConfigureFile()), "UTF-8"));
+			m_sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 
-        try {
-    		Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ServerConfig.getInstance().getMybatisConfigureFile()),"UTF-8"));
-    		m_sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    		
-    		Environment environment = m_sqlSessionFactory.getConfiguration().getEnvironment();
-    		DataSource dataSource = environment.getDataSource();
-    		//org.sqlite.MetaData@1028607     oracle.jdbc.driver.OracleDatabaseMetaData@1fb9d58
-    		String metaDataClass = dataSource.getConnection().getMetaData().toString().toLowerCase();
-    		if(metaDataClass.indexOf("oracle") != -1) {
-    			DBType = "oracle";
-    		} else if(metaDataClass.indexOf("sqlite") != -1){
-    			DBType = "sqlite";
-    		} else {
-    			throw new RuntimeException("DBType is not find!");
-    		}
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-		reloadEvents(false);
+			Environment environment = m_sqlSessionFactory.getConfiguration()
+					.getEnvironment();
+			DataSource dataSource = environment.getDataSource();
+			// org.sqlite.MetaData@1028607
+			// oracle.jdbc.driver.OracleDatabaseMetaData@1fb9d58
+			String metaDataClass = dataSource.getConnection().getMetaData()
+					.toString().toLowerCase();
+			if (metaDataClass.indexOf("oracle") != -1) {
+				DBType = "oracle";
+			} else if (metaDataClass.indexOf("sqlite") != -1) {
+				DBType = "sqlite";
+			} else {
+				throw new RuntimeException("DBType is not find!");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		reloadEvents();
 	}
-	
+
 	public String doList() {
 		String str = JSON.toJSONString(this);
-//		System.err.println(str);
 		return str;
 	}
-	
-    private static DateFormat DateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+
+	private static DateFormat DateFormat = new SimpleDateFormat(
+			"yyyy/MM/dd HH:mm:ss.SSS");
 	private int m_lastSeqId = -1;
-	//return boolean doBoardcast
-	private boolean reloadEvents(boolean doBoardcast) {
+
+	// return boolean doBoardcast
+	private synchronized void reloadEvents() {
 		SqlSession session = null;
-        try {
-            session = m_sqlSessionFactory.openSession();
-            IEventQuery eventQuery = session.getMapper(IEventQuery.class);           
-            Event param = new Event();
-//            System.err.println("|" + m_dbToday + "|");
-//            System.err.println("|" + m_lastSeqId + "|");
-            param.setUpDate(m_dbToday);
-            param.setSeqId(m_lastSeqId);
-            List<Event> eventList = eventQuery.selectEvents(param);
-            
-//            System.err.println("init:" + eventList.size());
-    		if(eventList.size() == 0) {
-    			return false;
-    		}
-            
-    		//only send changed card
-    		Hashtable<String,Card> hash = new Hashtable<String,Card>();
-    		
-    		for(int i=0;i<eventList.size();i++) {
-    			Event event = (Event)eventList.get(i);
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IEventQuery eventQuery = session.getMapper(IEventQuery.class);
+			Event param = new Event();
+
+			param.setUpDate(m_dbToday);
+			param.setSeqId(m_lastSeqId);
+			List<Event> eventList = eventQuery.selectEvents(param);
+
+			if (eventList.size() == 0) {
+				return;
+			}
+
+			todayEventList.addAll(eventList);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+	}
+
+	public synchronized String loadNewEvents(int fromIndex) {
+		if(todayEventList.size() == 0 || fromIndex == todayEventList.size()){ // no new events
+			return null;
+		}
+		
+		Hashtable dataHash = new Hashtable();
+		if (fromIndex > todayEventList.size()) {  // on new day, todayEventList has been clear
+			dataHash.put("toIndex", 0);
+			return JSON.toJSONString(dataHash);
+		}
+
+		List eventList = todayEventList.subList(fromIndex,todayEventList.size());
+				
+		// only send changed card
+		Hashtable<String, Card> hash = new Hashtable<String, Card>();
+		try {
+			for (int i = 0; i < eventList.size(); i++) {
+				Event event = (Event) eventList.get(i);
 
 				String deviceId = event.getMacAddress() + "_" + event.getAntId();
 				event.setDeviceId(deviceId);
+
 				Date dateTime = DateFormat.parse(event.getUpDate() + " " + event.getUpTime());
 				long theTime = dateTime.getTime();
 				event.setTime(theTime);
-				
+
 				Device device = m_devices.getDevice(deviceId);
-				if(device == null) {
+				if (device == null) {
 					device = m_devices.buildDevice(deviceId);
 				}
 				event.setDevice(device);
-				
-    			
-    			m_lastSeqId = event.getSeqId();
-    			String cardId = event.getCardId();
-    			Card card = m_cards.getCard(cardId);
-    			if(card == null) {//for first record,create card and set create time
-    				card = m_cards.buildCard(cardId,theTime);
-    			}
-    			if(card != null) {
-    				card.appendEvent(event);
-    				hash.put(cardId, card);
-    			}
-    		}
-    		
-    		if(doBoardcast) {//boardcast to client
-    			Hashtable dataHash = new Hashtable();
-    			if(hash.size() > 0) {
-    				ArrayList list = new ArrayList();
-    				Iterator iters = hash.values().iterator();
-    				while(iters.hasNext()) {
-    					list.add(iters.next());
-    				}
-    				dataHash.put("cards", list);
-    			}
-    			dataHash.put("events", eventList);
-    			
-//    			Hashtable regInfoHash = new Hashtable(); 
-//    			m_cards.checkRegInfo(regInfoHash);
-//    			m_devices.checkRegInfo(regInfoHash);
-//    			
-//    			if(regInfoHash.size() > 0) {
-//    				dataHash.put("register", regInfoHash);
-//    			}
-    			
-    	
-    			Global.getInstance().broadcastClientData(dataHash);
-    			return true;
-    		}
-    		return false;
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        } finally {
-        	if(session != null) {
-                session.close();
-        	}
-        }
-        return false;
 
-        
-//		ArrayList eventList = DBManager.getInstance().queryEvents(m_lastSeqId,m_devices,m_dbToday);
-//		if(eventList.size() == 0) {
-//			return false;
-//		}
-//		//only send changed card
-//		Hashtable<String,Card> hash = new Hashtable<String,Card>();
-//		
-//		for(int i=0;i<eventList.size();i++) {
-//			Event event = (Event)eventList.get(i);
-//			m_lastSeqId = event.getSeqId();
-//			String cardId = event.getCardId();
-//			Card card = m_cards.getCard(cardId);
-//			if(card == null) {//for first record,create card and set create time
-//				long dateTime = event.getTime();
-//				card = m_cards.buildCard(cardId,dateTime);
-//			}
-//			if(card != null) {
-//				card.appendEvent(event);
-//				hash.put(cardId, card);
-//			}
-//		}
-//		
-//		if(doBoardcast) {//boardcast to client
-//			Hashtable dataHash = new Hashtable();
-//			if(hash.size() > 0) {
-//				ArrayList list = new ArrayList();
-//				Iterator iters = hash.values().iterator();
-//				while(iters.hasNext()) {
-//					list.add(iters.next());
-//				}
-//				dataHash.put("cards", list);
-//			}
-//			dataHash.put("events", eventList);
-//			
-////			Hashtable regInfoHash = new Hashtable(); 
-////			m_cards.checkRegInfo(regInfoHash);
-////			m_devices.checkRegInfo(regInfoHash);
-////			
-////			if(regInfoHash.size() > 0) {
-////				dataHash.put("register", regInfoHash);
-////			}
-//			
-//	
-//			Global.getInstance().broadcastClientData(dataHash);
-//			return true;
-//		}
-//		return false;
+				m_lastSeqId = event.getSeqId();
+				String cardId = event.getCardId();
+				Card card = m_cards.getCard(cardId);
+				if (card == null) {// for first record,create card and set
+									// create time
+					card = m_cards.buildCard(cardId, theTime);
+				}
+				if (card != null) {
+					card.appendEvent(event);
+					hash.put(cardId, card);
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		
+		if (hash.size() > 0) {
+			ArrayList list = new ArrayList();
+			Iterator iters = hash.values().iterator();
+			while (iters.hasNext()) {
+				list.add(iters.next());
+			}
+			dataHash.put("cards", list);
+		}
+		dataHash.put("events", eventList);
+		dataHash.put("toIndex", todayEventList.size());
+//		Global.getInstance().broadcastClientData(dataHash);
+		return JSON.toJSONString(dataHash);		
 	}
-	
+
 	public void doTaskWork() {
 		try {
-			boolean doBoardcast = reloadEvents(true);
-			if(!doBoardcast) {
-				Global.getInstance().broadcastBeepInfo();
-			}
-		} catch(Exception ex) {
+			reloadEvents();
+//			if (!doBoardcast) {
+//				Global.getInstance().broadcastBeepInfo();
+//			}
+		} catch (Exception ex) {
 			Global.getInstance().broadcastBeepInfo();
 		}
 	}
-	
-    public List queryHistoryEvents(String cardId,String theDate) {
-		SqlSession session = null;
-        try {
 
-        	String dbDate = DateTimeUtil.date8ToDate10(theDate);
-            session = m_sqlSessionFactory.openSession();
-            IEventQuery eventQuery = session.getMapper(IEventQuery.class);           
-            Event param = new Event();
-            param.setCardId(cardId);
-            param.setUpDate(dbDate);
-            List<Event> eventList = eventQuery.selectCardEvents(param);
-    		for(int i=0;i<eventList.size();i++) {
-    			Event event = (Event)eventList.get(i);
+	public List queryHistoryEvents(String cardId, String theDate) {
+		SqlSession session = null;
+		try {
+
+			String dbDate = DateTimeUtil.date8ToDate10(theDate);
+			session = m_sqlSessionFactory.openSession();
+			IEventQuery eventQuery = session.getMapper(IEventQuery.class);
+			Event param = new Event();
+			param.setCardId(cardId);
+			param.setUpDate(dbDate);
+			List<Event> eventList = eventQuery.selectCardEvents(param);
+			for (int i = 0; i < eventList.size(); i++) {
+				Event event = (Event) eventList.get(i);
 
 				String deviceId = event.getMacAddress() + "_" + event.getAntId();
 				event.setDeviceId(deviceId);
 				Date dateTime = DateFormat.parse(event.getUpDate() + " " + event.getUpTime());
 				long theTime = dateTime.getTime();
 				event.setTime(theTime);
-				
+
 				Device device = m_devices.getDevice(deviceId);
-				if(device == null) {
+				if (device == null) {
 					device = m_devices.buildDevice(deviceId);
 				}
 				event.setDevice(device);
-    		}
+			}
 			return eventList;
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        } finally {
-        	if(session != null) {
-                session.close();
-        	}
-        }
-        return null;
-    }
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return null;
+	}
 
-    public void generateGoOutEvents(){
-    	String antId = null;
-    	String macAddress = null;
-    	Map<String,Device> deviceMap = m_devices.getGroup();
-    	Iterator deviceIt = deviceMap.keySet().iterator();
-    	while(deviceIt.hasNext()){
-    		Device device = deviceMap.get((String)(deviceIt.next()));
-    		if(device.getActived() && "outside".equals(device.getLocate()) ){
-    			String deviceID = device.getId();
-    			macAddress = deviceID.substring(0, deviceID.lastIndexOf("_"));
-    			antId = deviceID.substring(deviceID.lastIndexOf("_") + 1);
-    			break;
-    		}
-    	}
-    	String [] upDateTime = DateFormat.format(new Date()).split(" ");
-    	System.err.println("macAddress  "+macAddress+"  antId  "+antId);
-    	
-    	SqlSession session = null;
-    	try {
+	public synchronized void generateGoOutEvents() {
+		String antId = null;
+		String macAddress = null;
+		Map<String, Device> deviceMap = m_devices.getGroup();
+		Iterator deviceIt = deviceMap.keySet().iterator();
+		while (deviceIt.hasNext()) {
+			Device device = deviceMap.get((String) (deviceIt.next()));
+			if (device.getActived() && "outside".equals(device.getLocate())) {
+				String deviceID = device.getId();
+				macAddress = deviceID.substring(0, deviceID.lastIndexOf("_"));
+				antId = deviceID.substring(deviceID.lastIndexOf("_") + 1);
+				break;
+			}
+		}
+		String[] upDateTime = DateFormat.format(new Date()).split(" ");
+		System.err.println("macAddress  " + macAddress + "  antId  " + antId);
+
+		SqlSession session = null;
+		try {
 			session = m_sqlSessionFactory.openSession();
-			IEventQuery insertSQL = session.getMapper(IEventQuery.class);      
-			Map<String,Card> cardMap = m_cards.getGroup();
+			IEventQuery insertSQL = session.getMapper(IEventQuery.class);
+			Map<String, Card> cardMap = m_cards.getGroup();
 			Iterator it = cardMap.keySet().iterator();
-			while(it.hasNext()){
-				Card card = cardMap.get((String)(it.next()));
-				System.err.println(" now all cards go out!"); 
+			while (it.hasNext()) {
+				Card card = cardMap.get((String) (it.next()));
+				System.err.println(" now all cards go out!");
 				if (!"outside".equals(card.getLastLocate())) {
 					Event param = new Event();
 					param.setCardId(card.getId());
@@ -280,20 +245,22 @@ public class Events {
 					param.setUpTime(upDateTime[1]);
 					if ("oracle".equals(DBType)) {
 						insertSQL.insertGoOutEventsOracle(param);
-					}else if("sqlite".equals(DBType)){
+					} else if ("sqlite".equals(DBType)) {
 						insertSQL.insertGoOutEventsSqlite(param);
 					}
 				}
 			}
-			session.commit();  
+			session.commit();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-        	if(session != null) {
-                session.close();
-        	}
-        }
-    	
-    }
-	
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+			todayEventList.clear();
+		}
+
+	}
+
 }

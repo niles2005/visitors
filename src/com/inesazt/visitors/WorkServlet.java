@@ -99,14 +99,20 @@ public class WorkServlet extends HttpServlet {
 			return card.loadTodayEvents();
 		} else if(action.equals("loadallevents")) {
 			return Global.getInstance().getEvents().doList();
-		} else if(action.equals("enumlocations")) {
+		}else if(action.equals("updateevents")){
+			int fromIndex = 0;
+			String findex = request.getParameter("fromindex");
+			if(findex != null && findex.length() > 0){
+				fromIndex = Integer.parseInt(findex);
+			}
+			return Global.getInstance().getEvents().loadNewEvents(fromIndex);
+		}else if(action.equals("enumlocations")) {
 			return DataEnums.loadLocateEnums();
 		} else if(action.equals("enumroles")) {
 			return DataEnums.loadRoleEnums();
 		} else if(action.equals("listfeedbacks")){
 			return Global.getInstance().getFeedbacks().doList();
 		} else if(action.equals("addfeedback")){
-
 			JSONObject jsonObject = this.getJsonFromRequest(request);
 			if (jsonObject != null) {
 				String userName = null;

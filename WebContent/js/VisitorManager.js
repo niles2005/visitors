@@ -10,13 +10,14 @@
         this._roles = {};
         this._cards = {};
         this._selectRole = null;
-        this._$consoleWindow = $("#consoleWindow");
+        this._toIndex = null;
     }
     
     VisitorManager.prototype = {
         init: function() {
             this._sideBar = new visitors.SideBarPage(this);
             this._sideBar.init();
+            this.initDataQuery();
         },
                 
         doInit: function() {
@@ -82,6 +83,9 @@
                 if(data.register) {
                     self.updateRegisterInfo(data.register);
                 }
+                $('#connectSign').text('网络已连接');
+                $('#connectSign').removeClass('label-disconnetct');
+                self.taskDataQuery();
             }
             
             $.ajax({
@@ -91,6 +95,108 @@
                 success: loadResult
             });
         },
+        taskDataQuery: function() {
+            var self = this;
+            setTimeout(function(){
+                return function(){
+                       self.taskDataQuery();
+                }
+            }.call(this),3000);
+
+            var url = "work?action=updateevents";
+            if(this._toIndex) {
+                url +="&fromindex="+ this._toIndex;
+            }
+            $.ajax({
+                url: url,
+                dataType: "json",
+                cache: false,
+//                success: this.updateDatas.call(this)
+                success: function(data){
+                    self.updateDatas(data) ;
+                }
+            });
+
+        },
+
+        updateDatas:function(json) {
+        if (json) {
+            if(json.toIndex){
+                 this._toIndex = json.toIndex;
+            }
+            if(json.today) {
+                visitors.today = json.today;
+                var today = visitors.utils.date8ToDate10(visitors.today,'-');
+
+                for (var i in this._cards) {
+                    var card = this._cards[i];
+                    if(card) {
+                        card.changeToday(today);
+                    }
+                }
+            }
+            if(json.register) {
+                this.updateRegisterInfo(json.register);
+            }
+
+            var cards = json.cards;
+            console.dir(cards);
+            if(cards) {
+                for (var i in cards) {
+                    var card = cards[i];
+                    var cardItem = this._cards[card.id];
+                    if(!cardItem) {
+                        cardItem = this.buildCardItem(card, i);
+                        if (cardItem) {
+                            this._cards[cardItem._id] = cardItem;
+                        }
+                    }
+                    if(cardItem) {
+                        var strRole = cardItem._json.role;
+                        if(strRole) {
+                            cardItem.setLastEvent(card);
+                            var roleId = strRole.substring(0,1) + "_" + card.lastLocate;
+                            var role = this._roles[roleId];
+                            if(role) {
+                                cardItem.setRole(role);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var events = json.events;
+            if(events) {
+                var self = this;
+                var $liWrap = $(".console-log");
+                for(var e in events) {
+                    var eve = events[e];
+                    var date = new Date(eve.time);
+                    var ss = "<li class='eventli'>" + eve.seqId + "  " + visitors.utils.formatDate(date, 'day') + " " + visitors.utils.formatDate(date, 'time') + " " + eve.cardId;
+                    var cardItem = this._cards[eve.cardId];
+                    if(cardItem) {
+                        ss += "[" + cardItem.getName() + "]";
+                    }
+                    ss += "  " + eve.deviceId + "[" + eve.deviceLocate + "]</li>";
+                    var $LI = $(ss);
+                    $LI.get(0).currentEvent = eve;
+                    $LI.click(function(event) {
+                        self.selectLI(this);
+                    });
+                    $liWrap.append($LI);
+                }
+                var children = $liWrap.children();
+                var limitNum = 50;
+                if(children.length > limitNum) {
+                    for(var i=children.length - limitNum - 1;i>=0;i--) {
+                        $(children.get(i)).remove();
+                    }
+                }
+                $('.console-wrapper').scrollTop($('.console-wrapper')[0].scrollHeight);
+            }
+        }
+    },
+
         updateRegisterInfo: function(data) {
             if(data) {
                 if(data.cardReg) {
@@ -125,7 +231,6 @@
                 for (var i in cards) {
                     var row = cards[i];
                     var cardItem = this.buildCardItem(row, i);
-                    
                     if(cardItem) {
                         this._cards[cardItem._id] = cardItem;
                         var strRole = cardItem._json.role;
@@ -163,80 +268,7 @@
             return arr;
         },
 
-        updateDatas: function(json) {
-            if (json) {
-//                console.log(json);
-                if(json.today) {
-                    visitors.today = json.today;
-                    var today = visitors.utils.date8ToDate10(visitors.today,'-');
 
-                    for (var i in this._cards) {
-                        var card = this._cards[i];
-                        if(card) {
-                            card.changeToday(today);
-                        }
-                    }                    
-                }
-                if(json.register) {
-                    this.updateRegisterInfo(json.register);
-                }
-
-                var cards = json.cards;
-                if(cards) {
-                    for (var i in cards) {
-                        var card = cards[i];
-                        var cardItem = this._cards[card.id];
-                        if(!cardItem) {
-                            cardItem = this.buildCardItem(card, i);
-                            if (cardItem) {
-                                this._cards[cardItem._id] = cardItem;
-                            }
-                        }
-                        if(cardItem) {
-                            var strRole = cardItem._json.role;
-                                if(strRole) {
-                                    cardItem.setLastEvent(card);
-                                    var roleId = strRole.substring(0,1) + "_" + card.lastLocate;
-                                    var role = this._roles[roleId];
-                                    if(role) {
-                                        cardItem.setRole(role);
-                                    }
-                            }
-                        }
-                    }
-                }
-
-                var events = json.events;
-                if(events) {
-                    var self = this;
-                    var $liWrap = $(".console-log");
-                    for(var e in events) {
-                        var eve = events[e];
-                        var date = new Date(eve.time);
-                        var ss = "<li class='eventli'>" + eve.seqId + "  " + visitors.utils.formatDate(date, 'day') + " " + visitors.utils.formatDate(date, 'time') + " " + eve.cardId;
-                        var cardItem = this._cards[eve.cardId];
-                        if(cardItem) {
-                            ss += "[" + cardItem.getName() + "]";
-                        }
-                        ss += "  " + eve.deviceId + "[" + eve.deviceLocate + "]</li>";
-                        var $LI = $(ss);
-                        $LI.get(0).currentEvent = eve;
-                        $LI.click(function(event) {
-                           self.selectLI(this);
-                        });
-                        $liWrap.append($LI);
-                    }
-                    var children = $liWrap.children();
-                    var limitNum = 50;
-                    if(children.length > limitNum) {
-                        for(var i=children.length - limitNum - 1;i>=0;i--) {
-                            $(children.get(i)).remove();
-                        }
-                    }
-                    $('.console-wrapper').scrollTop($('.console-wrapper')[0].scrollHeight);
-                }
-            }
-        },
         selectLI: function(li) {
             if(this._$selectLI) {
                 this._$selectLI.removeClass("selectedLI");
