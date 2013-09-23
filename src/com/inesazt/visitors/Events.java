@@ -100,13 +100,14 @@ public class Events {
 	}
 
 	public synchronized String loadNewEvents(int fromIndex) {
+		Hashtable dataHash = new Hashtable();
 		if(todayEventList.size() == 0 || fromIndex == todayEventList.size()){ // no new events
-			return null;
+			dataHash.put("fromIndex", -1);
+			return JSON.toJSONString(dataHash);
 		}
 		
-		Hashtable dataHash = new Hashtable();
 		if (fromIndex > todayEventList.size()) {  // on new day, todayEventList has been clear
-			dataHash.put("toIndex", 0);
+			dataHash.put("fromIndex", 0);
 			return JSON.toJSONString(dataHash);
 		}
 
