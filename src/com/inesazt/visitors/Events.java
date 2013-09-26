@@ -161,7 +161,6 @@ public class Events {
 				}
 				List newEventList = todayEventList.subList(readRecordIndex,todayEventList.size());
 				if (newEventList.size() > 0) {
-					System.err.println("bbbb");
 					dataHash.put("events", newEventList);
 
 					dataHash.put("cards", m_cards.getGroup());
@@ -170,16 +169,12 @@ public class Events {
 		}
 		dataHash.put("fromIndex", m_lastSeqId);
 		
-//		Global.getInstance().broadcastClientData(dataHash);
 		return JSON.toJSONString(dataHash);		
 	}
 
 	public void doTaskWork() {
 		try {
 			reloadEvents();
-//			if (!doBoardcast) {
-//				Global.getInstance().broadcastBeepInfo();
-//			}
 		} catch (Exception ex) {
 			Global.getInstance().broadcastBeepInfo();
 		}
