@@ -10,8 +10,9 @@
         this._roles = {};
         this._cards = {};
         this._selectRole = null;
-        this._fromIndex = null;
-        this._timer = null;
+        this._fromIndex = -1;
+//        this._timer = null;
+        this._updateTime = 0;
     }
     
     VisitorManager.prototype = {
@@ -104,37 +105,38 @@
             }.call(this),3000);
 
 
-            var url = "work?action=updateevents";
-            if(this._fromIndex && this._fromIndex >= 0) {
-                url +="&fromindex="+ this._fromIndex;
-            }
+            var url = "work?action=updateevents&fromindex="+ this._fromIndex;
             $.ajax({
                 url: url,
                 dataType: "json",
                 cache: false,
 //                success: this.updateDatas.call(this)
-                success: function(data,status){
+                success: function(data){
                     self.updateDatas(data) ;
-                    console.dir(status)
                 }
             });
+
+
+            if(new Date().getTime() -  this._updateTime > 10000){
+                $('#connectSign').text('网络已断开,请检查');
+                $('#connectSign').addClass('label-disconnetct');
+                console.log("last success time"+this._updateTime)
+            }
+
 
         },
 
         updateDatas:function(json) {
-            $('#connectSign').text('网络已连接');
-            $('#connectSign').removeClass('label-disconnetct');
-            if(this._timer){
-                clearTimeout(this._timer);
+            if ( new Date().getTime() -  this._updateTime > 9000) {
+                $('#connectSign').text('网络已连接');
+                $('#connectSign').removeClass('label-disconnetct');
             }
-            this._timer = setTimeout(function(){
-                $('#connectSign').text('网络已断开,请检查');
-                $('#connectSign').addClass('label-disconnetct');
-            },10000);
+            this._updateTime = new Date().getTime();
 
             if (json) {
-                if(json.fromIndex){
+                if(json.fromIndex && json.fromIndex >=0){
                      this._fromIndex = json.fromIndex;
+                    console.dir(json.fromIndex);
                 }
                 if(json.today) {
                     visitors.today = json.today;

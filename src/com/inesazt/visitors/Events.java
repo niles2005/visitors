@@ -30,6 +30,7 @@ public class Events {
 	private SqlSessionFactory m_sqlSessionFactory = null;
 	private String DBType;
 	private List<Event> todayEventList = new ArrayList<Event>();
+	private static final int MAXLISTSIZE = 100000;
 
 	public Events(Cards cards, Devices devices, String today) {
 		m_cards = cards;
@@ -85,8 +86,14 @@ public class Events {
 
 			if (eventList.size() == 0) {
 				return;
+			}else{
+				m_lastSeqId = eventList.get(eventList.size() -1).getSeqId();
 			}
-
+			
+			if (todayEventList.size() + eventList.size() > MAXLISTSIZE) {
+				todayEventList.clear();
+			}
+			
 			todayEventList.addAll(eventList);
 
 		} catch (Exception ex) {
@@ -101,23 +108,33 @@ public class Events {
 
 	public synchronized String loadNewEvents(int fromIndex) {
 		Hashtable dataHash = new Hashtable();
-		if(todayEventList.size() == 0 || fromIndex == todayEventList.size()){ // no new events
-			dataHash.put("fromIndex", -1);
-			return JSON.toJSONString(dataHash);
-		}
 		
-		if (fromIndex > todayEventList.size()) {  // on new day, todayEventList has been clear
+		if(todayEventList.size() == 0) {
 			dataHash.put("fromIndex", 0);
 			return JSON.toJSONString(dataHash);
 		}
-
-		List eventList = todayEventList.subList(fromIndex,todayEventList.size());
-				
+		
+		List<Event> newEventList = todayEventList;
+		if (fromIndex <= 0) {
+			//newEventList = todayEventList;
+		} else { 
+			if( m_lastSeqId == fromIndex ){ // no new events
+				dataHash.put("fromIndex", m_lastSeqId);
+				return JSON.toJSONString(dataHash);
+			}
+			int newRecordsCount = m_lastSeqId - fromIndex;
+			if ( newRecordsCount > todayEventList.size()) {
+				//newEventList = todayEventList;
+			}else {
+				newEventList = todayEventList.subList(todayEventList.size() - newRecordsCount,todayEventList.size());
+			}
+			
+		}
 		// only send changed card
 		Hashtable<String, Card> hash = new Hashtable<String, Card>();
 		try {
-			for (int i = 0; i < eventList.size(); i++) {
-				Event event = (Event) eventList.get(i);
+			for (int i = 0; i < newEventList.size(); i++) {
+				Event event = (Event) newEventList.get(i);
 
 				String deviceId = event.getMacAddress() + "_" + event.getAntId();
 				event.setDeviceId(deviceId);
@@ -132,7 +149,7 @@ public class Events {
 				}
 				event.setDevice(device);
 
-				m_lastSeqId = event.getSeqId();
+				
 				String cardId = event.getCardId();
 				Card card = m_cards.getCard(cardId);
 				if (card == null) {// for first record,create card and set
@@ -147,7 +164,6 @@ public class Events {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 		
 		if (hash.size() > 0) {
 			ArrayList list = new ArrayList();
@@ -157,8 +173,10 @@ public class Events {
 			}
 			dataHash.put("cards", list);
 		}
-		dataHash.put("events", eventList);
-		dataHash.put("toIndex", todayEventList.size());
+		if (fromIndex >= 0) {
+			dataHash.put("events", newEventList);
+		}
+		dataHash.put("fromIndex", m_lastSeqId);
 //		Global.getInstance().broadcastClientData(dataHash);
 		return JSON.toJSONString(dataHash);		
 	}
@@ -211,7 +229,7 @@ public class Events {
 		return null;
 	}
 
-	public synchronized void generateGoOutEvents() {
+	public void generateGoOutEvents() {
 		String antId = null;
 		String macAddress = null;
 		Map<String, Device> deviceMap = m_devices.getGroup();
@@ -259,7 +277,7 @@ public class Events {
 			if (session != null) {
 				session.close();
 			}
-			todayEventList.clear();
+			
 		}
 
 	}
