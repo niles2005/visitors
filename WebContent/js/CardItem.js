@@ -99,6 +99,7 @@
                 if (!data) {
                     return;
                 }
+//                console.dir(data)
                 var htmlContent = '<table class="table">'
                         + '<tbody><tr><th>Index</th><th>日期</th><th>时间</th><th>方位</th>';
                 for (var i = data.length - 1; i >= 0; i--) {
@@ -195,6 +196,8 @@
         changeDate: function(date) {
             if (date) {
                 var strDate = 1900 + date.getYear();
+            	alert(date.getYear());
+            	alert(strDate);
                 if (date.getMonth() < 10) {
                     strDate += "0";
                 }

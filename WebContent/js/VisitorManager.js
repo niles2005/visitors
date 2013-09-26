@@ -3,6 +3,7 @@
 
     var EXTEND = null;
 
+    var callIndex = 0;
     function VisitorManager() {
         if (EXTEND) {
             EXTEND.apply(this, arguments);
@@ -10,9 +11,10 @@
         this._roles = {};
         this._cards = {};
         this._selectRole = null;
-        this._fromIndex = -1;
+        this._fromIndex = -999;
 //        this._timer = null;
         this._updateTime = 0;
+        this._connecting = false;
     }
     
     VisitorManager.prototype = {
@@ -98,19 +100,18 @@
         },
         taskDataQuery: function() {
             var self = this;
-            setTimeout(function(){
-                return function(){
-                       self.taskDataQuery();
-                }
-            }.call(this),3000);
-
-
-            var url = "work?action=updateevents&fromindex="+ this._fromIndex;
+            setInterval(function(){
+                self.doTaskWork();
+            },3000);
+        },
+        doTaskWork: function() {
+        	var self = this;
+            var url = "work?action=updateevents&fromindex="+ this._fromIndex + "&callNum=" + callIndex;
+            callIndex++;
             $.ajax({
                 url: url,
                 dataType: "json",
                 cache: false,
-//                success: this.updateDatas.call(this)
                 success: function(data){
                     self.updateDatas(data) ;
                 }
@@ -118,25 +119,28 @@
 
 
             if(new Date().getTime() -  this._updateTime > 10000){
+            	this._connecting = false;
                 $('#connectSign').text('网络已断开,请检查');
                 $('#connectSign').addClass('label-disconnetct');
-                console.log("last success time"+this._updateTime)
+//                console.log("last success time"+this._updateTime)
             }
 
 
         },
 
         updateDatas:function(json) {
-            if ( new Date().getTime() -  this._updateTime > 9000) {
+            this._updateTime = new Date().getTime();
+        	if(!this._connecting) {
                 $('#connectSign').text('网络已连接');
                 $('#connectSign').removeClass('label-disconnetct');
-            }
-            this._updateTime = new Date().getTime();
+        	}
+        	this._connecting = true;
+        	
 
             if (json) {
                 if(json.fromIndex && json.fromIndex >=0){
                      this._fromIndex = json.fromIndex;
-                    console.dir(json.fromIndex);
+//                    console.dir(json.fromIndex);
                 }
                 if(json.today) {
                     visitors.today = json.today;

@@ -96,45 +96,8 @@ public class Events {
 			
 			todayEventList.addAll(eventList);
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-		}
-
-	}
-
-	public synchronized String loadNewEvents(int fromIndex) {
-		Hashtable dataHash = new Hashtable();
-		
-		if(todayEventList.size() == 0) {
-			dataHash.put("fromIndex", 0);
-			return JSON.toJSONString(dataHash);
-		}
-		
-		List<Event> newEventList = todayEventList;
-		if (fromIndex <= 0) {
-			//newEventList = todayEventList;
-		} else { 
-			if( m_lastSeqId == fromIndex ){ // no new events
-				dataHash.put("fromIndex", m_lastSeqId);
-				return JSON.toJSONString(dataHash);
-			}
-			int newRecordsCount = m_lastSeqId - fromIndex;
-			if ( newRecordsCount > todayEventList.size()) {
-				//newEventList = todayEventList;
-			}else {
-				newEventList = todayEventList.subList(todayEventList.size() - newRecordsCount,todayEventList.size());
-			}
-			
-		}
-		// only send changed card
-		Hashtable<String, Card> hash = new Hashtable<String, Card>();
-		try {
-			for (int i = 0; i < newEventList.size(); i++) {
-				Event event = (Event) newEventList.get(i);
+			for (int i = 0; i < eventList.size(); i++) {
+				Event event = (Event) eventList.get(i);
 
 				String deviceId = event.getMacAddress() + "_" + event.getAntId();
 				event.setDeviceId(deviceId);
@@ -158,25 +121,48 @@ public class Events {
 				}
 				if (card != null) {
 					card.appendEvent(event);
-					hash.put(cardId, card);
 				}
 			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		if (hash.size() > 0) {
-			ArrayList list = new ArrayList();
-			Iterator iters = hash.values().iterator();
-			while (iters.hasNext()) {
-				list.add(iters.next());
+			
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
-			dataHash.put("cards", list);
 		}
-		if (fromIndex >= 0) {
-			dataHash.put("events", newEventList);
+	}
+
+	public synchronized String loadNewEvents(int fromIndex) {
+		Hashtable dataHash = new Hashtable();
+		
+		if (fromIndex == -999) {//init
+
+			//send register
+			Hashtable regInfoHash = new Hashtable(); 
+			m_cards.checkRegInfo(regInfoHash);
+			m_devices.checkRegInfo(regInfoHash);
+			if(regInfoHash.size() > 0) {
+				dataHash.put("register", regInfoHash);
+			}
+			
+			//send date
+			dataHash.put("today", Global.getInstance().getToday());
+			
+			dataHash.put("cards", m_cards.getGroup());
+		} else { 
+			int readRecordIndex = todayEventList.size() - (m_lastSeqId - fromIndex);
+			if(readRecordIndex < 0) {
+				readRecordIndex = 0;
+			}
+			List newEventList = todayEventList.subList(readRecordIndex,todayEventList.size());
+			if (newEventList.size() >= 0) {
+				dataHash.put("events", newEventList);
+			}
 		}
 		dataHash.put("fromIndex", m_lastSeqId);
+		
 //		Global.getInstance().broadcastClientData(dataHash);
 		return JSON.toJSONString(dataHash);		
 	}

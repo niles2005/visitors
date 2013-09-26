@@ -1,1 +1,15 @@
-/WebContent/nbproject/private/
+/build/
+/.idea/
+wuproject.iml
+.project
+.classpath
+/nbproject/
+/.settings/
+/.externalToolBuilders/
+/classes
+*.bak
+*.class
+*.iml
+/bak/
+/tomcat/
+/config/

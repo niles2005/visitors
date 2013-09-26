@@ -158,6 +158,7 @@ public class Card {
 	public void appendEvent(Event event) {
 		m_lastEvent = event;
 		m_eventList.add(event);
+		System.err.println("append event:" + event);
 	}
 	
 	public String loadHistoryEvents(String date) {
@@ -179,6 +180,10 @@ public class Card {
 				} else {
 					m_eventList.remove(0);
 				}
+			}
+			for(int i=0;i<m_eventList.size();i++) {
+				Event event = m_eventList.get(i);
+				System.err.println(i + "  "  + event.getCardId() + "  " + event.getUpDate() + "  " + event.getUpTime());
 			}
 			return JSON.toJSONString(m_eventList);
 		}
