@@ -158,7 +158,6 @@ public class Card {
 	public void appendEvent(Event event) {
 		m_lastEvent = event;
 		m_eventList.add(event);
-		System.err.println("append event:" + event);
 	}
 	
 	public String loadHistoryEvents(String date) {

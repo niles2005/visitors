@@ -149,16 +149,23 @@ public class Events {
 			
 			//send date
 			dataHash.put("today", Global.getInstance().getToday());
-			
+
 			dataHash.put("cards", m_cards.getGroup());
 		} else { 
-			int readRecordIndex = todayEventList.size() - (m_lastSeqId - fromIndex);
-			if(readRecordIndex < 0) {
-				readRecordIndex = 0;
-			}
-			List newEventList = todayEventList.subList(readRecordIndex,todayEventList.size());
-			if (newEventList.size() >= 0) {
-				dataHash.put("events", newEventList);
+			if(m_lastSeqId == fromIndex) {
+				
+			} else {
+				int readRecordIndex = todayEventList.size() - (m_lastSeqId - fromIndex);
+				if(readRecordIndex < 0) {
+					readRecordIndex = 0;
+				}
+				List newEventList = todayEventList.subList(readRecordIndex,todayEventList.size());
+				if (newEventList.size() > 0) {
+					System.err.println("bbbb");
+					dataHash.put("events", newEventList);
+
+					dataHash.put("cards", m_cards.getGroup());
+				}
 			}
 		}
 		dataHash.put("fromIndex", m_lastSeqId);
