@@ -37,7 +37,7 @@
                 $.ajax({
                     url: url,
                     data: param,
-                    dataType: "json", //这里的dataType就是返回回来的数据格式了html,xml,json 
+                    dataType: "json", //这里的dataType就是返回回来的数据格式了html,xml,json
                     cache: false, //设置是否缓存，默认设置成为true，当需要每次刷新都需要执行数据库操作的话，需要设置成为false 
                     success: listener
                 });
@@ -172,7 +172,11 @@
             }
         },
         formatDate: function(now, form) {
-            var year = now.getYear() + 1900;
+            var baseYears = 1900;
+            if(visitors.isIE &&  visitors.IEVersion < 9){
+                baseYears =  0;
+            }
+            var year = now.getYear() + baseYears;
             var month = now.getMonth() + 1;
             if(month < 10) {
                 month = "0" + month;

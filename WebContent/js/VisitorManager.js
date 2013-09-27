@@ -71,9 +71,10 @@
         },
         taskDataQuery: function() {
             var self = this;
+            self.doTaskWork();
             setInterval(function(){
                 self.doTaskWork();
-            },3000);
+            },5000);
         },
         doTaskWork: function() {
         	var self = this;
@@ -89,7 +90,7 @@
             });
 
 
-            if(new Date().getTime() -  this._updateTime > 10000){
+            if(new Date().getTime() -  this._updateTime > 11000){
             	this._connecting = false;
                 $('#connectSign').text('网络已断开,请检查');
                 $('#connectSign').addClass('label-disconnetct');

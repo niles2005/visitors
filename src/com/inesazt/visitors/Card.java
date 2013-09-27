@@ -182,7 +182,7 @@ public class Card {
 			}
 			for(int i=0;i<m_eventList.size();i++) {
 				Event event = m_eventList.get(i);
-				System.err.println(i + "  "  + event.getCardId() + "  " + event.getUpDate() + "  " + event.getUpTime());
+//				System.err.println(i + "  "  + event.getCardId() + "  " + event.getUpDate() + "  " + event.getUpTime());
 			}
 			return JSON.toJSONString(m_eventList);
 		}

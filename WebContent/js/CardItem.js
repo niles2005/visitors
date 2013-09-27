@@ -47,7 +47,7 @@
             + '        <div class="popuplist-descr">           '
             + '<span style="margin-left:15px;">行踪详情</span>'
             + '<span id="detailRefresh" style="margin-left:30px;" class="btn btn-info btn-small"><i>刷新</i></span>'
-            + '            <div class="cardDetail row infobox descrbox chu_descr ellipsis multiline">'
+            + '            <div class="cardDetail infobox descrbox chu_descr ellipsis multiline">'
             + '</div>'
             + '        </div>'
             + '</div>'
@@ -94,12 +94,10 @@
             var $cardDetail = this._$Content.find(".cardDetail");
             $cardDetail.empty();
             var url = "work?action=loadevents&cardid=" + this._id + "&date=" + date + "&t=" + new Date().getTime();
-            var self = this;
             visitors.utils.loadJsonData(url, function(data) {
                 if (!data) {
                     return;
                 }
-//                console.dir(data)
                 var htmlContent = '<table class="table">'
                         + '<tbody><tr><th>Index</th><th>日期</th><th>时间</th><th>方位</th>';
                 for (var i = data.length - 1; i >= 0; i--) {
@@ -121,7 +119,8 @@
                 }
                 htmlContent = htmlContent + '</tbody></table>';
                 $cardDetail.html(htmlContent);
-            });
+//                $cardDetail[0].innerHTML=htmlContent;
+            } );
         },
         afterExpandDetail: function() {
             this.loadCardEvents(visitors.today);
@@ -195,7 +194,11 @@
         },
         changeDate: function(date) {
             if (date) {
-                var strDate = 1900 + date.getYear();
+                var baseYears = 1900;
+                if(visitors.isIE &&  visitors.IEVersion < 9){
+                    baseYears =  0;
+                }
+                var strDate = baseYears + date.getYear();
                 if (date.getMonth() < 10) {
                     strDate += "0";
                 }

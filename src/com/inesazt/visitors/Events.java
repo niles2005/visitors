@@ -28,7 +28,7 @@ public class Events {
 	private SqlSessionFactory m_sqlSessionFactory = null;
 	private String DBType;
 	private List<Event> todayEventList = new LinkedList<Event>();
-	private static final int MAXLISTSIZE = 100;
+	private static final int MAXLISTSIZE = 1000;
 
 	public Events(Cards cards, Devices devices, String today) {
 		m_cards = cards;
@@ -199,7 +199,7 @@ public class Events {
 			}
 		}
 		String[] upDateTime = DateFormat.format(new Date()).split(" ");
-		System.err.println("macAddress  " + macAddress + "  antId  " + antId);
+//		System.err.println("macAddress  " + macAddress + "  antId  " + antId);
 
 		SqlSession session = null;
 		try {

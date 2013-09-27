@@ -140,8 +140,10 @@
                 $('#modalPanel').addClass('showdialog');
                 var left = event.pageX;
                 var top = event.pageY;
-                var height = $(document.body).height() * 0.8;
+                var height = $(document.body).height() * 0.8 ;
                 var width =   $(document.body).width() * 0.86;
+                $('#interactive').width(width+'px');
+                $('#interactive').height(height*0.9+'px') ;
                 $('#modalPanel').css({top:top,left:left,width:'0',height:'0'});
                 $('#modalPanel').animate({top:'10%',left:'7%',width:width,height:height});
             }

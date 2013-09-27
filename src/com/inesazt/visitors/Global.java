@@ -114,7 +114,6 @@ public class Global {
 		String today = DateTimeUtil.getTodayString();
 		if(today != null && !today.equals(m_strToday)) {
 			if(m_events != null) {
-				System.err.println("insert go out events!");
 				m_events.generateGoOutEvents();
 			}
 			
@@ -162,7 +161,7 @@ public class Global {
 				if(recordPos < 0) {
 					recordPos = 0;
 				}
-				if(recordPos >= 0 && recordPos < eventList.size()) {
+				if( recordPos < eventList.size()) {
 					List newEventList = eventList.subList(recordPos,eventList.size());
 					if (newEventList.size() > 0) {
 						dataHash.put("events", newEventList);
