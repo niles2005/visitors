@@ -85,7 +85,6 @@ public class WorkServlet extends HttpServlet {
 		} else if(action.equals("loadevents")) {
 			String cardId = request.getParameter("cardid");
 			String strDate = request.getParameter("date");
-			System.err.println(strDate);
 			Card card = Global.getInstance().getCard(cardId);
 			if(card == null) {
 				return WebUtil.error("Can not find card for cardId:" + cardId);
