@@ -115,19 +115,20 @@ public class CardGroup {
 		m_unregCount += unregNum;
 		m_deactiveCount += deactiveNum;
 		
-		this.boardCastRegisterInfo();
+		Global.getInstance().changeRegister();
+//		this.boardCastRegisterInfo();
 //		System.err.println("changed card:" + m_regCount + "   " + m_unregCount +  "   " + m_deactiveCount);
 	}
 	
-	private void boardCastRegisterInfo() {
-		if(Global.getInstance() != null) {
-			Hashtable dataHash = new Hashtable();
-			Hashtable regInfoHash = new Hashtable(); 
-			this.checkRegInfo(regInfoHash);
-			dataHash.put("register", regInfoHash);
-			Global.getInstance().broadcastClientData(dataHash);
-		}
-	}
+//	private void boardCastRegisterInfo() {
+//		if(Global.getInstance() != null) {
+//			Hashtable dataHash = new Hashtable();
+//			Hashtable regInfoHash = new Hashtable(); 
+//			this.checkRegInfo(regInfoHash);
+//			dataHash.put("register", regInfoHash);
+////			Global.getInstance().broadcastClientData(dataHash);
+//		}
+//	}
 
 	public void checkRegInfo(Hashtable hash) {
 		hash.put("cardReg", "" + m_regCount);

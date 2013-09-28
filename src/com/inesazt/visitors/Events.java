@@ -5,12 +5,10 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +27,8 @@ public class Events {
 	private String m_dbToday;
 	private SqlSessionFactory m_sqlSessionFactory = null;
 	private String DBType;
-	private List<Event> todayEventList = new ArrayList<Event>();
-	private static final int MAXLISTSIZE = 100000;
+	private List<Event> todayEventList = new LinkedList<Event>();
+	private static final int MAXLISTSIZE = 100;
 
 	public Events(Cards cards, Devices devices, String today) {
 		m_cards = cards;
@@ -71,9 +69,24 @@ public class Events {
 	private static DateFormat DateFormat = new SimpleDateFormat(
 			"yyyy/MM/dd HH:mm:ss.SSS");
 	private int m_lastSeqId = -1;
+	
+	public int getLastSeqId() {
+		return m_lastSeqId;
+	}
+	
+	public List<Event> getTodayEventList() {
+		return todayEventList;
+	}
 
+	private synchronized void addTodayEvent(Event event) {
+		todayEventList.add(event);
+		while(todayEventList.size() > MAXLISTSIZE) {
+			todayEventList.remove(0);
+		}
+	}
+	
 	// return boolean doBoardcast
-	private synchronized void reloadEvents() {
+	private void reloadEvents() {
 		SqlSession session = null;
 		try {
 			session = m_sqlSessionFactory.openSession();
@@ -90,14 +103,10 @@ public class Events {
 				m_lastSeqId = eventList.get(eventList.size() -1).getSeqId();
 			}
 			
-			if (todayEventList.size() + eventList.size() > MAXLISTSIZE) {
-				todayEventList.clear();
-			}
-			
-			todayEventList.addAll(eventList);
-
 			for (int i = 0; i < eventList.size(); i++) {
 				Event event = (Event) eventList.get(i);
+				
+				this.addTodayEvent(event);
 
 				String deviceId = event.getMacAddress() + "_" + event.getAntId();
 				event.setDeviceId(deviceId);
@@ -111,7 +120,6 @@ public class Events {
 					device = m_devices.buildDevice(deviceId);
 				}
 				event.setDevice(device);
-
 				
 				String cardId = event.getCardId();
 				Card card = m_cards.getCard(cardId);
@@ -123,8 +131,6 @@ public class Events {
 					card.appendEvent(event);
 				}
 			}
-			
-			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
@@ -134,49 +140,10 @@ public class Events {
 		}
 	}
 
-	public synchronized String loadNewEvents(int fromIndex) {
-		Hashtable dataHash = new Hashtable();
-		
-		if (fromIndex == -999) {//init
-
-			//send register
-			Hashtable regInfoHash = new Hashtable(); 
-			m_cards.checkRegInfo(regInfoHash);
-			m_devices.checkRegInfo(regInfoHash);
-			if(regInfoHash.size() > 0) {
-				dataHash.put("register", regInfoHash);
-			}
-			
-			//send date
-			dataHash.put("today", Global.getInstance().getToday());
-
-			dataHash.put("cards", m_cards.getGroup());
-		} else { 
-			if(m_lastSeqId == fromIndex) {
-				
-			} else {
-				int readRecordIndex = todayEventList.size() - (m_lastSeqId - fromIndex);
-				if(readRecordIndex < 0) {
-					readRecordIndex = 0;
-				}
-				List newEventList = todayEventList.subList(readRecordIndex,todayEventList.size());
-				if (newEventList.size() > 0) {
-					dataHash.put("events", newEventList);
-
-					dataHash.put("cards", m_cards.getGroup());
-				}
-			}
-		}
-		dataHash.put("fromIndex", m_lastSeqId);
-		
-		return JSON.toJSONString(dataHash);		
-	}
-
 	public void doTaskWork() {
 		try {
 			reloadEvents();
 		} catch (Exception ex) {
-			Global.getInstance().broadcastBeepInfo();
 		}
 	}
 

@@ -115,19 +115,19 @@ public class DeviceGroup {
 		m_unregCount += unregNum;
 		m_deactiveCount += deactiveNum;
 		
-		this.boardCastRegisterInfo();
+		Global.getInstance().changeRegister();
+//		this.boardCastRegisterInfo();
 //		System.err.println("changed device:" + m_regCount + "   " + m_unregCount +  "   " + m_deactiveCount);
 	}
 	
-	private void boardCastRegisterInfo() {
-		if(Global.getInstance() != null) {
-			Hashtable dataHash = new Hashtable();
-			Hashtable regInfoHash = new Hashtable(); 
-			this.checkRegInfo(regInfoHash);
-			dataHash.put("register", regInfoHash);
-			Global.getInstance().broadcastClientData(dataHash);
-		}
-	}
+//	private void boardCastRegisterInfo() {
+//		if(Global.getInstance() != null) {
+//			Hashtable dataHash = new Hashtable();
+//			Hashtable regInfoHash = new Hashtable(); 
+//			this.checkRegInfo(regInfoHash);
+//			dataHash.put("register", regInfoHash);
+//		}
+//	}
 
 	public void checkRegInfo(Hashtable hash) {
 		hash.put("deviceReg", "" + m_regCount );

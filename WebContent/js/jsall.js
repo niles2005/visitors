@@ -25,8 +25,7 @@
         "VisitorManager",
         "RoleItem",
         "CardItem",
-        "VisitorPage",
-        "WSMessage"
+        "VisitorPage"
     ];
     var scriptLocation = getScriptLocatiion();
     if (modules.length > 0) {

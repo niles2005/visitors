@@ -12,6 +12,7 @@
         this._cards = {};
         this._selectRole = null;
         this._fromIndex = -999;
+        this._regIndex = -999;
 //        this._timer = null;
         this._updateTime = 0;
         this._connecting = false;
@@ -21,7 +22,7 @@
         init: function() {
             this._sideBar = new visitors.SideBarPage(this);
             this._sideBar.init();
-            this.initDataQuery();
+            this.taskDataQuery();
         },
                 
         doInit: function() {
@@ -68,36 +69,6 @@
             this._roles[roleItem._id] = roleItem;
             return roleItem;
         },
-        initDataQuery: function() {
-            var url = "work?action=initdatas";
-            var self = this;
-//            console.log(url);
-            function loadResult(data) {
-                if (!data) {
-                    return;
-                }
-                
-//                console.dir(data);
-                if(data.today) {
-                    visitors.today = data.today;
-                }
-                if(data.cards) {
-                    self.updateCardInfo(data.cards);
-                }
-                if(data.register) {
-                    self.updateRegisterInfo(data.register);
-                }
-
-                self.taskDataQuery();
-            }
-            
-            $.ajax({
-                url: url,
-                dataType: "json", //这里的dataType就是返回回来的数据格式了html,xml,json 
-                cache: false, //设置是否缓存，默认设置成为true，当需要每次刷新都需要执行数据库操作的话，需要设置成为false 
-                success: loadResult
-            });
-        },
         taskDataQuery: function() {
             var self = this;
             setInterval(function(){
@@ -106,7 +77,7 @@
         },
         doTaskWork: function() {
         	var self = this;
-            var url = "work?action=updateevents&fromindex="+ this._fromIndex + "&callNum=" + callIndex;
+            var url = "work?action=doUpdate&fromindex="+ this._fromIndex + "&regIndex=" + this._regIndex + "&date=" + visitors.today + "&callNum=" + callIndex;
             callIndex++;
             $.ajax({
                 url: url,
@@ -138,10 +109,12 @@
         	
 
             if (json) {
-                if(json.fromIndex && json.fromIndex >=0){
-                     this._fromIndex = json.fromIndex;
-//                    console.dir(json.fromIndex);
-                }
+                if(json.fromIndex){
+                    this._fromIndex = json.fromIndex;
+               }
+               if(json.regIndex){
+                    this._regIndex = json.regIndex;
+               }
                 if(json.today) {
                     visitors.today = json.today;
                     var today = visitors.utils.date8ToDate10(visitors.today,'-');
@@ -157,8 +130,8 @@
                     this.updateRegisterInfo(json.register);
                 }
 
-                var cards = json.cards;
-                if(cards) {
+                if(json.cards) {
+                	var cards = json.cards;
                     for (var i in cards) {
                         var card = cards[i];
                         var cardItem = this._cards[card.id];
@@ -182,8 +155,9 @@
                     }
                 }
 
-                var events = json.events;
-                if(events) {
+                
+                if(json.events) {
+                	var events = json.events;
                     var self = this;
                     var $liWrap = $(".console-log");
                     for(var e in events) {

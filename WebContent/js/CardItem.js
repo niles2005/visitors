@@ -196,8 +196,6 @@
         changeDate: function(date) {
             if (date) {
                 var strDate = 1900 + date.getYear();
-            	alert(date.getYear());
-            	alert(strDate);
                 if (date.getMonth() < 10) {
                     strDate += "0";
                 }

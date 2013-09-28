@@ -100,13 +100,19 @@ public class WorkServlet extends HttpServlet {
 			return card.loadTodayEvents();
 		} else if(action.equals("loadallevents")) {
 			return Global.getInstance().getEvents().doList();
-		}else if(action.equals("updateevents")){
+		}else if(action.equals("doUpdate")){
 			int fromIndex = 0;
 			String findex = request.getParameter("fromindex");
 			if(findex != null && findex.length() > 0){
 				fromIndex = Integer.parseInt(findex);
 			}
-			return Global.getInstance().getEvents().loadNewEvents(fromIndex);
+			int regIndex = 0;
+			String rIndex = request.getParameter("regIndex");
+			if(rIndex != null && rIndex.length() > 0){
+				regIndex = Integer.parseInt(rIndex);
+			}
+			String date = request.getParameter("date");
+			return Global.getInstance().doClientUpdate(fromIndex,regIndex,date);
 		}else if(action.equals("enumlocations")) {
 			return DataEnums.loadLocateEnums();
 		} else if(action.equals("enumroles")) {

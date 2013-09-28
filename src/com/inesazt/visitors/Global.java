@@ -1,15 +1,9 @@
 package com.inesazt.visitors;
 
 
-import java.io.IOException;
-import java.nio.CharBuffer;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.alibaba.fastjson.JSON;
 
@@ -61,23 +55,7 @@ public class Global {
 			String back7Day = DateTimeUtil.getDayString(new Date().getTime(),-7);
 			m_events = new Events(m_cards,m_devices,back7Day);
 			System.err.println("Global init finished***************");
-			
-			
-//			Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ServerConfig.getInstance().getMybatisConfigureFile()),"UTF-8"));
-//			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-//			
-//	        SqlSession session = sqlSessionFactory.openSession();
-//	        try {
-//	            IUserOperation userOperation=session.getMapper(IUserOperation.class);           
-//	            List<User> users = userOperation.selectUsers("%");
-//	            for(User user:users){
-//	                System.out.println(user.getId()+":"+user.getUserName()+":"+user.getUserAddress());
-//	            }
-//	            
-//	        } finally {
-//	            session.close();
-//	        }
-			
+			this.changeRegister();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -109,16 +87,6 @@ public class Global {
 
 	public Events getEvents() {
 		return m_events;
-	}
-	
-	private final Set<ChatMessageInbound> m_connections = new CopyOnWriteArraySet<ChatMessageInbound>();
-	
-	public void addChatMessageInbound(ChatMessageInbound cmi) {
-		m_connections.add(cmi);
-	}
-	
-	public void removeChatMessageInbound(ChatMessageInbound cmi) {
-		m_connections.remove(cmi);
 	}
 	
 	//for client init
@@ -154,60 +122,58 @@ public class Global {
 			m_cards.changeDate();			
 			Hashtable hash = new Hashtable();
 			hash.put("today", m_strToday);
-			broadcastClientData(hash);
 		}
 		if(m_events != null) {
 			m_events.doTaskWork();
 		}
 	}
 	
-//	public void broadcastClientData(String jsonData) {
-//		if(jsonData != null) {
-//			for (ChatMessageInbound connection : m_connections) {
-//				try {
-//					CharBuffer buffer = CharBuffer.wrap(jsonData);
-//					connection.getWsOutbound().writeTextMessage(buffer);
-//				} catch (IOException ex) {
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//	}
+	private int m_registerIndex = 0;
+	
+	public void changeRegister() {
+		m_registerIndex++;
+	}
+	
+	public synchronized String doClientUpdate(int eventIndex,int registerIndex,String date) {
+		Hashtable dataHash = new Hashtable();
+		
+		if(!m_strToday.equals(date)) {
+			dataHash.put("today", m_strToday);
+		}
+		int lastSeqId = this.m_events.getLastSeqId();
+		if(m_registerIndex != registerIndex) {
+			//send register
+			Hashtable regInfoHash = new Hashtable(); 
+			m_cards.checkRegInfo(regInfoHash);
+			m_devices.checkRegInfo(regInfoHash);
+			if(regInfoHash.size() > 0) {
+				dataHash.put("register", regInfoHash);
+			}
+			dataHash.put("regIndex", m_registerIndex);
+		}
+		if (eventIndex == -999) {//init
+			dataHash.put("cards", m_cards.getGroup());
+		} else { 
+			if(lastSeqId == eventIndex) {
+				
+			} else {
+				List<Event> eventList = m_events.getTodayEventList();
+				int recordPos = eventList.size() - (lastSeqId - eventIndex);
+				if(recordPos < 0) {
+					recordPos = 0;
+				}
+				if(recordPos >= 0 && recordPos < eventList.size()) {
+					List newEventList = eventList.subList(recordPos,eventList.size());
+					if (newEventList.size() > 0) {
+						dataHash.put("events", newEventList);
 
-	public void broadcastClientData(List list) {
-		if(list != null) {
-			String jsonData = JSON.toJSONString(list);
-			for (ChatMessageInbound connection : m_connections) {
-				try {
-					CharBuffer buffer = CharBuffer.wrap(jsonData);
-					connection.getWsOutbound().writeTextMessage(buffer);
-				} catch (IOException ex) {
-					ex.printStackTrace();
+						dataHash.put("cards", m_cards.getGroup());
+					}
 				}
 			}
 		}
-	}
-
-	public void broadcastClientData(Map map) {
-		if(map != null) {
-			String jsonData = JSON.toJSONString(map);
-			for (ChatMessageInbound connection : m_connections) {
-				try {
-					CharBuffer buffer = CharBuffer.wrap(jsonData);
-					connection.getWsOutbound().writeTextMessage(buffer);
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
-	}
-
-	private Hashtable m_beepInfoHash = new Hashtable();
-	private long m_beepIndex = 0;
-	public void broadcastBeepInfo() {
-		m_beepInfoHash.put("beeptime", new Date().getTime());
-		m_beepIndex += 1;
-		m_beepInfoHash.put("beepindex", m_beepIndex);
-		this.broadcastClientData(m_beepInfoHash);
+		dataHash.put("fromIndex", lastSeqId);
+		
+		return JSON.toJSONString(dataHash);		
 	}
 }
