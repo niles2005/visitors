@@ -198,41 +198,42 @@ public class Events {
 				break;
 			}
 		}
-		String[] upDateTime = DateFormat.format(new Date()).split(" ");
-//		System.err.println("macAddress  " + macAddress + "  antId  " + antId);
+		
 
-		SqlSession session = null;
-		try {
-			session = m_sqlSessionFactory.openSession();
-			IEventQuery insertSQL = session.getMapper(IEventQuery.class);
-			Map<String, Card> cardMap = m_cards.getGroup();
-			Iterator it = cardMap.keySet().iterator();
-			while (it.hasNext()) {
-				Card card = cardMap.get((String) (it.next()));
-				System.err.println(" now all cards go out!");
-				if (!"outside".equals(card.getLastLocate())) {
-					Event param = new Event();
-					param.setCardId(card.getId());
-					param.setMacAddress(macAddress);
-					param.setAntId(antId);
-					param.setUpDate(upDateTime[0]);
-					param.setUpTime(upDateTime[1]);
-					if ("oracle".equals(DBType)) {
-						insertSQL.insertGoOutEventsOracle(param);
-					} else if ("sqlite".equals(DBType)) {
-						insertSQL.insertGoOutEventsSqlite(param);
+		if (macAddress != null && antId != null) {
+			String[] upDateTime = DateFormat.format(new Date()).split(" ");
+			SqlSession session = null;
+			try {
+				session = m_sqlSessionFactory.openSession();
+				IEventQuery insertSQL = session.getMapper(IEventQuery.class);
+				Map<String, Card> cardMap = m_cards.getGroup();
+				Iterator it = cardMap.keySet().iterator();
+				while (it.hasNext()) {
+					Card card = cardMap.get((String) (it.next()));
+					System.err.println(" now all cards go out!");
+					if (!"outside".equals(card.getLastLocate())) {
+						Event param = new Event();
+						param.setCardId(card.getId());
+						param.setMacAddress(macAddress);
+						param.setAntId(antId);
+						param.setUpDate(upDateTime[0]);
+						param.setUpTime(upDateTime[1]);
+						if ("oracle".equals(DBType)) {
+							insertSQL.insertGoOutEventsOracle(param);
+						} else if ("sqlite".equals(DBType)) {
+							insertSQL.insertGoOutEventsSqlite(param);
+						}
 					}
 				}
+				session.commit();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (session != null) {
+					session.close();
+				}
 			}
-			session.commit();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-			
 		}
 
 	}

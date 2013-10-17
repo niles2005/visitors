@@ -10,10 +10,10 @@
         <environment id="development">
         <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
-            <property name="driver" value="org.sqlite.JDBC"/>
-            <property name="url" value="jdbc:sqlite:d:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test\\test.db" />
-            <property name="username" value=""/>
-            <property name="password" value=""/>
+            <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+            <property name="url" value="jdbc:oracle:thin:@192.168.5.203:1521:UNPAY" />
+            <property name="username" value="gis"/>
+            <property name="password" value="gis"/>
             </dataSource>
         </environment>
     </environments>

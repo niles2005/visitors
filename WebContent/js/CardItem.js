@@ -199,8 +199,10 @@
                     baseYears =  0;
                 }
                 var strDate = baseYears + date.getYear();
-                if (date.getMonth() < 10) {
+                if (date.getMonth()+1 < 10) {
                     strDate += "0";
+                }else{
+                    strDate += "";
                 }
                 strDate += (date.getMonth() + 1);
                 if (date.getDate() < 10) {
