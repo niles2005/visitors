@@ -71,7 +71,7 @@
             var consoleWrapper = document.getElementById("consoleWrapper");
             consoleWrapper.style.width = (this._cc.clientWidth + 2) + "px";
             var panelarrow2 = document.getElementById("panelarrow2");
-            panelarrow2.style.left = (this._cc.clientWidth - 80) / 2 + "px";
+            panelarrow2.style.left = (this._cc.clientWidth - 80) /4 + "px";
             
             var jViewcontainer = $(".viewcontainer");
             var fitWidth = 1000;

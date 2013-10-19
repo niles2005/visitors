@@ -28,12 +28,16 @@ public class DeviceGroup {
 		devices.put(device.getId(), device);
 		device.settheDeviceGroup(this);
 		if (device.getActived()) {
+			
 			if (device.getLocate() == null) {
+//				System.err.println("=========device.getId() Actived and locate is null"+device.getId());
 				changeRegisterInfo(0,1,0);
 			} else {
+//				System.err.println("==========device.getId() Actived and locate not null"+device.getId());
 				changeRegisterInfo(1,0,0);
 			}
 		} else {
+//			System.out.println("============device.getId() not Actived"+device.getId());
 			changeRegisterInfo(0,0,1);
 		}
 	}
@@ -114,8 +118,11 @@ public class DeviceGroup {
 		m_regCount += regNum;
 		m_unregCount += unregNum;
 		m_deactiveCount += deactiveNum;
+//		System.err.println("-----------------------remove changeRegister--------------");
+		if (Global.getInstance() != null) {
+			Global.getInstance().changeRegister(); //modify 1018
+		}
 		
-		Global.getInstance().changeRegister();
 //		this.boardCastRegisterInfo();
 //		System.err.println("changed device:" + m_regCount + "   " + m_unregCount +  "   " + m_deactiveCount);
 	}

@@ -40,6 +40,7 @@ public class Devices {
     	Device device = m_deviceGroup.getDevice(deviceId);
     	if(device == null) {
     		device = new Device();
+//    		System.out.println("=========new Device() "+deviceId);
     		device.setId(deviceId);
     		addDevice(device);
     	}

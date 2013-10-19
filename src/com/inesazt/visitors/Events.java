@@ -87,6 +87,7 @@ public class Events {
 	
 	// return boolean doBoardcast
 	private void reloadEvents() {
+		
 		SqlSession session = null;
 		try {
 			session = m_sqlSessionFactory.openSession();
@@ -96,7 +97,6 @@ public class Events {
 			param.setUpDate(m_dbToday);
 			param.setSeqId(m_lastSeqId);
 			List<Event> eventList = eventQuery.selectEvents(param);
-
 			if (eventList.size() == 0) {
 				return;
 			}else{
@@ -127,7 +127,7 @@ public class Events {
 									// create time
 					card = m_cards.buildCard(cardId, theTime);
 				}
-				if (card != null) {
+				if (card != null && device.getActived()) {
 					card.appendEvent(event);
 				}
 			}
@@ -207,10 +207,10 @@ public class Events {
 				session = m_sqlSessionFactory.openSession();
 				IEventQuery insertSQL = session.getMapper(IEventQuery.class);
 				Map<String, Card> cardMap = m_cards.getGroup();
+				System.err.println(" now all cards go out!");
 				Iterator it = cardMap.keySet().iterator();
 				while (it.hasNext()) {
 					Card card = cardMap.get((String) (it.next()));
-					System.err.println(" now all cards go out!");
 					if (!"outside".equals(card.getLastLocate())) {
 						Event param = new Event();
 						param.setCardId(card.getId());

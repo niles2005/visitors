@@ -115,9 +115,11 @@ public class CardGroup {
 		m_unregCount += unregNum;
 		m_deactiveCount += deactiveNum;
 		
-		Global.getInstance().changeRegister();
-//		this.boardCastRegisterInfo();
-//		System.err.println("changed card:" + m_regCount + "   " + m_unregCount +  "   " + m_deactiveCount);
+		if (Global.getInstance() != null) {
+			Global.getInstance().changeRegister();
+			//		this.boardCastRegisterInfo();
+			//		System.err.println("changed card:" + m_regCount + "   " + m_unregCount +  "   " + m_deactiveCount);
+		}
 	}
 	
 //	private void boardCastRegisterInfo() {
