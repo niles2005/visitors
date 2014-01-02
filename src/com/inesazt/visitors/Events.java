@@ -52,6 +52,8 @@ public class Events {
 				DBType = "oracle";
 			} else if (metaDataClass.indexOf("sqlite") != -1) {
 				DBType = "sqlite";
+			} else if (metaDataClass.indexOf("sqlserver") != -1) {
+				DBType = "sqlserver";
 			} else {
 				throw new RuntimeException("DBType is not find!");
 			}
@@ -220,7 +222,7 @@ public class Events {
 						param.setUpTime(upDateTime[1]);
 						if ("oracle".equals(DBType)) {
 							insertSQL.insertGoOutEventsOracle(param);
-						} else if ("sqlite".equals(DBType)) {
+						} else if ("sqlite".equals(DBType) || "sqlserver".equals(DBType)) {
 							insertSQL.insertGoOutEventsSqlite(param);
 						}
 					}

@@ -10,8 +10,8 @@
         <environment id="development">
         <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
-            <property name="driver" value="org.sqlite.JDBC"/>
-            <property name="url" value="jdbc:sqlite:d:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test\\test.db" />
+            <property name="driver" value="org.sqlite.JDBC"/> 
+            <property name="url" value="jdbc:sqlite:d:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test\\test.db" /> 
             <property name="username" value=""/>
             <property name="password" value=""/>
             </dataSource>

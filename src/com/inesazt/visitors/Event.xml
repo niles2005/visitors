@@ -27,5 +27,5 @@
     
     <insert id="insertGoOutEventsSqlite" parameterType="com.inesazt.visitors.Event">
     	insert into CARDPOSITIONTRANS(card_id,reader_name,ant_id,up_date,up_time,mac_address) values(#{cardId},'RFID Reader',#{antId},#{upDate},#{upTime},#{macAddress})
-    </insert>  
+    </insert>
 </mapper>
