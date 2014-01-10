@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.inesazt.visitors.manager.dao.IManagerSql">
+    <resultMap type="com.inesazt.visitors.manager.pojo.TblGuestInfo" id="tblGuestInfo">
+        <id column="id" property="id" />
+        <result column="card_id" property="cardId" />
+        <result column="attendant" property="attendant" />
+        <result column="card_no" property="cardNo" />
+        <result column="card_status" property="cardStatus" />
+        <result column="sq_num" property="sqNum" />
+        <result column="time_in" property="timeIn" />
+        <result column="time_out" property="timeOut" />
+        <result column="agent_name" property="agentName" />
+        <result column="visitor_name" property="visitorName" />
+        <result column="visitor_title" property="visitorTitle" />
+        <result column="pass_id" property="passId" />
+        <result column="purpose" property="purpose" />
+        <result column="carried_staff" property="carriedStaff" />
+        <result column="visit_area" property="visitArea" />
+        <result column="same_business" property="sameBusiness" />
+        <result column="country" property="country" />
+        <result column="eng_name" property="engName" />
+        <result column="address" property="address" />
+    </resultMap>
+    
+    <resultMap type="com.inesazt.visitors.manager.pojo.TblCard" id="tblCard">
+        <id column="id" property="id" />
+        <result column="card_no" property="cardNo" />
+        <result column="rfid_no" property="rfidNo" />
+        <result column="card_status" property="cardStatus" />
+    </resultMap>
+
+    <insert id="insertTblGuestInfoOracle" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo">
+    	insert into t_guest_info(attendant,sq_num,time_in,time_out,agent_name,visitor_name,visitor_title,pass_id,purpose,carried_staff,
+    							 visit_area,same_business,country,eng_name,address )
+    	 values(#{attendant},#{sqNum},#{timeIn},#{timeOut},#{agentName},#{visitorName},#{visitorTitle},#{passId},#{purpose},#{carriedStaff},
+    	 #{visitArea},#{sameBusiness},#{country},#{engName},#{address})
+    </insert>  
+    
+    <insert id="insertTblGuestInfoSqlite" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo">
+    	insert into t_guest_info(attendant,sq_num,time_in,time_out,agent_name,visitor_name,visitor_title,pass_id,purpose,carried_staff,
+    							 visit_area,same_business,country,eng_name,address )
+    	 values(#{attendant},#{sqNum},#{timeIn},#{timeOut},#{agentName},#{visitorName},#{visitorTitle},#{passId},#{purpose},#{carriedStaff},
+    	 #{visitArea},#{sameBusiness},#{country},#{engName},#{address})
+    </insert>  
+    
+    <select id="getGuestInfoBySqNumAndPassId" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo" resultMap="tblGuestInfo">
+		select t.id,t.attendant,t.card_no,t.card_status,t.sq_num,t.time_in,t.time_out,t.agent_name,t.visitor_name,t.visitor_title,
+		t.pass_id,purpose,carried_staff,visit_area,same_business,country,eng_name,address
+		 from t_guest_info t where t.sq_num = #{sqNum} and t.pass_id=#{passId}
+    </select>
+
+    <select id="getCardList" parameterType="com.inesazt.visitors.manager.pojo.TblCard" resultMap="tblCard">
+		select t.id,t.card_no,t.rfid_no,t.card_status from t_card t order by t.id
+    </select>
+    
+    <update id="updateTblGuestInfoOracle">
+		update t_guest_info 
+		<set> 
+		<if test="cardNo != null"> 
+		card_no = #{cardNo}, 
+		card_status = #{status}
+		</if> 
+		</set> 
+		where id = #{guestId} 
+    </update> 
+    
+    
+    <update id="updateTblGuestInfoSqlite">
+		update t_guest_info 
+		<set> 
+		<if test="cardNo != null"> 
+		card_no = #{cardNo}, 
+		card_status = #{status}
+		</if> 
+		</set> 
+		where id = #{guestId} 
+    </update> 
+    
+    <update id="updateTblCardOracle">
+		update t_card 
+		<set> 
+		card_status = #{status}
+		</set> 
+		where card_no = #{cardNo} 
+    </update>
+    
+    <update id="updateTblCardSqlite">
+		update t_card 
+		<set> 
+		card_status = #{status}
+		</set> 
+		where card_no = #{cardNo} 
+    </update>
+        
+</mapper>

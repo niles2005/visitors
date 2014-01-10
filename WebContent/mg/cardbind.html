@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="/css/bootstrap-3.03.css"/>
+        <link rel="stylesheet" href="/css/manager.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/alert.css" />
+        <script src="/scripts/jquery-1.7.js"></script>
+        <script src="/scripts/jquery.alert.js"></script>
+        <script src="/scripts/bootstrap.min.js"></script>
+        <script>
+			$(document).ready(function(){
+			
+				//陪同工号查询
+				$(".queryBtn").click(function(){
+					var attendantCode = $("input[name='attendantCode']").val();
+					if(!attendantCode){
+						hiAlert("请输入陪同人工号", "提示");
+						return;
+					}
+					$("table tbody").html("<tr><td colspan='7' class='text-center'>" + "正在查询..." + "</td></tr>");
+					$.post("/mg?action=getGuestList&attendantCode=" + attendantCode, function(jsonData){
+						if(jsonData){
+							$("table tbody").html("");
+							$("table .th_text").hide();
+							$("table .btn-group").show();
+							var cardNoHtmlTemp = 
+								'<div class="input-group">' +
+									'<label class="form-control cardNo" ></label>' +
+									'<span class="input-group-btn">' +  
+										'<button class="btn btn-default deleteBindBtn" type="button">' +
+										 	'<span class="glyphicon glyphicon-remove"></span>' + 
+										'</button>' + 
+									'</span>' + 
+								'</div>';
+							for(var i = 0; i < jsonData.length; i ++){
+								if(jsonData[i]){
+									var cardNoHtml = jsonData[i].cardNo;
+									if(cardNoHtml){
+										var jTmep = $(cardNoHtmlTemp);
+										jTmep.find(".cardNo").html(jsonData[i].cardNo);
+										cardNoHtml = jTmep.get(0).outerHTML;
+									}else{
+										cardNoHtml = "";
+									}
+									$("table tbody").append(
+										"<tr>" + 
+											"<td><input type='hidden' name='guestId' value='" + jsonData[i].id + "'/>" + jsonData[i].sqNum + "</td>" + 
+											"<td>" + jsonData[i].agentName + "</td>" + 
+											"<td>" + jsonData[i].visitorName + "</td>" + 
+											"<td>" + jsonData[i].passId + "</td>" + 
+											"<td>" + jsonData[i].timeIn + "</td>" + 
+											"<td>" + jsonData[i].timeOut + "</td>" +
+											"<td class='td_cardNo text-center'>" + cardNoHtml + "</td>" +
+										"</tr>"
+									);
+								}
+							}
+						}else{
+							$("table tbody").html("");
+							$("table .th_text").show();
+							$("table .btn-group").hide();
+						}
+					}, "json");
+				});
+				
+				//自动分配卡号
+				$(".dropdown-menu .autoAssign").click(function(){
+					$.post("/mg?action=getUnBindCardList", function(jsonData){
+						if(jsonData && jsonData.length > 0){
+							var i = 0;
+							$("table td.td_cardNo:empty").each(function(){
+								if(jsonData[i]){
+									var cardNo = jsonData[i].cardNo;
+									$(this).addClass("warning");
+									$(this).html("<span class='text-primary cardNo'>" + cardNo + "</span>");
+									i++;
+								}
+							});
+							$(".dropdown-toggle").attr("disabled", "disabled");//分配按钮不可再用
+							$(".saveBindBtn").fadeIn();
+						}else{
+							hiAlert("没有可分配的卡", "提示");
+						}
+					}, "json");
+				});
+
+				//手动分配卡号
+				$(".dropdown-menu .manualAssign").click(function(){
+					$.post("/mg?action=getUnBindCardList", function(jsonData){
+						if(jsonData && jsonData.length > 0){
+							var options = "<option value=''>请选择</option>";
+							for(var i = 0; i < jsonData.length; i ++){
+								options += "<option value='" + jsonData[i].cardNo + "'>" + jsonData[i].cardNo + "</option>";
+							}
+							$("table td.td_cardNo:empty").each(function(i){
+								if(i < jsonData.length){
+									$(this).addClass("warning");
+									$(this).html(
+										"<select class='form-control cardNo'>" + 
+											options + 
+										"</select>"
+									);
+								}
+							});
+							$(".dropdown-toggle").attr("disabled", "disabled");//分配按钮不可再用
+							$(".saveBindBtn").fadeIn();
+						}else{
+							hiAlert("没有可分配的卡", "提示");
+						}
+					}, "json");
+				});
+				
+				//保存绑定关系
+				$(".saveBindBtn").click(function(){
+					var binds = "";
+					var cardNoArray = new Array();
+					$("tbody tr").each(function(){
+						var jInput = $(this).find("input[name='guestId']");
+						if(jInput.get(0)){
+							var guestId = jInput.val();
+							var JcardNo = $(this).find(".cardNo");
+							var cardNo = JcardNo.text();
+							if(JcardNo.is("select")){
+								cardNo = JcardNo.val();
+							}
+							binds += guestId + ":" + cardNo + ",";
+							if(cardNo){
+								cardNoArray.push(cardNo);
+							}
+						}
+					});
+					
+					if(cardNoArray.length == 0){//没有要绑定的卡
+						hiAlert("没有要绑定的卡,无法保存", "错误");
+						return;
+					}
+					
+					var isDuplicate = false;
+					if(cardNoArray.length > 1){
+						for(var i = 0; i < cardNoArray.length; i ++){
+							if(isDuplicate){
+								break;
+							}
+							var no = cardNoArray[i];
+							if(no){
+								var j = i + 1;
+								while(j < cardNoArray.length){
+									if(no == cardNoArray[j]){
+										isDuplicate = true;
+										break;
+									}
+									j ++;
+								}
+							}
+						}
+					}
+					
+					if(isDuplicate){
+						hiAlert("数据中存在重复被绑定的卡号,无法提交");
+						return;
+					}					
+					
+					$.post("/mg?action=saveBind", {"binds": binds}, function(msg){
+						if(msg){
+							hiAlert(msg, "提示");
+						}else{
+							hiAlert("保存绑定关系失败", "错误");
+						}
+						$(".queryBtn").trigger("click");//刷新页面
+					});
+				});
+				
+				//删除绑定关系
+				$(".deleteBindBtn").live("click", function(){
+					var self = this;
+					hiConfirm("确定删除绑定关系?", "提示", function(f){
+						if(f){
+							var jTr = $(self).parents("tr");
+							var guestId = jTr.find("input[name='guestId']").val();
+							var cardNo = jTr.find(".cardNo").html();
+							if(guestId && cardNo){
+								var binds = guestId + ":" + cardNo;
+								$.post("/mg?action=deleteBind", {"binds": binds}, function(msg){
+									if(msg){
+										hiAlert(msg, "提示");
+										$(".dropdown-toggle").removeAttr("disabled");//重新激活分配按钮
+									}else{
+										hiAlert("删除绑定关系失败", "错误");
+									}
+									$(".queryBtn").trigger("click");//刷新页面
+								});
+							}
+						}
+					});
+				});
+
+				//全部解绑
+				$(".dropdown-menu .allDeleteBind").click(function(){
+					hiConfirm("确定删除绑定关系?", "提示", function(f){
+						if(f){
+							var binds = "";
+							$("tbody tr").each(function(){
+								var jInput = $(this).find("input[name='guestId']");
+								if(jInput.get(0)){
+									var guestId = jInput.val();
+									var cardNo = $(this).find(".cardNo").text();
+									binds += guestId + ":" + cardNo + ",";
+								}
+							});
+							$.post("/mg?action=deleteBind", {"binds": binds}, function(msg){
+								if(msg){
+									hiAlert(msg, "提示");
+								}else{
+									hiAlert("删除绑定关系失败", "错误");
+								}
+								$(".queryBtn").trigger("click");//刷新页面
+							});							
+						}
+					});
+				});
+			});
+        </script>
+    </head>
+	<body>
+
+		<div class="container">
+			
+			<div class="row show-grid">
+				<div class="col-md-6">
+					<form class="form-inline" role="form" onsubmit="return false;">
+						<div class="form-group">
+							<label class="sr-only" for="attendantCode">请输入陪同人工号：</label>
+							<input type="text" class="form-control" name="attendantCode" id="attendantCode" placeholder="请输入陪同人工号"/>
+						</div>
+						<button type="button" class="queryBtn btn btn-primary">查询</button>
+					</form>
+				</div>
+			</div>
+		
+			<div class="row show-grid">
+				<div class="col-md-12">
+					<form id="cardBindForm" role="form" onsubmit="return false;">
+						<table class="table table-bordered table-hover" >
+							<thead>
+								<tr>
+									<th class="text-center">流水号</th>
+									<th class="text-center">单位</th>
+									<th class="text-center">姓名</th>
+									<th class="text-center">身份证</th>
+									<th class="text-center">访问时间</th>
+									<th class="text-center">离开时间</th>
+									<th class="text-center" width="220px">
+										<div class="th_text">
+											卡号
+										</div>
+										<div class="btn-group" style="display: none;">
+											<button type="button" class="btn btn-info  dropdown-toggle" data-toggle="dropdown">
+												卡号<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" role="menu">
+												<li><a href="javascript:void(0);" class="autoAssign">自动分配卡号</a></li>
+												<li><a href="javascript:void(0);" class="allDeleteBind">全部解绑</a></li>
+												<li class="divider"></li>
+												<li><a href="javascript:void(0);" class="manualAssign">手动分配卡号</a></li>
+											</ul>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+			
+			<div class="row show-grid">
+				<div class="col-md-2 col-md-offset-10">
+					<button type="button" class="btn btn-primary btn-lg saveBindBtn" style="display: none;">保存绑定关系</button>
+				</div>
+			</div>
+			
+		</div>
+
+
+
+		
+
+	     
+	</body>
+</html>

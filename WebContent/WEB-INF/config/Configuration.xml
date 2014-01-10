@@ -10,15 +10,16 @@
         <environment id="development">
         <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
-            <property name="driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-            <property name="url" value="jdbc:sqlserver://192.168.3.214:1433;databaseName=SanDiskTEST;" />
-            <property name="username" value="sa"/>
-            <property name="password" value="inesazt2013"/>
+            <property name="driver" value="org.sqlite.JDBC"/>
+            <property name="url" value="jdbc:sqlite:d:\\mywork\\inesazt\\workspace\\visitors\\tomcat\\test\\test.db" />
+            <property name="username" value=""/>
+            <property name="password" value=""/>
             </dataSource>
         </environment>
     </environments>
     
     <mappers>
         <mapper resource="com/inesazt/visitors/Event.xml"/>
+        <mapper resource="com/inesazt/visitors/manager/pojo/Manager.xml"/>
     </mappers>
 </configuration>
