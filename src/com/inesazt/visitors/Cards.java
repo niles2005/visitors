@@ -1,6 +1,5 @@
 package com.inesazt.visitors;
 
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -11,14 +10,16 @@ public class Cards {
 	private CardGroup m_cardGroup = null;
 	
 	public Cards() {
-		m_cardGroup = CardGroup.doLoad();
+		m_cardGroup = CardGroup.doLoadFromDB();
+//		m_cardGroup = CardGroup.doLoad();
 		if(m_cardGroup == null) {
 			m_cardGroup = new CardGroup();
 		}
 	}
 	
-	public boolean saveCards() {
-		return this.m_cardGroup.doSave();
+	public boolean saveCards( Card card) {
+		return this.m_cardGroup.doSaveToDB(card);
+//		return this.m_cardGroup.doSave();
 	}
 
 	
@@ -44,7 +45,7 @@ public class Cards {
 			card = new Card();
 			card.setId(cardId);
 			card.setName(cardId);
-			card.setCreateTime(time);
+//			card.setCreateTime(time);
 			card.setActived(true);// default true
 			addCard(card);
 		}
@@ -80,7 +81,7 @@ public class Cards {
 				card.setInfo(info);
 			}
 			card.setActived(actived);
-			card.setCreateTime(new Date().getTime());
+//			card.setCreateTime(new Date().getTime());
 			this.addCard(card);
 		} else {
 			if (name != null) {
@@ -94,7 +95,7 @@ public class Cards {
 			}
 			card.setActived(actived);
 		}
-		boolean success = saveCards();
+		boolean success = saveCards(card);
 		if (success) {
 			return JSON.toJSONString(card);
 		} else {

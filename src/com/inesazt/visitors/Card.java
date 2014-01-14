@@ -4,24 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
+import com.inesazt.visitors.manager.pojo.TblCard;
+import com.inesazt.visitors.manager.pojo.TblGuestInfo;
 
 public class Card {
-	private String id;
-	private String name;
-	private String role;
-
-	private long createTime;
-	private String info;
-	
-	private long lastTime = 0;
+	private TblCard m_tblCard;
 	private boolean isActived = true;
 	
 	private CardGroup m_cardGroup = null;
+	
+	public Card(){
+		m_tblCard = new TblCard();
+	}
+	
+	public Card(TblCard tblCard){
+		m_tblCard = tblCard;
+	}
+	
+	public TblCard fetchTblCard(){
+		return m_tblCard;
+	}
+	
 	public void settheCardGroup(CardGroup cardGroup) {
 		m_cardGroup = cardGroup;
 	}
 	
 	public boolean getActived() {
+		if(m_tblCard.getCardStatus()!= null && m_tblCard.getCardStatus() > 0){
+			isActived = true;
+		}else{
+			isActived = false;
+		}
 		return isActived;
 	}
 	
@@ -43,15 +56,19 @@ public class Card {
 	public void setActived(boolean isActived) {
 		if(m_cardGroup != null) {
 //			System.err.println("set active:" + isActived);
-			if(this.isActived != isActived) {//int regNum,int unregNum,int deactiveNum
+			if(this.getActived() != isActived) {//int regNum,int unregNum,int deactiveNum
 				if(isActived) {
-					if(role != null) {
+					if( m_tblCard.getCardStatus() == null || m_tblCard.getCardStatus() <= 0){
+						m_tblCard.setCardStatus(1);
+					}
+					if(m_tblCard.getRole() != null) {
 						this.m_cardGroup.changeRegisterInfo(1, 0, -1);
 					} else {
 						this.m_cardGroup.changeRegisterInfo(0, 1, -1);
 					}
 				} else {
-					if(role != null) {
+					m_tblCard.setCardStatus(0);
+					if(m_tblCard.getRole() != null) {
 						this.m_cardGroup.changeRegisterInfo(-1, 0, 1);
 					} else {
 						this.m_cardGroup.changeRegisterInfo(0, -1, 1);
@@ -62,50 +79,42 @@ public class Card {
 		this.isActived = isActived;
 	}
 
-	public long getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(long createTime) {
-		this.createTime = createTime;
-	}
-
 	public String getInfo() {
-		return info;
+		return m_tblCard.getInfo();
 	}
 
 	public void setInfo(String info) {
-		this.info = info;
+		m_tblCard.setInfo(info);
 	}
 
 	public String getName() {
-		return name;
+		return m_tblCard.getCardNo();
 	}
 
 	public void setName(String name) {
 		if (name != null) {
-			this.name = name.trim();
+			m_tblCard.setCardNo(name.trim()) ;
 		}
 	}
 
 	public String getId() {
-		return id;
+		return m_tblCard.getRfidNo();
 	}
 
 	public void setId(String id) {
 		if (id != null) {
-			this.id = id.trim();
+			m_tblCard.setRfidNo(id.trim());
 		}
 	}
 
 	public String getRole() {
-		return role;
+		return m_tblCard.getRole();
 	}
 
 	public void setRole(String role) {
 		if(m_cardGroup != null) {
-			if(this.isActived) {
-				boolean hasOldRole = this.role != null;
+			if(this.getActived()) {
+				boolean hasOldRole = m_tblCard.getRole() != null;
 				boolean hasNewRole = role != null;
 				if(hasOldRole != hasNewRole) {//int regNum,int unregNum,int deactiveNum
 					if(role != null) {
@@ -118,9 +127,9 @@ public class Card {
 				}
 			}
 		}
-		this.role = role;
+		m_tblCard.setRole(role);
 	}
-
+	
 	public String getLastLocate() {
 		if(m_lastEvent != null) {
 			return m_lastEvent.getDeviceLocate();
@@ -128,19 +137,11 @@ public class Card {
 		return "";
 	}
 	
-	public void setLastLocate(String lastLocate) {
-		//empty method
-	}
-
 	public String getLastDeviceId() {
 		if(m_lastEvent != null) {
 			return m_lastEvent.getDeviceId();
 		}
 		return "";
-	}
-
-	public void setLastDeviceId(String deviceId) {
-		//empty method
 	}
 	
 	public long getLastTime() {
@@ -149,9 +150,7 @@ public class Card {
 		}
 		return -1;
 	}
-
-	public void setLastTime(long lastTime) {
-	}
+	
 	
 	private Event m_lastEvent = null;
 	private ArrayList<Event> m_eventList = new ArrayList<Event>();
@@ -161,7 +160,7 @@ public class Card {
 	}
 	
 	public String loadHistoryEvents(String date) {
-		List list = Global.getInstance().getEvents().queryHistoryEvents(id, date);
+		List list = Global.getInstance().getEvents().queryHistoryEvents(m_tblCard.getRfidNo(), date);
 		return JSON.toJSONString(list);
 	}
 	
@@ -186,11 +185,20 @@ public class Card {
 			}
 			return JSON.toJSONString(m_eventList);
 		}
-		List list = Global.getInstance().getEvents().queryHistoryEvents(id, date);
+		List list = Global.getInstance().getEvents().queryHistoryEvents(m_tblCard.getRfidNo(), date);
 		return JSON.toJSONString(list);
 	}
 	
 	public String loadTodayEvents() {
 		return JSON.toJSONString(m_eventList);
+	}
+	
+	private TblGuestInfo m_guest = null;
+	public void setGuest(TblGuestInfo guest) {
+		m_guest = guest;
+	}
+	
+	public TblGuestInfo getGuest() {
+		return m_guest;
 	}
 }

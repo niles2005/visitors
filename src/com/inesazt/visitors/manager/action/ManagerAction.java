@@ -1,8 +1,6 @@
 package com.inesazt.visitors.manager.action;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -59,8 +57,9 @@ public class ManagerAction extends HttpServlet {
 		//获取访客列表
 		if(action.equals("getGuestList")) {
 			String attendantCode = request.getParameter("attendantCode");
+			String cardStatus = request.getParameter("cardStatus");
 			ManagerBoImpl managerBo = new ManagerBoImpl();
-			return managerBo.getGuestList(attendantCode);
+			return managerBo.getGuestList(attendantCode, cardStatus);
 		}
 		
 		//获取未绑定卡列表

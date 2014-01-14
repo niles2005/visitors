@@ -67,13 +67,13 @@
             if( RoleItem.selectRoleItem) {
                 RoleItem.selectRoleItem.clearFocus();
             }
-            this._$PageContent.addClass('roleselected');
+            this._$PageContent.find('div.roleBody').addClass('roleselected');
             this._sideBar.onPageQueryResult(this._cards);
             RoleItem.selectRoleItem = this;
             this._manager._selectRole = this;
         },
         clearFocus: function() {
-            this._$PageContent.removeClass('roleselected');
+            this._$PageContent.find('div.roleBody').removeClass('roleselected');
         },
         reset: function() {
             this._cards = {};

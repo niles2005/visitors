@@ -1,18 +1,25 @@
 package com.inesazt.visitors;
 
-
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
-
+import javax.sql.DataSource;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import com.alibaba.fastjson.JSON;
 
 
 
 public class Global {
 	private String m_strToday = null;
-	
 	private static Global m_instance= null;
+	private String DBType;
+	private SqlSessionFactory m_sqlSessionFactory ;
 	
 	public static Global getInstance() {
 		return m_instance;
@@ -21,11 +28,12 @@ public class Global {
 	public static void initInstance() {
 		if(m_instance == null) {
 			m_instance = new Global();
+			m_instance.initGlobal();
 		}
 	}
 	
 	private Global() {
-		initGlobal();
+		
 	}
 
 	private Devices m_devices = null;
@@ -45,12 +53,36 @@ public class Global {
 			m_init = true;
 			m_strToday = DateTimeUtil.getTodayString();
 			
-			
-			
 			m_devices = new Devices();
 			m_cards = new Cards();
 			m_feedbacks = Feedbacks.buildFeedback();
+			
+			try {
+				Reader reader = new BufferedReader(new InputStreamReader(
+						new FileInputStream(ServerConfig.getInstance()
+								.getMybatisConfigureFile()), "UTF-8"));
+				m_sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 
+				Environment environment = m_sqlSessionFactory.getConfiguration()
+						.getEnvironment();
+				DataSource dataSource = environment.getDataSource();
+				// org.sqlite.MetaData@1028607
+				// oracle.jdbc.driver.OracleDatabaseMetaData@1fb9d58
+				String metaDataClass = dataSource.getConnection().getMetaData()
+						.toString().toLowerCase();
+				if (metaDataClass.indexOf("oracle") != -1) {
+					DBType = "oracle";
+				} else if (metaDataClass.indexOf("sqlite") != -1) {
+					DBType = "sqlite";
+				} else if (metaDataClass.indexOf("sqlserver") != -1) {
+					DBType = "sqlserver";
+				} else {
+					throw new RuntimeException("DBType is not find!");
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			
 			//为了保证查询后的卡，都有具体的位置，倒数7天查询events
 			String back7Day = DateTimeUtil.getDayString(new Date().getTime(),-7);
 			m_events = new Events(m_cards,m_devices,back7Day);
@@ -89,6 +121,15 @@ public class Global {
 		return m_events;
 	}
 	
+	
+	public String getDBType() {
+		return DBType;
+	}
+
+	public SqlSessionFactory getSqlSessionFactory() {
+		return m_sqlSessionFactory;
+	}
+
 	//for client init
 	public String getInitDatas() {
 		Hashtable hash = new Hashtable();

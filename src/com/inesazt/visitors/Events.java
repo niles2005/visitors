@@ -1,9 +1,5 @@
 package com.inesazt.visitors;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,21 +8,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.alibaba.fastjson.JSON;
+import com.inesazt.visitors.manager.bo.ManagerBoImpl;
+import com.inesazt.visitors.manager.pojo.TblGuestInfo;
 
 public class Events {
 	private Cards m_cards;
 	private Devices m_devices;
 	private String m_dbToday;
-	private SqlSessionFactory m_sqlSessionFactory = null;
-	private String DBType;
 	private List<Event> todayEventList = new LinkedList<Event>();
 	private static final int MAXLISTSIZE = 1000;
 
@@ -34,32 +25,6 @@ public class Events {
 		m_cards = cards;
 		m_devices = devices;
 		m_dbToday = DateTimeUtil.date8ToDate10(today);
-
-		try {
-			Reader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(ServerConfig.getInstance()
-							.getMybatisConfigureFile()), "UTF-8"));
-			m_sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-
-			Environment environment = m_sqlSessionFactory.getConfiguration()
-					.getEnvironment();
-			DataSource dataSource = environment.getDataSource();
-			// org.sqlite.MetaData@1028607
-			// oracle.jdbc.driver.OracleDatabaseMetaData@1fb9d58
-			String metaDataClass = dataSource.getConnection().getMetaData()
-					.toString().toLowerCase();
-			if (metaDataClass.indexOf("oracle") != -1) {
-				DBType = "oracle";
-			} else if (metaDataClass.indexOf("sqlite") != -1) {
-				DBType = "sqlite";
-			} else if (metaDataClass.indexOf("sqlserver") != -1) {
-				DBType = "sqlserver";
-			} else {
-				throw new RuntimeException("DBType is not find!");
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 		reloadEvents();
 	}
 
@@ -92,7 +57,7 @@ public class Events {
 		
 		SqlSession session = null;
 		try {
-			session = m_sqlSessionFactory.openSession();
+			session = Global.getInstance().getSqlSessionFactory().openSession();
 			IEventQuery eventQuery = session.getMapper(IEventQuery.class);
 			Event param = new Event();
 
@@ -131,6 +96,12 @@ public class Events {
 				}
 				if (card != null && device.getActived()) {
 					card.appendEvent(event);
+					String cardNo = card.getName();
+					ManagerBoImpl managerBo = new ManagerBoImpl();
+					List<TblGuestInfo> guestInfoList = managerBo.getGuestInfoByCard(cardNo);
+					if (guestInfoList != null && guestInfoList.size() == 1) {
+						card.setGuest(guestInfoList.get(0));
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -154,15 +125,15 @@ public class Events {
 		try {
 
 			String dbDate = DateTimeUtil.date8ToDate10(theDate);
-			session = m_sqlSessionFactory.openSession();
+			session = Global.getInstance().getSqlSessionFactory().openSession();
 			IEventQuery eventQuery = session.getMapper(IEventQuery.class);
 			Event param = new Event();
 			param.setCardId(cardId);
 			param.setUpDate(dbDate);
 			List<Event> eventList = null;
-			if ("oracle".equals(DBType)) {
+			if ("oracle".equals(Global.getInstance().getDBType())) {
 				eventList = eventQuery.selectCardEvents(param);
-			} else if ("sqlite".equals(DBType) || "sqlserver".equals(DBType)) {
+			} else if ("sqlite".equals(Global.getInstance().getDBType()) || "sqlserver".equals(Global.getInstance().getDBType())) {
 				eventList = eventQuery.selectCardEventsSqlServer(param);
 			}
 			
@@ -212,7 +183,7 @@ public class Events {
 			String[] upDateTime = DateFormat.format(new Date()).split(" ");
 			SqlSession session = null;
 			try {
-				session = m_sqlSessionFactory.openSession();
+				session = Global.getInstance().getSqlSessionFactory().openSession();
 				IEventQuery insertSQL = session.getMapper(IEventQuery.class);
 				Map<String, Card> cardMap = m_cards.getGroup();
 				System.err.println(" now all cards go out!");
@@ -226,9 +197,9 @@ public class Events {
 						param.setAntId(antId);
 						param.setUpDate(upDateTime[0]);
 						param.setUpTime(upDateTime[1]);
-						if ("oracle".equals(DBType)) {
+						if ("oracle".equals(Global.getInstance().getDBType())) {
 							insertSQL.insertGoOutEventsOracle(param);
-						} else if ("sqlite".equals(DBType) || "sqlserver".equals(DBType)) {
+						} else if ("sqlite".equals(Global.getInstance().getDBType()) || "sqlserver".equals(Global.getInstance().getDBType())) {
 							insertSQL.insertGoOutEventsSqlite(param);
 						}
 					}

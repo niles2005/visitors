@@ -15,6 +15,10 @@ public class TblCard {
 	private String rfidNo;
 	
 	private Integer cardStatus;
+	
+	private String info;
+	
+	private String role;
 
 	public Integer getId() {
 		return id;
@@ -48,4 +52,19 @@ public class TblCard {
 		this.cardStatus = cardStatus;
 	}
 	
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 }

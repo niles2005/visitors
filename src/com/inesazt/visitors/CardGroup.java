@@ -7,11 +7,15 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.inesazt.visitors.manager.bo.ManagerBoImpl;
+import com.inesazt.visitors.manager.pojo.TblCard;
 
 
 public class CardGroup {
@@ -65,6 +69,22 @@ public class CardGroup {
 		return null;
 	}
 	
+	public static CardGroup doLoadFromDB() {
+		ManagerBoImpl managerBo = new ManagerBoImpl();
+		List<TblCard> TblCardList = managerBo.getCardList();
+		if(TblCardList.size() > 0) {
+			CardGroup cardGroup = new CardGroup();
+			cardGroup.setGroup(new HashMap<String, Card>());
+			for ( TblCard tblCard : TblCardList) {
+				Card card = new Card(tblCard);
+				cardGroup.getGroup().put(tblCard.getRfidNo() , card);
+			}
+			cardGroup.initRegInfo();
+			return cardGroup;
+		}
+		return null;
+	}
+	
 	public synchronized boolean doSave() {
 		try {
 			File cardFile = ServerConfig.getInstance().getCardFile();
@@ -79,6 +99,12 @@ public class CardGroup {
 			ex.printStackTrace();
 		}
 		return false;
+	}
+	
+	public synchronized boolean doSaveToDB( Card card ) {
+		
+		 ManagerBoImpl managerBo = new ManagerBoImpl();
+		 return managerBo.updateOrInsertTblCard(card.fetchTblCard());
 	}
 	
 	private int m_regCount = 0;

@@ -10,6 +10,7 @@
             + '<div class="first_photo_imagebox thumbnail lazy"> <img id="cardImage"></img></div>'
             + '<div id="cardName" class="title ellipsis" style="Color:blue;"></div>'
             + '<div id="cardInfo" class="title ellipsis multiline"></div>'
+            + '<div id="attendNo" class="title ellipsis multiline"></div>'
             + '</div>'
             + '<ul class="meta-three-block">'
             + '<li><span>最新位置</span>&nbsp;&nbsp;<span id="cardLocate"  class="locate"></span></li>'
@@ -137,6 +138,10 @@
             }
             return "";
         },
+        setGuestInfo: function(guestJson){
+            this._$SidebarContent.find("#cardInfo").html(guestJson.visitorName);
+            this._$SidebarContent.find("#attendNo").html("陪同人工号:"+guestJson.attendant);
+        },
         setLastEvent: function(eventJson) {
             //when change data,change background color
             if (eventJson.lastLocate !== this._json.lastLocate) {
@@ -150,6 +155,7 @@
 
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate);
             this._$SidebarContent.find("#cardTime").html(visitors.utils.formatDate(new Date(this._json.lastTime), 'time'));
+
             var self = this;
             setTimeout(function() {
                 self._$SidebarContent.find("#cardLocate").css("background", "#efefef");
@@ -159,9 +165,10 @@
         getSidebarContent: function() {
             this._$detailPage = this._$SidebarContent.find(".popuplist-main");
             this._$SidebarContent.find("#cardImage").attr("src", this.getIcon()).attr("title", "ID:" + this._json.id);
-            this._$SidebarContent.find("#cardName").html(this._json.name).attr("title", "ID:" + this._json.id);
-            if (this._json.info) {
-                this._$SidebarContent.find("#cardInfo").html(this._json.info).attr("title", this._json.info);
+            this._$SidebarContent.find("#cardName").html("卡号:"+this._json.name).attr("title", "ID:" + this._json.id);
+            if (this._json.guest) {
+                this._$SidebarContent.find("#cardInfo").html(this._json.guest.visitorName);
+                this._$SidebarContent.find("#attendNo").html("陪同人工号:"+this._json.guest.attendant);
             }
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate).attr('title', this._json.lastDeviceId);
             this._$SidebarContent.find("#cardTime").html(visitors.utils.formatDate(new Date(this._json.lastTime), 'time'))

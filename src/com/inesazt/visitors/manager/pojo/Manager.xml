@@ -31,6 +31,8 @@
         <result column="card_no" property="cardNo" />
         <result column="rfid_no" property="rfidNo" />
         <result column="card_status" property="cardStatus" />
+        <result column="info" property="info" />
+        <result column="role" property="role" />
     </resultMap>
 
     <insert id="insertTblGuestInfoOracle" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo">
@@ -52,10 +54,31 @@
 		t.pass_id,purpose,carried_staff,visit_area,same_business,country,eng_name,address
 		 from t_guest_info t where t.sq_num = #{sqNum} and t.pass_id=#{passId}
     </select>
+    
+    <select id="getGuestInfoByCard" parameterType="java.lang.String" resultMap="tblGuestInfo">
+		select t.* from t_guest_info t where t.card_no = #{cardNo} order by t.id desc limit 1
+    </select>
+    
+     <select id="getGuestInfoByCardSqlServer" parameterType="java.lang.String" resultMap="tblGuestInfo">
+		select top 1 t.* from t_guest_info t where t.card_no = #{cardNo} order by t.id desc
+    </select>
 
     <select id="getCardList" parameterType="com.inesazt.visitors.manager.pojo.TblCard" resultMap="tblCard">
-		select t.id,t.card_no,t.rfid_no,t.card_status from t_card t order by t.id
+		select t.* from t_card t order by t.id
     </select>
+    
+     <select id="getCardByRfid" parameterType="com.inesazt.visitors.manager.pojo.TblCard" resultMap="tblCard">
+		select t.* from t_card t where t.rfid_no=#{rfidNo} order by t.id
+    </select>
+    
+     <insert id="insertTblCard" parameterType="com.inesazt.visitors.manager.pojo.TblCard">
+    	insert into t_card(card_no,rfid_no,card_status,info,role) values(#{cardNo},#{rfidNo},#{cardStatus},#{info},#{role})
+    </insert> 
+    
+    <update id="updateTblCard" parameterType="com.inesazt.visitors.manager.pojo.TblCard">
+    	update t_card set card_no=#{cardNo},card_status=#{cardStatus},info=#{info},role=#{role} where rfid_no=#{rfidNo}
+    </update> 
+    
     
     <update id="updateTblGuestInfoOracle">
 		update t_guest_info 

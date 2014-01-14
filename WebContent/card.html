@@ -56,9 +56,6 @@
                         <th><a href="" ng-click="kk = 'name'; reverse=!reverse">actived</a></th>
                         <th><a href="" ng-click="kk = 'role'; reverse=!reverse">role</a></th>
                         <th><a href="" ng-click="kk = 'info'; reverse=!reverse">info</a></th>
-                        <th><a href="" ng-click="kk = 'createTime'; reverse=!reverse">createTime</a></th>
-<!--                        <th><a href="" ng-click="kk = 'lastLocate'; reverse=!reverse">lastLocate</a></th>
-                        <th><a href="" ng-click="kk = 'lastTime'; reverse=!reverse">lastTime</a></th>-->
                     </tr>
                     <tr ng-repeat="card in cards | filter:searchText | filter:displayDeactive | orderBy:kk:reverse" ng-click="setCard(card)">
                         <td>{{$index + 1}}</td>
@@ -67,9 +64,6 @@
                         <td>{{card.actived}}</td>
                         <td>{{card.role}}</td>
                         <td>{{card.info}}</td>
-                        <td>{{card.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-<!--                        <td>{{card.lastLocate}}</td>
-                        <td>{{card.lastTime | date:'yyyy-MM-dd HH:mm:ss'}}</td> -->
                     </tr>
                 </table>
                 </div>

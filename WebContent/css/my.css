@@ -2239,7 +2239,7 @@ input#searchSubmit {
 
 .public-listings .listings .listing .main .info {
 	float: left;
-	width: 180px;
+	width: 197px;
 }
 
 .public-listings .listing .mypost_tag {
@@ -3389,11 +3389,16 @@ table.roleTable td{
 
 .roleselected {
     opacity: 0.7;
-    background-color: #84c5ed;
-    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-    -webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-    -moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    background-color: #88ed92;
+    box-shadow: 0 0 5px rgb(92, 238, 171);
+    -webkit-box-shadow: 0 0 5px rgb(93, 238, 153);
+    -moz-box-shadow: 0 0 5px rgb(52, 238, 112);
     border-radius: 5px;
+}
+
+.roleFooter{
+    color:#c0c0c0;
+    font-weight: bold;
 }
 
 .roleRow{
@@ -3407,6 +3412,10 @@ table.roleTable td{
     vertical-align: middle;
     text-align: center;
 
+}
+
+.roleHead{
+    color: blue;
 }
 
 .warn{

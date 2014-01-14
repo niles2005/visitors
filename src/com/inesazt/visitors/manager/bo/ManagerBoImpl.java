@@ -33,7 +33,7 @@ public class ManagerBoImpl {
 	 * @param attendantCode
 	 * @return
 	 */
-	public String getGuestList(String attendantCode){
+	public String getGuestList(String attendantCode, String cardStatus){
 		
 		String result = "";
 		if(attendantCode != null){
@@ -67,6 +67,17 @@ public class ManagerBoImpl {
 				
 				if(guestInfoList != null){
 					managerDaoImpl.saveGuestInfoList(guestInfoList);
+					//如果cardStatus参数为1，表示只查询未绑定的访客列表，去掉已绑定过了的访客列表
+					if(cardStatus != null && cardStatus.equals("1")){
+						List<TblGuestInfo> list = new ArrayList<TblGuestInfo>();
+						for(TblGuestInfo info : guestInfoList){
+							Integer status = info.getCardStatus();
+							if(status == null || status != 2){
+								list.add(info);
+							}
+						}
+						guestInfoList = list;
+					}
 					result = JSON.toJSONString(guestInfoList);
 				}
 			}
@@ -100,11 +111,29 @@ public class ManagerBoImpl {
 		}
 		return null;
 	}
+
+	//获取卡
+	public List<TblGuestInfo> getGuestInfoByCard(String cardNo){
+		
+		return managerDaoImpl.getGuestInfoByCard(cardNo);
+	}
 	
 	//获取卡
-	private List<TblCard> getCardList(){
+	public List<TblCard> getCardList(){
 		
 		return managerDaoImpl.getCardList();
+	}
+	
+	//添加或更新卡
+	public boolean updateOrInsertTblCard(TblCard tblCard){
+		
+		List<TblCard> tblCardList = managerDaoImpl.getCardByRfid(tblCard);
+		if(tblCardList !=null && tblCardList.size() > 0){
+			return managerDaoImpl.updateTblCard(tblCard);
+		}else{
+			tblCard.setCardStatus(1); //初始状态1表示未绑定
+			return managerDaoImpl.insertTblCard(tblCard);
+		}
 	}
 	
 	//保存绑定关系

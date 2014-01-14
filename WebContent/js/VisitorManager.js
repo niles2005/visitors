@@ -27,7 +27,7 @@
                 
         doInit: function() {
             this.init();
-            var locations = [{name:"building1",top:"170px",left:"215px"},{name:"building2",top:"170px",left:"475px"},{name:"factory",top:"326px",left:"320px"},{name:"outside",top:"403px",left:"320px"}];
+            var locations = [{name:"building1",top:"40px",left:"170px"},{name:"building2",top:"140px",left:"415px"},{name:"factory",top:"380px",left:"320px"},{name:"outside",top:"430px",left:"660px"}];
             var roles = [{abb:'W',name:'Worker',css:'worker',icon:'images/Worker1.png'},{abb:'O',name:'Officer',css:'worker',icon:'images/Officer1.png'},{abb:'F',name:'Facility',css:'worker',icon:'images/Facility1.png'},{abb:'V',name:'VIP',css:'worker',icon:'images/VIP1.png'}];
             var jMainStageDiv = $(".viewcontainer");
             for(var row in locations){
@@ -143,6 +143,9 @@
                             }
                         }
                         if(cardItem) {
+                            if(card.guest){
+                                cardItem.setGuestInfo(card.guest);
+                            }
                             var strRole = cardItem._json.role;
                             if(strRole) {
                                 cardItem.setLastEvent(card);
@@ -253,6 +256,8 @@
                     if(card.getId().toLowerCase().indexOf(name) !== -1) {
                         arr.push(card);
                     } else if(card.getName().toLowerCase().indexOf(name) !== -1) {
+                        arr.push(card);
+                    } else if(card._json.guest && card._json.guest.visitorName.toLowerCase().indexOf(name) !== -1) {
                         arr.push(card);
                     }
                 }

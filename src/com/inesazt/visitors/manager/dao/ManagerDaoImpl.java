@@ -136,6 +136,88 @@ public class ManagerDaoImpl {
 		return null;
 	}
 	
+	//根据卡号获取访客信息
+	public List<TblGuestInfo> getGuestInfoByCard(String cardNo){
+		
+		SqlSession session = null;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			List<TblGuestInfo> guestList = null;
+			if ("oracle".equals(DBType) || "sqlite".equals(DBType)) {
+				return managerSql.getGuestInfoByCard(cardNo);
+			} else if ("sqlserver".equals(DBType)) {
+				return managerSql.getGuestInfoByCardSqlServer(cardNo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return null;
+	}
+	
+	//根据rfid获取卡
+	public List<TblCard> getCardByRfid(TblCard tblCard){
+		
+		SqlSession session = null;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			return managerSql.getCardByRfid(tblCard);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return null;
+	}
+	
+	//更新卡
+	public boolean updateTblCard(TblCard tblCard){
+		
+		SqlSession session = null;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			managerSql.updateTblCard(tblCard);
+			session.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return false;
+	}
+	
+	//插入新卡
+	public boolean insertTblCard(TblCard tblCard){
+			
+		SqlSession session = null;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			managerSql.insertTblCard(tblCard);
+			session.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return false;
+	}
+	
 	//更新绑定关系
 	public void updateBind(String binds, Integer status){
 		
@@ -201,5 +283,6 @@ public class ManagerDaoImpl {
 			}
 		}		
 	}
+	
 	
 }
