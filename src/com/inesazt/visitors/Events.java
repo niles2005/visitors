@@ -159,21 +159,27 @@ public class Events {
 			Event param = new Event();
 			param.setCardId(cardId);
 			param.setUpDate(dbDate);
-			List<Event> eventList = eventQuery.selectCardEvents(param);
-			for (int i = 0; i < eventList.size(); i++) {
-				Event event = (Event) eventList.get(i);
-
-				String deviceId = event.getMacAddress() + "_" + event.getAntId();
-				event.setDeviceId(deviceId);
-				Date dateTime = DateFormat.parse(event.getUpDate() + " " + event.getUpTime());
-				long theTime = dateTime.getTime();
-				event.setTime(theTime);
-
-				Device device = m_devices.getDevice(deviceId);
-				if (device == null) {
-					device = m_devices.buildDevice(deviceId);
+			List<Event> eventList = null;
+			if ("oracle".equals(DBType)) {
+				eventList = eventQuery.selectCardEvents(param);
+			} else if ("sqlite".equals(DBType) || "sqlserver".equals(DBType)) {
+				eventList = eventQuery.selectCardEventsSqlServer(param);
+			}
+			
+			if ( eventList != null ) {
+				for (int i = 0; i < eventList.size(); i++) {
+					Event event = (Event) eventList.get(i);
+					String deviceId = event.getMacAddress() + "_"+ event.getAntId();
+					event.setDeviceId(deviceId);
+					Date dateTime = DateFormat.parse(event.getUpDate() + " "+ event.getUpTime());
+					long theTime = dateTime.getTime();
+					event.setTime(theTime);
+					Device device = m_devices.getDevice(deviceId);
+					if (device == null) {
+						device = m_devices.buildDevice(deviceId);
+					}
+					event.setDevice(device);
 				}
-				event.setDevice(device);
 			}
 			return eventList;
 		} catch (Exception ex) {
