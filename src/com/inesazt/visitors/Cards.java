@@ -1,6 +1,7 @@
 package com.inesazt.visitors;
 
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
@@ -22,7 +23,13 @@ public class Cards {
 //		return this.m_cardGroup.doSave();
 	}
 
+	public boolean isGuestUpdated(){
+		return this.m_cardGroup.isGuestUpdated();
+	}
 	
+	public void setGuestUpdated(boolean isGuestUpdated){
+		this.m_cardGroup.setGuestUpdated(isGuestUpdated);
+	}
 
 	public Map<String, Card> getGroup() {
 		return this.m_cardGroup.getGroup();
@@ -53,6 +60,17 @@ public class Cards {
 	}
 
 	public String doList() {
+//		m_cardGroup.getGroup().putAll( CardGroup.doLoadFromDB().getGroup() ) ;
+		Map<String,Card> updatedCardMap = CardGroup.doLoadFromDB().getGroup();
+		Iterator<String> it = updatedCardMap.keySet().iterator();
+		while (it.hasNext()) {
+			String rfid = it.next();
+			Card card = m_cardGroup.getGroup().get(rfid);
+			if (card != null) {
+				Card updatedCard = updatedCardMap.get(rfid);
+				card.setStatus(updatedCard.fetchStatus());
+			}
+		}
 		String str = JSON.toJSONString(m_cardGroup);
 		// System.err.println(str);
 		return str;

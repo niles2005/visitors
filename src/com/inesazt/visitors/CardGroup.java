@@ -19,7 +19,17 @@ import com.inesazt.visitors.manager.pojo.TblCard;
 
 
 public class CardGroup {
-	private Map<String, Card> cards = null;
+	private Map<String, Card> cards = new HashMap<String, Card>();
+	private boolean isGuestUpdated = false;
+	
+
+	public boolean isGuestUpdated() {
+		return isGuestUpdated;
+	}
+
+	public void setGuestUpdated(boolean isGuestUpdated) {
+		this.isGuestUpdated = isGuestUpdated;
+	}
 
 	public Map<String, Card> getGroup() {
 		return cards;
@@ -70,19 +80,18 @@ public class CardGroup {
 	}
 	
 	public static CardGroup doLoadFromDB() {
+		CardGroup cardGroup = new CardGroup();
 		ManagerBoImpl managerBo = new ManagerBoImpl();
 		List<TblCard> TblCardList = managerBo.getCardList();
 		if(TblCardList.size() > 0) {
-			CardGroup cardGroup = new CardGroup();
 			cardGroup.setGroup(new HashMap<String, Card>());
 			for ( TblCard tblCard : TblCardList) {
 				Card card = new Card(tblCard);
 				cardGroup.getGroup().put(tblCard.getRfidNo() , card);
 			}
 			cardGroup.initRegInfo();
-			return cardGroup;
 		}
-		return null;
+		return cardGroup;
 	}
 	
 	public synchronized boolean doSave() {

@@ -41,6 +41,10 @@ public class Events {
 		return m_lastSeqId;
 	}
 	
+	public void setLastSeqId( int lastSeqId ) {
+		m_lastSeqId = lastSeqId;
+	}
+	
 	public List<Event> getTodayEventList() {
 		return todayEventList;
 	}

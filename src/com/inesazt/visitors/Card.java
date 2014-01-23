@@ -21,6 +21,10 @@ public class Card {
 		m_tblCard = tblCard;
 	}
 	
+	public void setTblCard(TblCard tblCard){
+		m_tblCard = tblCard;
+	}
+	
 	public TblCard fetchTblCard(){
 		return m_tblCard;
 	}
@@ -52,7 +56,7 @@ public class Card {
 			}
 		}
 	}
-
+	
 	public void setActived(boolean isActived) {
 		if(m_cardGroup != null) {
 //			System.err.println("set active:" + isActived);
@@ -105,6 +109,14 @@ public class Card {
 		if (id != null) {
 			m_tblCard.setRfidNo(id.trim());
 		}
+	}
+	
+	public int fetchStatus(){
+		return m_tblCard.getCardStatus();
+	}
+	
+	public void setStatus(int cardStatus){
+		m_tblCard.setCardStatus(cardStatus);
 	}
 
 	public String getRole() {
@@ -196,9 +208,11 @@ public class Card {
 	private TblGuestInfo m_guest = null;
 	public void setGuest(TblGuestInfo guest) {
 		m_guest = guest;
+		m_cardGroup.setGuestUpdated(true);
 	}
 	
 	public TblGuestInfo getGuest() {
 		return m_guest;
 	}
+	
 }

@@ -211,6 +211,10 @@ public class Global {
 					}
 				}
 			}
+			if(m_cards.isGuestUpdated()){
+				dataHash.put("cards", m_cards.getGroup());
+				m_cards.setGuestUpdated(false);
+			}
 		}
 		dataHash.put("fromIndex", lastSeqId);
 		
