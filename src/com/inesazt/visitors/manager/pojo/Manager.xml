@@ -26,6 +26,15 @@
         <result column="address" property="address" />
     </resultMap>
     
+    <resultMap type="com.inesazt.visitors.manager.pojo.TblFacilityInfo" id="tblFacilityInfo">
+    	<id column="id" property="id" />
+    	<result column="name" property="name" />
+    	<result column="number" property="number" />
+    	<result column="depname" property="depName" />
+    	<result column="card_no" property="cardNo" />
+    	<result column="card_status" property="cardStatus" />
+    </resultMap>
+    
     <resultMap type="com.inesazt.visitors.manager.pojo.TblCard" id="tblCard">
         <id column="id" property="id" />
         <result column="card_no" property="cardNo" />
@@ -33,16 +42,10 @@
         <result column="card_status" property="cardStatus" />
         <result column="info" property="info" />
         <result column="role" property="role" />
+        <result column="owner_type" property="ownerType" />
     </resultMap>
 
-    <insert id="insertTblGuestInfoOracle" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo">
-    	insert into t_guest_info(attendant,sq_num,time_in,time_out,agent_name,visitor_name,visitor_title,pass_id,purpose,carried_staff,
-    							 visit_area,same_business,country,eng_name,address )
-    	 values(#{attendant},#{sqNum},#{timeIn},#{timeOut},#{agentName},#{visitorName},#{visitorTitle},#{passId},#{purpose},#{carriedStaff},
-    	 #{visitArea},#{sameBusiness},#{country},#{engName},#{address})
-    </insert>  
-    
-    <insert id="insertTblGuestInfoSqlite" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo">
+    <insert id="insertTblGuestInfo" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo">
     	insert into t_guest_info(attendant,sq_num,time_in,time_out,agent_name,visitor_name,visitor_title,pass_id,purpose,carried_staff,
     							 visit_area,same_business,country,eng_name,address )
     	 values(#{attendant},#{sqNum},#{timeIn},#{timeOut},#{agentName},#{visitorName},#{visitorTitle},#{passId},#{purpose},#{carriedStaff},
@@ -56,15 +59,21 @@
     </select>
     
     <select id="getGuestInfoByCard" parameterType="java.lang.String" resultMap="tblGuestInfo">
-		select t.* from t_guest_info t where t.card_no = #{cardNo} order by t.id desc limit 1
+		select t.* from t_guest_info t where t.card_no = #{cardNo} 
     </select>
     
-     <select id="getGuestInfoByCardSqlServer" parameterType="java.lang.String" resultMap="tblGuestInfo">
-		select top 1 t.* from t_guest_info t where t.card_no = #{cardNo} order by t.id desc
-    </select>
-
     <select id="getCardList" parameterType="com.inesazt.visitors.manager.pojo.TblCard" resultMap="tblCard">
-		select t.* from t_card t order by t.id
+		select t.* from t_card t where 1=1 
+		<if test="cardNo != null">
+			and t.card_no like '%${cardNo}%' 
+		</if>
+		<if test="rfidNo != null">
+			and t.rfid_no like '%${rfidNo}%' 
+		</if>
+		<if test="cardStatus != null">
+			and t.card_status = #{cardStatus} 
+		</if>
+		order by t.id
     </select>
     
      <select id="getCardByRfid" parameterType="com.inesazt.visitors.manager.pojo.TblCard" resultMap="tblCard">
@@ -75,12 +84,12 @@
     	insert into t_card(card_no,rfid_no,card_status,info,role) values(#{cardNo},#{rfidNo},#{cardStatus},#{info},#{role})
     </insert> 
     
-    <update id="updateTblCard" parameterType="com.inesazt.visitors.manager.pojo.TblCard">
+    <update id="updateTblCardByRfid" parameterType="com.inesazt.visitors.manager.pojo.TblCard">
     	update t_card set card_no=#{cardNo},card_status=#{cardStatus},info=#{info},role=#{role} where rfid_no=#{rfidNo}
     </update> 
     
     
-    <update id="updateTblGuestInfoOracle">
+    <update id="updateTblGuestInfo">
 		update t_guest_info 
 		<set> 
 		<if test="cardNo != null"> 
@@ -92,31 +101,50 @@
     </update> 
     
     
-    <update id="updateTblGuestInfoSqlite">
-		update t_guest_info 
+    <update id="updateTblCard">
+		update t_card 
+		<set> 
+		card_status = #{status},
+		owner_type = #{ownerType}
+		</set> 
+		where card_no = #{cardNo} 
+    </update>
+
+
+	<!-- 厂务人员API -->
+    <select id="queryFacilitys" parameterType="com.inesazt.visitors.manager.pojo.TblFacilityInfo" resultMap="tblFacilityInfo">
+		select t.* from t_facility_info t where 1=1
+		<if test="cardNo != null">
+			and t.card_no = #{cardNo}
+		</if>
+		<if test="cardStatus != null">
+			and t.card_status = #{cardStatus} 
+		</if>
+		<if test="name != null">
+			and t.name like '%${name}%' 
+		</if>
+		<if test="number != null">
+			and t.number like '%${number}%' 
+		</if>	
+		order by t.id		
+    </select>
+
+
+    <update id="updateTblFacilityInfo">
+		update t_facility_info 
 		<set> 
 		<if test="cardNo != null"> 
 		card_no = #{cardNo}, 
 		card_status = #{status}
 		</if> 
 		</set> 
-		where id = #{guestId} 
+		where id = #{facilityId} 
     </update> 
+
+    <select id="getFacilityInfoByCard" parameterType="java.lang.String" resultMap="tblFacilityInfo">
+		select t.* from t_facility_info t where t.card_no = #{cardNo}
+    </select>
     
-    <update id="updateTblCardOracle">
-		update t_card 
-		<set> 
-		card_status = #{status}
-		</set> 
-		where card_no = #{cardNo} 
-    </update>
     
-    <update id="updateTblCardSqlite">
-		update t_card 
-		<set> 
-		card_status = #{status}
-		</set> 
-		where card_no = #{cardNo} 
-    </update>
         
 </mapper>

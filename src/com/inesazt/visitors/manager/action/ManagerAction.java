@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.inesazt.visitors.WebUtil;
 import com.inesazt.visitors.manager.bo.ManagerBoImpl;
+import com.inesazt.visitors.manager.pojo.TblCard;
+import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 
 /**
  * 管理平台的总入口
@@ -81,6 +83,34 @@ public class ManagerAction extends HttpServlet {
 			String binds = request.getParameter("binds");
 			return managerBo.deleteBind(binds);
 		}
+		
+		//卡管理-根据卡ID删除绑定关系
+		if(action.equals("deleteBindByCardNos")) {
+			ManagerBoImpl managerBo = new ManagerBoImpl();
+			String nos = request.getParameter("nos");
+			return managerBo.deleteBindByCardNos(nos);
+		}
+		
+		//卡管理-获取所有卡列表
+		if(action.equals("getCardList")) {
+			ManagerBoImpl managerBo = new ManagerBoImpl();
+			String cardNo = request.getParameter("cardNo");
+			String rfidNo = request.getParameter("rfidNo");
+			String cardStatus = request.getParameter("cardStatus");
+			TblCard card = new TblCard(cardNo, rfidNo, cardStatus);
+			return managerBo.getCardList(card);
+		}
+		
+		/***************厂务人员action****************/
+		//获取厂务人员列表
+		if(action.equals("queryFacilitys")) {
+			String name = request.getParameter("name");
+			String number = request.getParameter("number");
+			String cardStatus = request.getParameter("cardStatus");
+			TblFacilityInfo info = new TblFacilityInfo(name, number, cardStatus);
+			ManagerBoImpl managerBo = new ManagerBoImpl();
+			return managerBo.queryFacilitys(info);
+		}		
 		
 		return "can not find any action named by " + action + "!";
 		

@@ -142,6 +142,14 @@
             this._$SidebarContent.find("#cardInfo").html(guestJson.visitorName);
             this._$SidebarContent.find("#attendNo").html("陪同人工号:"+guestJson.attendant);
         },
+        setFacilityInfo: function(facilityJson){
+            this._$SidebarContent.find("#cardInfo").html(facilityJson.name);
+            this._$SidebarContent.find("#attendNo").html("工号:"+facilityJson.number);
+        },
+        clearInfo: function(){
+            this._$SidebarContent.find("#cardInfo").html("");
+            this._$SidebarContent.find("#attendNo").html("");
+        },
         setLastEvent: function(eventJson) {
             //when change data,change background color
             if (eventJson.lastLocate !== this._json.lastLocate) {
@@ -169,6 +177,9 @@
             if (this._json.guest) {
                 this._$SidebarContent.find("#cardInfo").html(this._json.guest.visitorName);
                 this._$SidebarContent.find("#attendNo").html("陪同人工号:"+this._json.guest.attendant);
+            }else if(this._json.facility){
+                this._$SidebarContent.find("#cardInfo").html(this._json.facility.name);
+                this._$SidebarContent.find("#attendNo").html("工号:"+this._json.facility.number);
             }
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate).attr('title', this._json.lastDeviceId);
             this._$SidebarContent.find("#cardTime").html(visitors.utils.formatDate(new Date(this._json.lastTime), 'time'))

@@ -7,11 +7,18 @@ import java.io.Reader;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+
 import javax.sql.DataSource;
+
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
 import com.alibaba.fastjson.JSON;
+import com.inesazt.visitors.manager.bo.ManagerBoImpl;
+import com.inesazt.visitors.manager.pojo.TblCard;
+import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
+import com.inesazt.visitors.manager.pojo.TblGuestInfo;
 
 
 
@@ -108,7 +115,7 @@ public class Global {
 	public Card getCard(String cardId) {
 		return m_cards.getCard(cardId);
 	}
-
+	
 	public Devices getDevices() {
 		return m_devices;
 	}
@@ -166,6 +173,38 @@ public class Global {
 		if(m_events != null) {
 			m_events.doTaskWork();
 		}
+	}
+	
+	public void updateCard(Card card , TblCard tblCard){
+		if( card != null && tblCard != null) {
+			card.setTblCard(tblCard);
+		}
+		String cardNo = card.getName();
+		ManagerBoImpl managerBo = new ManagerBoImpl();
+		if(card.getOwnerType() != null){
+			if (card.getOwnerType() == 1) {//访客
+				List<TblGuestInfo> guestInfoList = managerBo.getGuestInfoByCard(cardNo);
+				if (guestInfoList != null && guestInfoList.size() == 1) {
+					card.setGuest(guestInfoList.get(0));
+					card.setFacility(null);
+				}				
+			}
+			if (card.getOwnerType() == 2) {//厂务
+				List<TblFacilityInfo> facilityList = managerBo.getFacilityInfoByCard(cardNo);
+				if (facilityList != null && facilityList.size() == 1) {
+					card.setFacility(facilityList.get(0));
+					card.setGuest(null);
+				}				
+			}
+			if (card.getOwnerType() == 0) {//什么都不是
+				card.setGuest(null);
+				card.setFacility(null);
+			}
+		}else{
+			card.setGuest(null);
+			card.setFacility(null);
+		}
+		
 	}
 	
 	private int m_registerIndex = 0;

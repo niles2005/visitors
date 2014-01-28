@@ -14,7 +14,7 @@
 	    <!--[if lt IE 9]>
 	        <script src="../scripts/html5shiv.js"></script>
 	        <script src="../scripts/respond.min.js"></script>
-	    <![endif]-->        
+	    <![endif]-->         
     </head>
 	<body>
 
@@ -26,8 +26,8 @@
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="../mg/cardbind.html">访客卡绑定</a></li>
-						<li><a href="../mg/facilitybind.html">厂务人员卡绑定</a></li>
+						<li><a href="../mg/cardbind.html">访客卡绑定</a></li>
+						<li class="active"><a href="../mg/facilitybind.html">厂务人员卡绑定</a></li>
 						<li><a href="../mg/cardmg.html">卡管理</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
@@ -42,47 +42,45 @@
 		<!-- 内容 -->
 		<div class="container">
 			<div class="panel panel-primary">	
-				<div class="panel-heading">访客卡绑定</div>
+				<div class="panel-heading">厂务人员卡绑定</div>
 				<div class="panel-body">
 					<form class="form-horizontal" role="form" onsubmit="return false;">
 						<div class="form-group">
-							<label for="attendantCode" class="col-md-1 control-label">工号：</label>
+							<label for="number" class="col-md-1 control-label">工号：</label>
 							<div class="col-md-2">
-								<input type="text" class="form-control" name="attendantCode" id="attendantCode" placeholder="请输入陪同人工号"/>
+								<input type="text" class="form-control" name="number" id="number" placeholder="请输入工号"/>
 							</div>
+							<label for="name" class="col-md-1 control-label">姓名：</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" name="name" id="name" placeholder="请输入姓名"/>
+							</div>							
 							<div class="col-md-2">
 								<div class="checkbox">
-									<label><input name="cardStatus" id="cardStatus" type="checkbox"> 未绑定访客</label>
+									<label><input name="cardStatus" type="checkbox"> 未绑定人员</label>
 								</div>
-							</div>		
+							</div>
 							<div class="col-md-2">
 								<button type="button" class="queryBtn btn btn-primary">查询</button>
-							</div>												
+							</div>																
 						</div>
-						
 					</form>
 				</div>
 				<table class="table table-bordered table-hover" >
 					<thead>
 						<tr>
-							<th class="text-center">流水号</th>
-							<th class="text-center">单位</th>
+							<th class="text-center">工号</th>
 							<th class="text-center">姓名</th>
-							<th class="text-center">身份证</th>
-							<th class="text-center">访问时间</th>
-							<th class="text-center">离开时间</th>
+							<th class="text-center">部门名称</th>
 							<th class="text-center" width="220px">
 								<div class="th_text">
 									卡号
 								</div>
-								<div class="btn-group cardFilter" style="display: none;">
-									<button id="Worker" type="button" class="btn btn-danger">红</button>
-									<button id="Officer" type="button" class="btn btn-primary">蓝</button>
-									<button id="VIP" type="button" class="btn btn-warning">VIP</button>
+								<div class="btn-group" style="display: none;">
 									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-										<span class="caret"></span>
+										卡号 <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu" role="menu">
+										<li><a href="javascript:void(0);" class="manualAssign">手动分配卡号</a></li>
 										<li><a href="javascript:void(0);" class="autoAssign">自动分配卡号</a></li>
 									</ul>									
 								</div>
@@ -108,55 +106,16 @@
         <script>
 			$(document).ready(function(){
 			
-				var cloneSelect = null;
-				var colors = {"Worker" : "#FF6666", "Officer" : "#0066CC", "Facility": "#333333", "VIP" : "#FFCC00"};
 				
-				//筛选项按钮
-				$(".cardFilter").find("button:not(.dropdown-toggle)").click(function(){
-					if(!$(this).hasClass("active")){
-						$(this).append(" <span class='glyphicon glyphicon-check'></span>");
-					}else{
-						$(this).find("span").remove();
-					}
-					
-					//根据cardFilter情况筛选卡列表
-					var filterId = $(this).attr("id");
-					if(filterId && cloneSelect){
-						var jSelectHtml = $(cloneSelect.get(0).outerHTML);
-						if(!$(this).hasClass("active")){
-							jSelectHtml.find("option:not(.header)").not("." + filterId).remove();
-						}
-						$("select.cardNo").each(function(){
-							var oldSelected = $(this).find("option:not(.header):selected").get(0);
-							if(oldSelected){
-								var temp = $(jSelectHtml.get(0).outerHTML);
-								temp.prepend(oldSelected.outerHTML);
-								$(this).replaceWith(temp.get(0).outerHTML);
-							}else{
-								$(this).replaceWith(jSelectHtml.get(0).outerHTML);
-							}
-						});
-					}					
-					
-					$(this).toggleClass("active");
-					$(this).siblings().removeClass("active");
-					$(this).siblings().find(".glyphicon").remove();
-					
-				});
-				
-				//陪同工号查询
+				//查询按钮
 				$(".queryBtn").click(function(){
-					var attendantCode = $("input[name='attendantCode']").val();
-					if(!attendantCode){
-						hiAlert("请输入陪同人工号", "提示");
-						return;
-					}
-					cloneSelect = null;
 					var cardStatus = $("input[name='cardStatus']:checked").val();
 					cardStatus = cardStatus ? 1 : ""; 
+					var name = $("input[name='name']").val();
+					var number = $("input[name='number']").val();
 					$(".dropdown-toggle").removeAttr("disabled");//重新激活分配按钮
-					$("table tbody").html("<tr><td colspan='7' class='text-center'>" + "正在查询..." + "</td></tr>");
-					$.post("../mg?action=getGuestList&attendantCode=" + attendantCode + "&cardStatus=" + cardStatus, function(jsonData){
+					$("table tbody").html("<tr><td colspan='4' class='text-center'>" + "正在查询..." + "</td></tr>");
+					$.post("../mg?action=queryFacilitys", {"cardStatus" : cardStatus, "name": name, "number": number}, function(jsonData){
 						if(jsonData){
 							$("table tbody").html("");
 							$("table .th_text").hide();
@@ -182,12 +141,9 @@
 									}
 									$("table tbody").append(
 										"<tr>" + 
-											"<td><input type='hidden' name='guestId' value='" + jsonData[i].id + "'/>" + jsonData[i].sqNum + "</td>" + 
-											"<td>" + jsonData[i].agentName + "</td>" + 
-											"<td>" + jsonData[i].visitorName + "</td>" + 
-											"<td>" + jsonData[i].passId + "</td>" + 
-											"<td>" + jsonData[i].timeIn + "</td>" + 
-											"<td>" + jsonData[i].timeOut + "</td>" +
+											"<td><input type='hidden' name='facilityId' value='" + jsonData[i].id + "'/>" + jsonData[i].number + "</td>" + 
+											"<td>" + jsonData[i].name + "</td>" + 
+											"<td>" + jsonData[i].depName + "</td>" + 
 											"<td class='td_cardNo text-center'>" + cardNoHtml + "</td>" +
 										"</tr>"
 									);
@@ -195,8 +151,8 @@
 							}
 							$(".allDeleteBind").show();
 						}else{
-							hiOverAlert('没有找到此陪同工号下的访客',3000); 
-							$("table tbody").html("<tr><td colspan='7' class='text-center'>" + "没有找到此陪同工号下的访客" + "</td></tr>");
+							hiOverAlert('没有找当前条件下的厂务人员',3000); 
+							$("table tbody").html("<tr><td colspan='4' class='text-center'>" + "没有找当前条件下的厂务人员" + "</td></tr>");
 							$("table .th_text").show();
 							$("table .btn-group").hide();
 							$(".allDeleteBind").hide();
@@ -210,13 +166,17 @@
 						if(jsonData && jsonData.length > 0){
 							var i = 0;
 							$("table td.td_cardNo:empty").each(function(){
-								if(jsonData[i]){
+								if(jsonData[i] && jsonData[i].role == 'Facility'){
 									var cardNo = jsonData[i].cardNo;
 									$(this).addClass("warning");
 									$(this).html("<span class='text-primary cardNo'>" + cardNo + "</span>");
 									i++;
 								}
 							});
+							if(i == 0){
+								hiAlert("没有可分配的卡", "提示");
+								return;
+							}
 							$(".dropdown-toggle").attr("disabled", "disabled");//分配按钮不可再用
 							$(".saveBindBtn").fadeIn();
 						}else{
@@ -226,21 +186,19 @@
 				});
 
 				//手动分配卡号
-				$(".cardFilter button:not(.dropdown-toggle)").click(function(){
-					if(cloneSelect){
-						return;
-					}
+				$(".dropdown-menu .manualAssign").click(function(){
 					$.post("../mg?action=getUnBindCardList", function(jsonData){
 						if(jsonData && jsonData.length > 0){
 							var options = "<option class='header' value=''>请选择</option>";
 							for(var i = 0; i < jsonData.length; i ++){
-								var cardNo = jsonData[i].cardNo;
-								var role = jsonData[i].role;
-								var color = "";
-								if(role){
-									color = colors[role];
-								}
-								options += "<option class='" + role + "' style='color: " + color + "' value='" + cardNo + "'>" + cardNo + "</option>";								
+								if(jsonData[i].role == 'Facility'){
+									var cardNo = jsonData[i].cardNo;
+									options += "<option value='" + cardNo + "'>" + cardNo + "</option>";
+								}							
+							}
+							if($(options).size() == 1){
+								hiAlert("没有可分配的卡", "提示");
+								return;
 							}
 							$("table td.td_cardNo:empty").each(function(i){
 								if(i < jsonData.length){
@@ -252,14 +210,6 @@
 									);
 								}
 							});
-							
-							cloneSelect = $("select.cardNo").clone();
-							//根据cardFilter情况筛选卡列表
-							var filterId = $(".cardFilter .active").attr("id");
-							if(filterId){
-								$("select.cardNo").find("option:not(.header)").not("." + filterId).remove();
-							}
-							
 							$(".dropdown-toggle").attr("disabled", "disabled");//分配按钮不可再用
 							$(".saveBindBtn").fadeIn();
 						}else{
@@ -273,17 +223,17 @@
 					var binds = "";
 					var cardNoArray = new Array();
 					$("tbody tr").each(function(){
-						var jInput = $(this).find("input[name='guestId']");
+						var jInput = $(this).find("input[name='facilityId']");
 						if(jInput.get(0)){
-							var guestId = jInput.val();
+							var facilityId = jInput.val();
 							var JcardNo = $(this).find(".cardNo");
 							var cardNo = JcardNo.text();
 							if(JcardNo.is("select")){
 								cardNo = JcardNo.val();
 							}
 							if(cardNo){
-								var ownerType = "1";//用户类型
-								binds += guestId + ":" + cardNo + ":" + ownerType + ",";
+								var ownerType = "2";//用户类型
+								binds += facilityId + ":" + cardNo + ":" + ownerType + ",";
 								cardNoArray.push(cardNo);
 							}
 						}
@@ -335,11 +285,11 @@
 					hiConfirm("确定删除绑定关系?", "提示", function(f){
 						if(f){
 							var jTr = $(self).parents("tr");
-							var guestId = jTr.find("input[name='guestId']").val();
+							var facilityId = jTr.find("input[name='facilityId']").val();
 							var cardNo = jTr.find(".cardNo").html();
-							var ownerType = "1";//用户类型
-							if(guestId && cardNo){
-								var binds = guestId + ":" + cardNo + ":" + ownerType;
+							var ownerType = "2";//用户类型
+							if(facilityId && cardNo){
+								var binds = facilityId + ":" + cardNo + ":" + ownerType;
 								$.post("../mg?action=deleteBind", {"binds": binds}, function(msg){
 									if(msg){
 										hiAlert(msg, "提示");
@@ -360,12 +310,12 @@
 						if(f){
 							var binds = "";
 							$("tbody tr").each(function(){
-								var jInput = $(this).find("input[name='guestId']");
+								var jInput = $(this).find("input[name='facilityId']");
 								if(jInput.get(0)){
-									var guestId = jInput.val();
+									var facilityId = jInput.val();
 									var cardNo = $(this).find(".cardNo").text();
-									var ownerType = "1";//用户类型
-									binds += guestId + ":" + cardNo + ":" + ownerType  + ",";
+									var ownerType = "2";//用户类型
+									binds += facilityId + ":" + cardNo + ":" + ownerType + ",";
 								}
 							});
 							$.post("../mg?action=deleteBind", {"binds": binds}, function(msg){

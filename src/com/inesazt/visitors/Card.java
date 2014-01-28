@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.inesazt.visitors.manager.pojo.TblCard;
+import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 import com.inesazt.visitors.manager.pojo.TblGuestInfo;
 
 public class Card {
@@ -214,5 +215,24 @@ public class Card {
 	public TblGuestInfo getGuest() {
 		return m_guest;
 	}
+	
+	public boolean isGuest(){
+		return m_tblCard.isGuest();
+	}
+	
+	public Integer getOwnerType(){
+		return m_tblCard.getOwnerType();
+	}
+	
+	private TblFacilityInfo m_facility = null;
+	public void setFacility(TblFacilityInfo facility) {
+		m_facility = facility;
+		m_cardGroup.setGuestUpdated(true);
+	}
+	
+	public TblFacilityInfo getFacility() {
+		return m_facility;
+	}
+	
 	
 }

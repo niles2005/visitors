@@ -12,6 +12,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.alibaba.fastjson.JSON;
 import com.inesazt.visitors.manager.bo.ManagerBoImpl;
+import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 import com.inesazt.visitors.manager.pojo.TblGuestInfo;
 
 public class Events {
@@ -39,10 +40,6 @@ public class Events {
 	
 	public int getLastSeqId() {
 		return m_lastSeqId;
-	}
-	
-	public void setLastSeqId( int lastSeqId ) {
-		m_lastSeqId = lastSeqId;
 	}
 	
 	public List<Event> getTodayEventList() {
@@ -100,12 +97,7 @@ public class Events {
 				}
 				if (card != null && device.getActived()) {
 					card.appendEvent(event);
-					String cardNo = card.getName();
-					ManagerBoImpl managerBo = new ManagerBoImpl();
-					List<TblGuestInfo> guestInfoList = managerBo.getGuestInfoByCard(cardNo);
-					if (guestInfoList != null && guestInfoList.size() == 1) {
-						card.setGuest(guestInfoList.get(0));
-					}
+					Global.getInstance().updateCard(card, null);
 				}
 			}
 		} catch (Exception ex) {

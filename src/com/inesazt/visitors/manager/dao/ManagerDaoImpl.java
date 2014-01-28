@@ -13,8 +13,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import com.inesazt.visitors.Card;
+import com.inesazt.visitors.Global;
 import com.inesazt.visitors.ServerConfig;
 import com.inesazt.visitors.manager.pojo.TblCard;
+import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 import com.inesazt.visitors.manager.pojo.TblGuestInfo;
 
 public class ManagerDaoImpl {
@@ -59,44 +62,16 @@ public class ManagerDaoImpl {
 		try {
 			session = m_sqlSessionFactory.openSession();
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
-			if ("oracle".equals(DBType)) {
-				for(int i = 0; i < guestInfoList.size(); i ++){
-					TblGuestInfo e = guestInfoList.get(i);
-					List<TblGuestInfo> savedList = managerSql.getGuestInfoBySqNumAndPassId(e);
-					if(savedList == null || savedList.size() == 0){
-						managerSql.insertTblGuestInfoOracle(e);
-						e = managerSql.getGuestInfoBySqNumAndPassId(e).get(0);
-						guestInfoList.set(i, e);
-					}else{
-						guestInfoList.set(i, savedList.get(0));
-						//System.out.println(infos.get(0).getId() + ", " + infos.get(0).getSqNum() + ", " + infos.get(0).getPassId());
-					}
-				}
-			} else if ("sqlite".equals(DBType)) {
-				for(int i = 0; i < guestInfoList.size(); i ++){
-					TblGuestInfo e = guestInfoList.get(i);
-					List<TblGuestInfo> savedList = managerSql.getGuestInfoBySqNumAndPassId(e);
-					if(savedList == null || savedList.size() == 0){
-						managerSql.insertTblGuestInfoSqlite(e);
-						e = managerSql.getGuestInfoBySqNumAndPassId(e).get(0);
-						guestInfoList.set(i, e);
-					}else{
-						guestInfoList.set(i, savedList.get(0));
-						//System.out.println(infos.get(0).getId() + ", " + infos.get(0).getSqNum() + ", " + infos.get(0).getPassId());
-					}
-				}
-			} else if ("sqlserver".equals(DBType)) {
-				for(int i = 0; i < guestInfoList.size(); i ++){
-					TblGuestInfo e = guestInfoList.get(i);
-					List<TblGuestInfo> savedList = managerSql.getGuestInfoBySqNumAndPassId(e);
-					if(savedList == null || savedList.size() == 0){
-						managerSql.insertTblGuestInfoSqlite(e);
-						e = managerSql.getGuestInfoBySqNumAndPassId(e).get(0);
-						guestInfoList.set(i, e);
-					}else{
-						guestInfoList.set(i, savedList.get(0));
-						//System.out.println(infos.get(0).getId() + ", " + infos.get(0).getSqNum() + ", " + infos.get(0).getPassId());
-					}
+			for(int i = 0; i < guestInfoList.size(); i ++){
+				TblGuestInfo e = guestInfoList.get(i);
+				List<TblGuestInfo> savedList = managerSql.getGuestInfoBySqNumAndPassId(e);
+				if(savedList == null || savedList.size() == 0){
+					managerSql.insertTblGuestInfo(e);
+					e = managerSql.getGuestInfoBySqNumAndPassId(e).get(0);
+					guestInfoList.set(i, e);
+				}else{
+					guestInfoList.set(i, savedList.get(0));
+					//System.out.println(infos.get(0).getId() + ", " + infos.get(0).getSqNum() + ", " + infos.get(0).getPassId());
 				}
 			}
 			session.commit();
@@ -111,21 +86,13 @@ public class ManagerDaoImpl {
 	}
 	
 	//获取卡列表
-	public List<TblCard> getCardList(){
+	public List<TblCard> getCardList(TblCard card){
 		
 		SqlSession session = null;
 		try {
 			session = m_sqlSessionFactory.openSession();
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
-			List<TblCard> cardList = null;
-			if ("oracle".equals(DBType)) {
-				cardList = managerSql.getCardList();
-			} else if ("sqlite".equals(DBType)) {
-				cardList = managerSql.getCardList();
-			} else if ("sqlserver".equals(DBType)) {
-				cardList = managerSql.getCardList();
-			}
-			return cardList;
+			return managerSql.getCardList(card);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -143,13 +110,7 @@ public class ManagerDaoImpl {
 		try {
 			session = m_sqlSessionFactory.openSession();
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
-			List<TblGuestInfo> guestList = null;
-			if ("oracle".equals(DBType) || "sqlite".equals(DBType)) {
-				return managerSql.getGuestInfoByCard(cardNo);
-			} else if ("sqlserver".equals(DBType)) {
-				return managerSql.getGuestInfoByCardSqlServer(cardNo);
-			}
-			
+			return managerSql.getGuestInfoByCard(cardNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -185,7 +146,7 @@ public class ManagerDaoImpl {
 		try {
 			session = m_sqlSessionFactory.openSession();
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
-			managerSql.updateTblCard(tblCard);
+			managerSql.updateTblCardByRfid(tblCard);
 			session.commit();
 			return true;
 		} catch (Exception e) {
@@ -225,52 +186,26 @@ public class ManagerDaoImpl {
 		try {
 			session = m_sqlSessionFactory.openSession();
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
-
-			if ("oracle".equals(DBType)) {
-				String[] items = binds.split(",");
-				for(String item : items){
-					String[] values = item.split(":");
-					if(values.length == 2){
-						String guestId = values[0];
-						String cardNo = values[1];
-						String guestInfoCardNo = cardNo;
-						if(status == TblGuestInfo.cardStatus_unbind){//状态为1的同时将guestInfoCardNo清空
-							guestInfoCardNo = "";
-						}
-						managerSql.updateTblGuestInfoOracle(guestId, guestInfoCardNo, status);
-						managerSql.updateTblCardOracle(cardNo, status);
-						
+			String[] items = binds.split(",");
+			for(String item : items){
+				String[] values = item.split(":");
+				if(values.length == 3){
+					String userId = values[0];
+					String cardNo = values[1];
+					Integer ownerType = Integer.parseInt(values[2]);
+					String userCardNo = cardNo;
+					Integer userOwnerType = ownerType;
+					if(status == TblGuestInfo.cardStatus_unbind){//状态为1的同时将userCardNo和userOwnerType清空，并更新缓存
+						userCardNo = "";
+						userOwnerType = 0;
 					}
-				}
-			} else if ("sqlite".equals(DBType)) {
-				String[] items = binds.split(",");
-				for(String item : items){
-					String[] values = item.split(":");
-					if(values.length == 2){
-						String guestId = values[0];
-						String cardNo = values[1];
-						String guestInfoCardNo = cardNo;
-						if(status == TblGuestInfo.cardStatus_unbind){//状态为1的同时将guestInfoCardNo清空
-							guestInfoCardNo = "";
-						}
-						managerSql.updateTblGuestInfoSqlite(guestId, guestInfoCardNo, status);
-						managerSql.updateTblCardSqlite(cardNo, status);
+					//根据ownerType判断是访客发卡还是厂务人员发卡.2表示厂务人员
+					if(ownerType == 2){
+						managerSql.updateTblFacilityInfo(userId, userCardNo, status);
+					}else{
+						managerSql.updateTblGuestInfo(userId, userCardNo, status);
 					}
-				}
-			} else if ("sqlserver".equals(DBType)) {
-				String[] items = binds.split(",");
-				for(String item : items){
-					String[] values = item.split(":");
-					if(values.length == 2){
-						String guestId = values[0];
-						String cardNo = values[1];
-						String guestInfoCardNo = cardNo;
-						if(status == TblGuestInfo.cardStatus_unbind){//状态为1的同时将guestInfoCardNo清空
-							guestInfoCardNo = "";
-						}
-						managerSql.updateTblGuestInfoSqlite(guestId, guestInfoCardNo, status);
-						managerSql.updateTblCardSqlite(cardNo, status);
-					}
+					managerSql.updateTblCard(cardNo, status, userOwnerType);
 				}
 			}
 			session.commit();
@@ -282,6 +217,46 @@ public class ManagerDaoImpl {
 				session.close();
 			}
 		}		
+	}
+	
+	
+	/**********************厂务人员API*********************/
+	
+	//获取厂务人员列表
+	public List<TblFacilityInfo> queryFacilitys(TblFacilityInfo info){
+		
+		SqlSession session = null;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			return managerSql.queryFacilitys(info);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return null;
+	}
+	
+	
+	//根据卡号获取厂务人员信息
+	public List<TblFacilityInfo> getFacilityInfoByCard(String cardNo){
+		
+		SqlSession session = null;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			return managerSql.getFacilityInfoByCard(cardNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return null;
 	}
 	
 	

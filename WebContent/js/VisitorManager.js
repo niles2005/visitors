@@ -145,6 +145,10 @@
                         if(cardItem) {
                             if(card.guest){
                                 cardItem.setGuestInfo(card.guest);
+                            } else if(card.facility){
+                                cardItem.setFacilityInfo(card.facility);
+                            } else {
+                            	cardItem.clearInfo();
                             }
                             var strRole = cardItem._json.role;
                             if(strRole) {
@@ -258,6 +262,8 @@
                     } else if(card.getName().toLowerCase().indexOf(name) !== -1) {
                         arr.push(card);
                     } else if(card._json.guest && card._json.guest.visitorName.toLowerCase().indexOf(name) !== -1) {
+                        arr.push(card);
+                    } else if(card._json.facility && card._json.facility.name.toLowerCase().indexOf(name) !== -1) {
                         arr.push(card);
                     }
                 }

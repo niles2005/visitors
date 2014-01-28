@@ -34,6 +34,10 @@ public class Cards {
 	public Map<String, Card> getGroup() {
 		return this.m_cardGroup.getGroup();
 	}
+	
+	public void removeCard(String cardId){
+		m_cardGroup.removeCard(cardId);
+	}
 
 	public void addCard(Card card) {
 		m_cardGroup.addCard(card);

@@ -53,6 +53,10 @@ public class CardGroup {
 		}
 	}
 	
+	public void removeCard(String id){
+		cards.remove(id);
+	}
+	
 	public Card getCard(String id) {
 		return cards.get(id);
 	}

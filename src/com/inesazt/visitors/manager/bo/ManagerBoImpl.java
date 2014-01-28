@@ -7,8 +7,11 @@ import org.apache.commons.lang.StringUtils;
 import org.tempuri.Service1Soap_Service1Soap_Client;
 
 import com.alibaba.fastjson.JSON;
+import com.inesazt.visitors.Card;
+import com.inesazt.visitors.Global;
 import com.inesazt.visitors.manager.dao.ManagerDaoImpl;
 import com.inesazt.visitors.manager.pojo.TblCard;
+import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 import com.inesazt.visitors.manager.pojo.TblGuestInfo;
 
 
@@ -100,7 +103,7 @@ public class ManagerBoImpl {
 	public String getUnBindCardList(){
 		
 		List<TblCard> unBindCardList = new ArrayList<TblCard>();
-		List<TblCard> allCardList = getCardList();
+		List<TblCard> allCardList = managerDaoImpl.getCardList(null);
 		if(allCardList != null){
 			for(TblCard card : allCardList){
 				if(card.getCardStatus() == 1){
@@ -111,17 +114,32 @@ public class ManagerBoImpl {
 		}
 		return null;
 	}
-
-	//获取卡
+	
+	public String getCardList(TblCard card){
+		
+		List<TblCard> cardList = managerDaoImpl.getCardList(card);
+		if(cardList != null){
+			return JSON.toJSONString(cardList);
+		}
+		return null;
+	}
+	
+	//根据卡号获取访客
 	public List<TblGuestInfo> getGuestInfoByCard(String cardNo){
 		
 		return managerDaoImpl.getGuestInfoByCard(cardNo);
+	}
+
+	//根据卡号获取厂务人员
+	public List<TblFacilityInfo> getFacilityInfoByCard(String cardNo){
+		
+		return managerDaoImpl.getFacilityInfoByCard(cardNo);
 	}
 	
 	//获取卡
 	public List<TblCard> getCardList(){
 		
-		return managerDaoImpl.getCardList();
+		return managerDaoImpl.getCardList(null);
 	}
 	
 	//添加或更新卡
@@ -142,6 +160,16 @@ public class ManagerBoImpl {
 		String result = null;
 		if(StringUtils.isNotBlank(binds)){
 			managerDaoImpl.updateBind(binds, TblGuestInfo.cardStatus_bind);
+			
+			//并更新缓存
+			String[] items = binds.split(",");
+			for(String item : items){
+				String[] values = item.split(":");
+				if(values.length == 3){
+					String cardNo = values[1];
+					updateCardCache(cardNo);			
+				}
+			}			
 			result = "已成功保存绑定关系";
 		}
 		return result;
@@ -153,10 +181,112 @@ public class ManagerBoImpl {
 		String result = null;
 		if(StringUtils.isNotBlank(binds)){
 			managerDaoImpl.updateBind(binds, TblGuestInfo.cardStatus_unbind);
+			
+			//并更新缓存
+			String[] items = binds.split(",");
+			for(String item : items){
+				String[] values = item.split(":");
+				if(values.length == 3){
+					String cardNo = values[1];
+					updateCardCache(cardNo);			
+				}
+			}
 			result = "已成功删除绑定关系";
 		}
 		return result;
 	}
+	
+	//更新Card缓存：在每次tblCard变化后调用这方法
+	private void updateCardCache(String cardNo){
+		TblCard tCard = new TblCard(cardNo, null, null);
+		List<TblCard> list = managerDaoImpl.getCardList(tCard);
+		if(list != null && list.size() > 0){
+			tCard = list.get(0);
+			String rfidNo = tCard.getRfidNo();
+			Card card = Global.getInstance().getCard(rfidNo);
+			Global.getInstance().updateCard(card, tCard);
+		}		
+	}
+	
+	
+	//根据卡No删除绑定关系
+	public String deleteBindByCardNos(String nos){
+		
+		String result = null;
+		if(StringUtils.isNotBlank(nos)){
+			StringBuffer binds = new StringBuffer();
+			String[] cardNos = nos.split(",");
+			for(String cardNo : cardNos){
+				TblCard tCard = new TblCard(cardNo, null, null);
+				List<TblCard> cardList = managerDaoImpl.getCardList(tCard);//根据卡号查卡表，获取用户类型
+				if(cardList != null && cardList.size() > 0){
+					Integer ownerType = cardList.get(0).getOwnerType();
+					boolean isGuest = cardList.get(0).isGuest();//判断是否是访客类型卡
+					if(isGuest){//访客
+						List<TblGuestInfo> guestList = managerDaoImpl.getGuestInfoByCard(cardNo);
+						if(guestList != null && guestList.size() > 0){
+							TblGuestInfo guestInfo = guestList.get(0);
+							if(guestInfo.getCardStatus() == TblGuestInfo.cardStatus_bind){
+								String guestId = guestInfo.getId().toString();
+								binds.append(guestId + ":" + cardNo + ":" + ownerType + ",");
+							}
+						}else{
+							result = "未在访客信息表中找到绑定了卡号为:[" + cardNo + "]的访客";
+							return result;
+						}						
+					}else{//厂务人员
+						List<TblFacilityInfo> facilityList = managerDaoImpl.getFacilityInfoByCard(cardNo);
+						if(facilityList != null && facilityList.size() > 0){
+							TblFacilityInfo facilityInfo = facilityList.get(0);
+							if(facilityInfo.getCardStatus() == TblFacilityInfo.cardStatus_bind){
+								String facilityId = facilityInfo.getId().toString();
+								binds.append(facilityId + ":" + cardNo + ":" + ownerType + ",");
+							}
+						}else{
+							result = "未在厂务人员信息表中找到绑定了卡号为:[" + cardNo + "]的厂务人员";
+							return result;
+						}	
+					}
+				}else{
+					result = "未在卡信息表中找到卡号为:[" + cardNo + "]的卡";
+					return result;
+				}
+			}
+			
+			managerDaoImpl.updateBind(binds.toString(), TblGuestInfo.cardStatus_unbind);
+			
+			//并更新缓存
+			for(String cardNo : cardNos){
+				updateCardCache(cardNo);				
+			}
+			
+			result = "已成功删除绑定关系";
+		}
+		return result;
+	}	
+	
+	
+	/***********************厂务人员API*************************/
+	
+	public String queryFacilitys(TblFacilityInfo info){
+		
+		List<TblFacilityInfo> list =  managerDaoImpl.queryFacilitys(info);
+		if(list != null && list.size() > 0){
+			return JSON.toJSONString(list);
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

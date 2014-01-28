@@ -14,4 +14,14 @@
 		<listener-class>com.inesazt.visitors.TaskServlet</listener-class> 
 	</listener>   
     
+	<filter>
+		<filter-name>SecurityFilter</filter-name>
+		<filter-class>com.inesazt.visitors.manager.filter.SecurityFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>SecurityFilter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	  
 </web-app>
