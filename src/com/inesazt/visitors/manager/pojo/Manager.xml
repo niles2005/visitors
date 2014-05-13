@@ -24,6 +24,8 @@
         <result column="country" property="country" />
         <result column="eng_name" property="engName" />
         <result column="address" property="address" />
+        <result column="flag" property="flag" />
+        <result column="escort_name" property="escortName" />
     </resultMap>
     
     <resultMap type="com.inesazt.visitors.manager.pojo.TblFacilityInfo" id="tblFacilityInfo">
@@ -45,16 +47,26 @@
         <result column="owner_type" property="ownerType" />
     </resultMap>
 
+    <resultMap type="com.inesazt.visitors.manager.pojo.TblRole" id="tblRole">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="areas" property="areas" />
+        <result column="icon" property="icon" />
+        <result column="color" property="color" />
+        <result column="status" property="status" />
+        <result column="role_type" property="roleType" />
+    </resultMap>
+    
     <insert id="insertTblGuestInfo" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo">
     	insert into t_guest_info(attendant,sq_num,time_in,time_out,agent_name,visitor_name,visitor_title,pass_id,purpose,carried_staff,
-    							 visit_area,same_business,country,eng_name,address )
+    							 visit_area,same_business,country,eng_name,address,flag,escort_name )
     	 values(#{attendant},#{sqNum},#{timeIn},#{timeOut},#{agentName},#{visitorName},#{visitorTitle},#{passId},#{purpose},#{carriedStaff},
-    	 #{visitArea},#{sameBusiness},#{country},#{engName},#{address})
+    	 #{visitArea},#{sameBusiness},#{country},#{engName},#{address},#{flag},#{escortName})
     </insert>  
     
     <select id="getGuestInfoBySqNumAndPassId" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo" resultMap="tblGuestInfo">
 		select t.id,t.attendant,t.card_no,t.card_status,t.sq_num,t.time_in,t.time_out,t.agent_name,t.visitor_name,t.visitor_title,
-		t.pass_id,purpose,carried_staff,visit_area,same_business,country,eng_name,address
+		t.pass_id,purpose,carried_staff,visit_area,same_business,country,eng_name,address,flag,escort_name
 		 from t_guest_info t where t.sq_num = #{sqNum} and t.pass_id=#{passId}
     </select>
     
@@ -73,7 +85,7 @@
 		<if test="cardStatus != null">
 			and t.card_status = #{cardStatus} 
 		</if>
-		order by t.id
+		order by t.card_no
     </select>
     
      <select id="getCardByRfid" parameterType="com.inesazt.visitors.manager.pojo.TblCard" resultMap="tblCard">
@@ -88,6 +100,10 @@
     	update t_card set card_no=#{cardNo},card_status=#{cardStatus},info=#{info},role=#{role} where rfid_no=#{rfidNo}
     </update> 
     
+     <update id="updateTblCardRoleName" parameterType="java.util.Map">
+    	update t_card set role=#{roleName} where role=#{oldRoleName}
+    </update> 
+    
     
     <update id="updateTblGuestInfo">
 		update t_guest_info 
@@ -99,7 +115,30 @@
 		</set> 
 		where id = #{guestId} 
     </update> 
-    
+
+    <update id="updateTblGuestInfoByEntity" parameterType="com.inesazt.visitors.manager.pojo.TblGuestInfo">
+		update t_guest_info 
+		<set>
+			attendant = #{attendant},
+			sq_num = #{sqNum},
+			time_in = #{timeIn},
+			time_out = #{timeOut},
+			agent_name = #{agentName},
+			visitor_name = #{visitorName},
+			visitor_title = #{visitorTitle},
+			pass_id = #{passId},
+			purpose = #{passId},
+			carried_staff = #{carriedStaff},
+			visit_area = #{visitArea},
+			same_business = #{sameBusiness},
+			country = #{country},
+			eng_name = #{engName},
+			address = #{address},
+			flag = #{flag},
+			escort_name = #{escortName} 
+		</set>
+    	 where id = #{id}
+    </update>     
     
     <update id="updateTblCard">
 		update t_card 
@@ -146,5 +185,36 @@
     </select>
     
     
-        
+    <!-- 权限API -->
+    <select id="getRoleList" parameterType="com.inesazt.visitors.manager.pojo.TblRole" resultMap="tblRole">
+		select t.* from t_role t where 1=1
+		<if test="name != null">
+			and t.name like '%${name}%' 
+		</if>
+		<if test="areas != null">
+			and t.areas like '%${areas}%' 
+		</if>
+		<if test="icon != null">
+			and t.icon like '%${icon}%' 
+		</if>
+		<if test="color != null">
+			and t.color like '%${color}%' 
+		</if>
+		<if test="status != null">
+			and t.status= #{status} 
+		</if>	
+		<if test="roleType != null">
+			and t.role_type= #{roleType} 
+		</if>	
+		order by t.id		
+    </select>
+    
+    <insert id="insertTblRole" parameterType="com.inesazt.visitors.manager.pojo.TblRole">
+    	insert into t_role(name,areas,icon,color,status,role_type) values(#{name},#{areas},#{icon},#{color},#{status},#{roleType})
+    </insert>
+    
+    <update id="updateTblRole" parameterType="com.inesazt.visitors.manager.pojo.TblRole">
+    	update t_role set name=#{name},areas=#{areas},icon=#{icon},color=#{color},status=#{status}, role_type=#{roleType} where id=#{id}
+    </update>
+            
 </mapper>

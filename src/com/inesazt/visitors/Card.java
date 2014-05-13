@@ -113,7 +113,10 @@ public class Card {
 	}
 	
 	public int fetchStatus(){
-		return m_tblCard.getCardStatus();
+		if ( m_tblCard != null && m_tblCard.getCardStatus() != null) {
+			return m_tblCard.getCardStatus();
+		} 
+		return -1;
 	}
 	
 	public void setStatus(int cardStatus){
@@ -209,7 +212,7 @@ public class Card {
 	private TblGuestInfo m_guest = null;
 	public void setGuest(TblGuestInfo guest) {
 		m_guest = guest;
-		m_cardGroup.setGuestUpdated(true);
+		Global.getInstance().addGuestUpdateTime();
 	}
 	
 	public TblGuestInfo getGuest() {
@@ -227,7 +230,7 @@ public class Card {
 	private TblFacilityInfo m_facility = null;
 	public void setFacility(TblFacilityInfo facility) {
 		m_facility = facility;
-		m_cardGroup.setGuestUpdated(true);
+		Global.getInstance().addGuestUpdateTime();
 	}
 	
 	public TblFacilityInfo getFacility() {

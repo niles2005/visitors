@@ -23,18 +23,35 @@
                     $scope.selectCard = card;
                 };
                 $scope.kk = "role";
+                $scope.roles = [];
                 $scope.doAll();
+
 
                 $scope.doUpdate = function() {
                     var url = "work?action=setcard";
                     if($scope.selectCard) {
-                        $http.get(url, {params: {id: $scope.selectCard.id, name: $scope.selectCard.name, role: $scope.selectCard.role, info: $scope.selectCard.info,actived:$scope.selectCard.actived}}).success(function(data) {
+                        $http.get(url, {params: {id: $scope.selectCard.id, name: $scope.selectCard.name, role: encodeURI($scope.selectCard.role), info: $scope.selectCard.info,actived:$scope.selectCard.actived}}).success(function(data) {
                             $scope.selectCard = data;
                             $scope.doAll();
                         });
                     }
                 };
 
+                $scope.getRoles = function(){
+//                    $scope.roles = [{name:"Worker",value:"Worker"},{name:"Officer",value:"Officer"}];
+                    var url = "work?action=listroles&t=" + new Date().getTime();
+                    //console.dir(url);
+                    $http.get(url, {params: {t: "all"}}).success(function(data) {
+                        if(data && data.length > 0) {
+                            for( var i= 0 ;i < data.length ;i++){
+                                 if( data[i].status > 0 ){
+                                     $scope.roles.push(data[i]);
+                                 }
+                            }
+                        }
+                    });
+                };
+                $scope.getRoles();
             }
         </script>
     </head>
@@ -71,11 +88,9 @@
                     <form ng-submit="doUpdate()" style="position:fixed;right:20px;top:15px;background: white; ">
                         Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.id" /><br>
                         name:<input ng-model="selectCard.name" /><br>
-                        role&nbsp;&nbsp;&nbsp;:<select ng-model="selectCard.role">
-                        <option value='Worker'>Worker</option>
-                        <option value='Officer'>Officer</option>
-                        <option value='Facility'>Facility</option>
-                        <option value='VIP'>VIP</option>
+                        role&nbsp;&nbsp;&nbsp;:
+                        <!-- role.name as role.name  the first is the option's value, the second is the option's label  -->
+                        <select ng-model="selectCard.role" ng-options="role.name as role.name for role in roles">
                     </select><br>
                         info&nbsp;&nbsp;&nbsp;:<input ng-model="selectCard.info"><br>
                         isActived&nbsp;&nbsp;&nbsp;:

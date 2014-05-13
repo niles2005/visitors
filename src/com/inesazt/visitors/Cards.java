@@ -1,5 +1,6 @@
 package com.inesazt.visitors;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,16 +24,21 @@ public class Cards {
 //		return this.m_cardGroup.doSave();
 	}
 
-	public boolean isGuestUpdated(){
-		return this.m_cardGroup.isGuestUpdated();
-	}
-	
-	public void setGuestUpdated(boolean isGuestUpdated){
-		this.m_cardGroup.setGuestUpdated(isGuestUpdated);
-	}
-
 	public Map<String, Card> getGroup() {
 		return this.m_cardGroup.getGroup();
+	}
+	
+	public Map<String, Card> getFilterGroup( int status ) {
+		Map<String, Card> cardMap = new HashMap<String, Card>();
+		Iterator<String> it =  this.m_cardGroup.getGroup().keySet().iterator();
+		while( it.hasNext() ) {
+			String cardId = it.next();
+			Card card = this.m_cardGroup.getGroup().get(cardId);
+			if( card.fetchStatus() == status) {
+				cardMap.put(cardId, card);
+			}
+		}
+		return cardMap;
 	}
 	
 	public void removeCard(String cardId){
@@ -65,6 +71,13 @@ public class Cards {
 
 	public String doList() {
 //		m_cardGroup.getGroup().putAll( CardGroup.doLoadFromDB().getGroup() ) ;
+		updatedCardGroup();
+		String str = JSON.toJSONString(m_cardGroup);
+		// System.err.println(str);
+		return str;
+	}
+	
+	public void updatedCardGroup(){
 		Map<String,Card> updatedCardMap = CardGroup.doLoadFromDB().getGroup();
 		Iterator<String> it = updatedCardMap.keySet().iterator();
 		while (it.hasNext()) {
@@ -73,11 +86,9 @@ public class Cards {
 			if (card != null) {
 				Card updatedCard = updatedCardMap.get(rfid);
 				card.setStatus(updatedCard.fetchStatus());
+				card.setRole(updatedCard.getRole());
 			}
 		}
-		String str = JSON.toJSONString(m_cardGroup);
-		// System.err.println(str);
-		return str;
 	}
 
 	public String setCard(String id, String name, String role, String info,

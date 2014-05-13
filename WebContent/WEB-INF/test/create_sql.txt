@@ -1,0 +1,77 @@
+CREATE TABLE [dbo].[CARDPOSITIONTRANS](
+	[CARD_ID] [char](32) NULL,
+	[READER_NAME] [varchar](32) NULL,
+	[ANT_ID] [numeric](8, 0) NULL,
+	[UP_DATE] [char](10) NULL,
+	[UP_TIME] [char](12) NULL,
+	[RSSI] [numeric](10, 2) NULL,
+	[MAC_ADDRESS] [char](20) NULL,
+	[TRANS_SEQ] [numeric](18, 0) IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_CARDPOSITION] PRIMARY KEY CLUSTERED 
+(
+	[TRANS_SEQ] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[t_attendant](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[code] [varchar](1) NULL,
+	[name] [varchar](1) NULL,
+ CONSTRAINT [PK__t_attend__3213E83F5A48F904] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+CREATE TABLE [dbo].[t_card](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[card_no] [varchar](100) NULL,
+	[rfid_no] [varchar](100) NULL,
+	[card_status] [int] NULL,
+	[role] [varchar](150) NULL,
+	[info] [varchar](150) NULL,
+ CONSTRAINT [PK__t_card__3213E83F63333FE4] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+CREATE TABLE [dbo].[t_guest_info](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[attendant] [varchar](100) NULL,
+	[card_no] [varchar](100) NULL,
+	[card_status] [int] NULL,
+	[sq_num] [varchar](100) NULL,
+	[time_in] [varchar](100) NULL,
+	[time_out] [varchar](100) NULL,
+	[agent_name] [nvarchar](100) NULL,
+	[visitor_name] [nvarchar](100) NULL,
+	[visitor_title] [nvarchar](100) NULL,
+	[pass_id] [varchar](100) NULL,
+	[purpose] [nvarchar](200) NULL,
+	[carried_staff] [nvarchar](100) NULL,
+	[visit_area] [nvarchar](20) NULL,
+	[same_business] [int] NULL,
+	[country] [nvarchar](100) NULL,
+	[eng_name] [varchar](100) NULL,
+	[address] [nvarchar](100) NULL,
+ CONSTRAINT [PK__t_guest___3213E83F0687EA15] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+
+
+
+
+
+
+

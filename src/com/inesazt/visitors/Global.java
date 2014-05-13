@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -16,9 +19,11 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.alibaba.fastjson.JSON;
 import com.inesazt.visitors.manager.bo.ManagerBoImpl;
+import com.inesazt.visitors.manager.dao.ManagerDaoImpl;
 import com.inesazt.visitors.manager.pojo.TblCard;
 import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 import com.inesazt.visitors.manager.pojo.TblGuestInfo;
+import com.inesazt.visitors.manager.pojo.TblRole;
 
 
 
@@ -51,6 +56,12 @@ public class Global {
 	
 	private Events m_events = null;
 	
+	private List<TblRole> m_roleList = new ArrayList<TblRole>();
+	
+	private Map<Integer , TblRole> m_roleMap = new HashMap<Integer , TblRole>();
+	
+	private ManagerDaoImpl m_managerDao = new ManagerDaoImpl();
+	
 	private boolean m_init = false;
 	private void initGlobal() {
 		try {
@@ -63,6 +74,7 @@ public class Global {
 			m_devices = new Devices();
 			m_cards = new Cards();
 			m_feedbacks = Feedbacks.buildFeedback();
+			
 			
 			try {
 				Reader reader = new BufferedReader(new InputStreamReader(
@@ -97,6 +109,60 @@ public class Global {
 			this.changeRegister();
 		} catch(Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+	
+	public List<TblRole> getRoles() {
+		m_roleList = m_managerDao.getRoleList(null);
+		m_roleMap.clear();
+		for(TblRole role : m_roleList){
+			m_roleMap.put(role.getId(), role);
+		}
+		return m_roleList;
+	}
+	
+	private TblRole getRoleById(Integer roleId){
+		return m_roleMap.get(roleId);
+	}
+	
+	public String setRole(Integer roleId , TblRole tblRole){
+		String roleName = tblRole.getName();
+		if( roleName == null || roleName.equals("")){
+			return WebUtil.error("role's name can not be null");
+		}
+		TblRole oldTblRole = getRoleById(roleId);
+		if( oldTblRole == null){
+			return insertRole(tblRole);
+		}else{
+			tblRole.setId(roleId);
+			return updateRole(tblRole , oldTblRole.getName());
+		}
+	}
+	
+	private String insertRole(TblRole tblRole) {
+		if(m_managerDao.insertTblRole(tblRole)) {
+			m_roleUpdateTimes++;
+			return WebUtil.oKJSON();
+		}else{
+			return WebUtil.error("insert role failse");
+		}
+	}
+	
+	private int m_roleUpdateTimes = 0;
+	private String updateRole(TblRole tblRole , String oldRoleName) {
+		if(m_managerDao.updateTblRole(tblRole ,oldRoleName )) {
+			m_cards.updatedCardGroup();
+			m_roleUpdateTimes++;
+			return WebUtil.oKJSON();
+		}else{
+			return WebUtil.error("update role failse");
+		}
+	}
+	
+	public void updateCardsStatus(){
+		if (m_cards != null) {
+			m_cards.updatedCardGroup();
+			m_guestUpdateTimes++;
 		}
 	}
 	
@@ -161,9 +227,9 @@ public class Global {
 	public void doTaskWork() {
 		String today = DateTimeUtil.getTodayString();
 		if(today != null && !today.equals(m_strToday)) {
-			if(m_events != null) {
-				m_events.generateGoOutEvents();
-			}
+//			if(m_events != null) {
+//				m_events.generateGoOutEvents();
+//			}
 			
 			m_strToday = today;			
 			m_cards.changeDate();			
@@ -213,7 +279,12 @@ public class Global {
 		m_registerIndex++;
 	}
 	
-	public synchronized String doClientUpdate(int eventIndex,int registerIndex,String date) {
+	private int m_guestUpdateTimes = 0;
+	public void addGuestUpdateTime(){
+		m_guestUpdateTimes++;
+	}
+	
+	public synchronized String doClientUpdate(int eventIndex,int registerIndex,int guestUpdateTimes,int roleUpdateTimes,String date) {
 		Hashtable dataHash = new Hashtable();
 		
 		if(!m_strToday.equals(date)) {
@@ -230,8 +301,13 @@ public class Global {
 			}
 			dataHash.put("regIndex", m_registerIndex);
 		}
+		if( m_roleUpdateTimes != roleUpdateTimes ) {
+			dataHash.put("roleUpdateTimes", m_roleUpdateTimes);
+		}
+		
 		if (eventIndex == -999) {//init
-			dataHash.put("cards", m_cards.getGroup());
+//			this.updateCardsStatus();
+			dataHash.put("cards", m_cards.getFilterGroup(2)); // 过滤出已经绑定到人的卡
 		} else { 
 			if(lastSeqId == eventIndex) {
 				
@@ -245,14 +321,13 @@ public class Global {
 					List newEventList = eventList.subList(recordPos,eventList.size());
 					if (newEventList.size() > 0) {
 						dataHash.put("events", newEventList);
-
-						dataHash.put("cards", m_cards.getGroup());
+						dataHash.put("cards",  m_cards.getFilterGroup(2));// 过滤出已经绑定到人的卡
 					}
 				}
 			}
-			if(m_cards.isGuestUpdated()){
-				dataHash.put("cards", m_cards.getGroup());
-				m_cards.setGuestUpdated(false);
+			if( guestUpdateTimes != m_guestUpdateTimes){
+				dataHash.put("cards", m_cards.getFilterGroup(2)); // 过滤出已经绑定到人的卡
+				dataHash.put("guestUpdateTimes", m_guestUpdateTimes);
 			}
 		}
 		dataHash.put("fromIndex", lastSeqId);

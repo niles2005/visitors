@@ -58,16 +58,19 @@ public class LoginAction  extends HttpServlet {
 		String password = request.getParameter("password");
 		String addr = "ldap://10.71.5.80:389";
 		try {
-			if(!Config.getInstance().getISTEST()){
+			Config cfg = Config.getInstance();
+			if(!cfg.getISTEST()){//生产环境
 				boolean auth = loginBoImpl.userAuthenticate(username, password, addr);
 				if(auth){
 					request.getSession().setAttribute("username", username);
+					request.getSession().setAttribute("authority", cfg.getAuthority(username));
 					response.sendRedirect("");
 				}else{
 					return "用户登录验证失败";
 				}
-			}else{
+			}else{//测试环境
 				request.getSession().setAttribute("username", username);
+				request.getSession().setAttribute("authority", cfg.getAuthority(username));
 				response.sendRedirect("");
 			}
 		} catch (Exception e) {

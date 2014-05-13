@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 
+import com.inesazt.visitors.Global;
 import com.inesazt.visitors.manager.bo.ManagerBoImpl;
 import com.inesazt.visitors.manager.dao.ManagerDaoImpl;
 import com.inesazt.visitors.manager.pojo.TblCard;
@@ -21,7 +22,7 @@ public class UnBindCardWorker extends TimerTask {
 		if (!isRunning) {
 			isRunning = true;
 
-			doLoopWork();
+			//doLoopWork();
 			
 			isRunning = false;
 		} else {
@@ -63,6 +64,7 @@ public class UnBindCardWorker extends TimerTask {
 		ManagerDaoImpl managerDaoImpl = new ManagerDaoImpl();
 		if(binds.length() > 0){
 			managerDaoImpl.updateBind(binds.toString(), TblGuestInfo.cardStatus_unbind);
+			Global.getInstance().updateCardsStatus();
 		}
 		System.out.println(new Date() + "解除绑定的序列：" + binds);
 	}

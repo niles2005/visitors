@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.tempuri.Service1Soap_Service1Soap_Client;
 
 import com.alibaba.fastjson.JSON;
@@ -13,6 +15,7 @@ import com.inesazt.visitors.manager.dao.ManagerDaoImpl;
 import com.inesazt.visitors.manager.pojo.TblCard;
 import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 import com.inesazt.visitors.manager.pojo.TblGuestInfo;
+import com.inesazt.visitors.manager.pojo.TblRole;
 
 
 /**
@@ -27,6 +30,8 @@ public class ManagerBoImpl {
 	private Service1Soap_Service1Soap_Client wsClient = new Service1Soap_Service1Soap_Client();
 	
 	private List<TblGuestInfo> guestInfoList;
+	
+	private static Log log = LogFactory.getLog(ManagerBoImpl.class);
 	
 	/**
 	 * 获取访客列表
@@ -157,6 +162,8 @@ public class ManagerBoImpl {
 	//保存绑定关系
 	public String saveBind(String binds){
 		
+		log.info("saveBind: " + "[" + binds + "]");
+		
 		String result = null;
 		if(StringUtils.isNotBlank(binds)){
 			managerDaoImpl.updateBind(binds, TblGuestInfo.cardStatus_bind);
@@ -278,12 +285,16 @@ public class ManagerBoImpl {
 	}
 	
 	
+	/***********************权限API*************************/
 	
-	
-	
-	
-	
-	
+	public String getRoleList(TblRole role){
+		
+		List<TblRole> list =  managerDaoImpl.getRoleList(role);
+		if(list != null && list.size() > 0){
+			return JSON.toJSONString(list);
+		}
+		return null;		
+	}	
 	
 	
 	

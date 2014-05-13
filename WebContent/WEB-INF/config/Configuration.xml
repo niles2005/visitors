@@ -20,6 +20,6 @@
     
     <mappers>
         <mapper resource="com/inesazt/visitors/Event.xml"/>
-        <mapper resource="com/inesazt/visitors/manager/pojo/Manager.xml"/>
+		<mapper resource="com/inesazt/visitors/manager/pojo/Manager.xml"/>
     </mappers>
 </configuration>

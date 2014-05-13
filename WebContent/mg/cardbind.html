@@ -27,7 +27,7 @@
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="../mg/cardbind.html">访客卡绑定</a></li>
-						<li><a href="../mg/facilitybind.html">厂务人员卡绑定</a></li>
+						<li><a href="../mg/facilitybind.html">内部员工卡绑定</a></li>
 						<li><a href="../mg/cardmg.html">卡管理</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
@@ -62,29 +62,24 @@
 						
 					</form>
 				</div>
-				<table class="table table-bordered table-hover" >
+				<table class="table table-bordered table-hover" style="font-size: 12px;">
 					<thead>
 						<tr>
-							<th class="text-center">流水号</th>
-							<th class="text-center">单位</th>
-							<th class="text-center">姓名</th>
-							<th class="text-center">身份证</th>
-							<th class="text-center">访问时间</th>
-							<th class="text-center">离开时间</th>
+							<th class="text-center nowrap">流水号</th>
+							<th class="text-center nowrap">单位</th>
+							<th class="text-center nowrap">姓名</th>
+							<th class="text-center nowrap">身份证</th>
+							<th class="text-center nowrap">访问时间</th>
+							<th class="text-center nowrap">离开时间</th>
+							<th class="text-center nowrap">访问区域</th>
+							<th class="text-center nowrap">携带工具</th>
+							<th class="text-center nowrap">陪同人</th>
+							<th class="text-center nowrap">状态 </th>
 							<th class="text-center" width="220px">
 								<div class="th_text">
 									卡号
 								</div>
 								<div class="btn-group cardFilter" style="display: none;">
-									<button id="Worker" type="button" class="btn btn-danger">红</button>
-									<button id="Officer" type="button" class="btn btn-primary">蓝</button>
-									<button id="VIP" type="button" class="btn btn-warning">VIP</button>
-									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" role="menu">
-										<li><a href="javascript:void(0);" class="autoAssign">自动分配卡号</a></li>
-									</ul>									
 								</div>
 							</th>
 						</tr>
@@ -106,13 +101,17 @@
 	</body>
 	
         <script>
+        	var colors = {};
+        	
 			$(document).ready(function(){
-			
+				
 				var cloneSelect = null;
-				var colors = {"Worker" : "#FF6666", "Officer" : "#0066CC", "Facility": "#333333", "VIP" : "#FFCC00"};
+				
+				//初始化权限按钮
+				initRoleButton();
 				
 				//筛选项按钮
-				$(".cardFilter").find("button:not(.dropdown-toggle)").click(function(){
+				$(".cardFilter").find("button:not(.dropdown-toggle)").live("click", function(){
 					if(!$(this).hasClass("active")){
 						$(this).append(" <span class='glyphicon glyphicon-check'></span>");
 					}else{
@@ -155,7 +154,7 @@
 					var cardStatus = $("input[name='cardStatus']:checked").val();
 					cardStatus = cardStatus ? 1 : ""; 
 					$(".dropdown-toggle").removeAttr("disabled");//重新激活分配按钮
-					$("table tbody").html("<tr><td colspan='7' class='text-center'>" + "正在查询..." + "</td></tr>");
+					$("table tbody").html("<tr><td colspan='11' class='text-center'>" + "正在查询..." + "</td></tr>");
 					$.post("../mg?action=getGuestList&attendantCode=" + attendantCode + "&cardStatus=" + cardStatus, function(jsonData){
 						if(jsonData){
 							$("table tbody").html("");
@@ -184,10 +183,14 @@
 										"<tr>" + 
 											"<td><input type='hidden' name='guestId' value='" + jsonData[i].id + "'/>" + jsonData[i].sqNum + "</td>" + 
 											"<td>" + jsonData[i].agentName + "</td>" + 
-											"<td>" + jsonData[i].visitorName + "</td>" + 
+											"<td class='nowrap'>" + jsonData[i].visitorName + "</td>" + 
 											"<td>" + jsonData[i].passId + "</td>" + 
 											"<td>" + jsonData[i].timeIn + "</td>" + 
 											"<td>" + jsonData[i].timeOut + "</td>" +
+											"<td>" + jsonData[i].visitAreaDis + "</td>" +
+											"<td>" + jsonData[i].carriedStaff + "</td>" +
+											"<td class='nowrap'>" + jsonData[i].escortName + "</td>" +
+											"<td class='nowrap'>" + jsonData[i].flagDis + "</td>" +
 											"<td class='td_cardNo text-center'>" + cardNoHtml + "</td>" +
 										"</tr>"
 									);
@@ -196,7 +199,7 @@
 							$(".allDeleteBind").show();
 						}else{
 							hiOverAlert('没有找到此陪同工号下的访客',3000); 
-							$("table tbody").html("<tr><td colspan='7' class='text-center'>" + "没有找到此陪同工号下的访客" + "</td></tr>");
+							$("table tbody").html("<tr><td colspan='11' class='text-center'>" + "没有找到此陪同工号下的访客" + "</td></tr>");
 							$("table .th_text").show();
 							$("table .btn-group").hide();
 							$(".allDeleteBind").hide();
@@ -226,7 +229,7 @@
 				});
 
 				//手动分配卡号
-				$(".cardFilter button:not(.dropdown-toggle)").click(function(){
+				$(".cardFilter button:not(.dropdown-toggle)").live("click", function(){
 					if(cloneSelect){
 						return;
 					}
@@ -379,7 +382,30 @@
 						}
 					});
 				});
+				
 			});
+			
+			
+			function initRoleButton(){
+				$.post("../mg?action=getRoleList", function(jsonData){
+					if(jsonData){
+						var roleButton = "";
+						for(var i = 0; i < jsonData.length; i ++){
+							if(jsonData[i].roleType == 0){
+								var roleName = jsonData[i].name;
+								var roleColors =jsonData[i].color;
+								colors[roleName] = roleColors;
+								roleButton += "<button id='" + roleName + "' type='button' class='btn btn-default' style='background-color:" + roleColors + ";border-color:" + roleColors + ";color: #ffffff;'>" + roleName + "</button>";
+							}
+						}
+						$(".cardFilter").prepend(roleButton);
+						$(".cardFilter").parent("th").width($(".cardFilter").width());
+					}else{
+						hiAlert("系统还未分配卡权限，无法进行卡绑定操作", "提示");
+					}
+				}, 'json');					
+			}
+			
         </script>	
 	
 	

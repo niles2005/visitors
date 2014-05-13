@@ -2,6 +2,8 @@ package com.inesazt.visitors.manager.pojo;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.inesazt.visitors.manager.cfg.Config;
+
 /**
  * 访客信息表
  * @author xyc
@@ -44,6 +46,10 @@ public class TblGuestInfo {
 	private String engName;
 	
 	private String address;
+	
+	private Integer flag;
+	
+	private String escortName;
 	
 	public final static Integer cardStatus_dead = 0;
 	
@@ -101,6 +107,14 @@ public class TblGuestInfo {
 			}
 			if(fieldName.endsWith("Address")){
 				this.setAddress(fieldValue);
+			}
+			if(fieldName.endsWith("Flag")){
+				if(fieldValue != null){
+					this.setFlag(Integer.parseInt(fieldValue));
+				}
+			}
+			if(fieldName.endsWith("EscortName")){
+				this.setEscortName(fieldValue);
 			}
 		}			
 	}
@@ -248,5 +262,44 @@ public class TblGuestInfo {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	public String getVisitAreaDis() {
+		
+		String areaDis = Config.getInstance().getVisitAreaDis(this.visitArea);
+		if(StringUtils.isEmpty(areaDis)){
+			areaDis = this.visitArea;
+		}
+		return areaDis;
+	}
+
+	public Integer getFlag() {
+		return flag;
+	}
 	
+	public String getFlagDis() {
+		
+		String flagDis = "未知";
+		if(flag != null){
+			if(flag == 0){
+				flagDis = "已批准";
+			}
+			if(flag == -1){
+				flagDis = "审批中 ";
+			}
+		}
+		return flagDis;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
+	}
+
+	public String getEscortName() {
+		return escortName;
+	}
+
+	public void setEscortName(String escortName) {
+		this.escortName = escortName;
+	}
+
 }

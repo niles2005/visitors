@@ -30,12 +30,12 @@
         getPageContent: function() {
             return this._$PageContent;
         },
-        setJsonData: function(json) {
-            this._json = json;
-            
-            this.setIcon("images/" + this._json.name + "2.png");
-            this.setOffsetPos([11, 31]);
-        },
+//        setJsonData: function(json) {
+//            this._json = json;
+//
+//            this.setIcon("images/" + this._json.name + "2.png");
+//            this.setOffsetPos([11, 31]);
+//        },
         addCard: function(card) {
             this._cards[card._id] = card;
             this._cardCount++;
@@ -53,7 +53,7 @@
             if(this.$countTitle) {
                 this.$countTitle.html("" + this._cardCount);
                 if (this._cardCount > 0) {
-                    if (this._id == "O_building1" || this._id == "F_building1" || this._id == "W_building2"  || this._id == "F_building2" ) {
+                    if( this._needWarn ){
                         this.$cautionTitle.show();
                         this.$countTitle.addClass('warn');
                     }

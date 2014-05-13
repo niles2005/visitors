@@ -9,10 +9,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.inesazt.visitors.Global;
 import com.inesazt.visitors.WebUtil;
 import com.inesazt.visitors.manager.bo.ManagerBoImpl;
 import com.inesazt.visitors.manager.pojo.TblCard;
 import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
+import com.inesazt.visitors.manager.pojo.TblRole;
+import com.inesazt.visitors.util.MyLogUtil;
 
 /**
  * 管理平台的总入口
@@ -22,6 +28,8 @@ import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 
 @WebServlet(name = "ManagerAction", urlPatterns = { "/mg" }, loadOnStartup=0)
 public class ManagerAction extends HttpServlet {
+	
+	private static Log log = LogFactory.getLog(ManagerAction.class);
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		doPage(request, response);
@@ -33,20 +41,29 @@ public class ManagerAction extends HttpServlet {
 	
 	public void doPage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
-		request.setCharacterEncoding("UTF-8");
 		ServletOutputStream sos = response.getOutputStream();
-		response.setContentType("text/html; charset=UTF-8");
-		
-		String retInfo = doAction(request);
-		
-		if(retInfo != null) {
-			String callback = request.getParameter("callback");
-			if(callback != null) {
-				retInfo = callback + "(" + retInfo + ");";
-			}
+		try{
+			request.setCharacterEncoding("UTF-8");
+			response.setContentType("text/html; charset=UTF-8");			
+			String action = request.getParameter("action");
+			if(action != null){
+				log.info("当前请求: " + request.getParameter("action"));
+			}			
+			String retInfo = doAction(request);
 			
-			sos.write(retInfo.getBytes("UTF-8"));
-		}		
+			if(retInfo != null) {
+				String callback = request.getParameter("callback");
+				if(callback != null) {
+					retInfo = callback + "(" + retInfo + ");";
+				}
+				sos.write(retInfo.getBytes("UTF-8"));
+			}				
+		}catch(Exception e){
+			log.error("ManagerAction发生未知异常：");
+			log.error(MyLogUtil.getExceptionStr(e));
+			sos.write("".getBytes("UTF-8"));
+		}
+	
 	}
 
 	//入口
@@ -72,6 +89,7 @@ public class ManagerAction extends HttpServlet {
 		
 		//保存绑定关系
 		if(action.equals("saveBind")) {
+			
 			ManagerBoImpl managerBo = new ManagerBoImpl();
 			String binds = request.getParameter("binds");
 			return managerBo.saveBind(binds);
@@ -81,6 +99,7 @@ public class ManagerAction extends HttpServlet {
 		if(action.equals("deleteBind")) {
 			ManagerBoImpl managerBo = new ManagerBoImpl();
 			String binds = request.getParameter("binds");
+			Global.getInstance().addGuestUpdateTime();
 			return managerBo.deleteBind(binds);
 		}
 		
@@ -88,6 +107,7 @@ public class ManagerAction extends HttpServlet {
 		if(action.equals("deleteBindByCardNos")) {
 			ManagerBoImpl managerBo = new ManagerBoImpl();
 			String nos = request.getParameter("nos");
+			Global.getInstance().addGuestUpdateTime();
 			return managerBo.deleteBindByCardNos(nos);
 		}
 		
@@ -110,7 +130,15 @@ public class ManagerAction extends HttpServlet {
 			TblFacilityInfo info = new TblFacilityInfo(name, number, cardStatus);
 			ManagerBoImpl managerBo = new ManagerBoImpl();
 			return managerBo.queryFacilitys(info);
-		}		
+		}
+		
+		/***************权限表action****************/
+		if(action.equals("getRoleList")) {
+			ManagerBoImpl managerBo = new ManagerBoImpl();
+			TblRole role = new TblRole();
+			role.setStatus(TblRole.ABLE);
+			return managerBo.getRoleList(role);
+		}
 		
 		return "can not find any action named by " + action + "!";
 		

@@ -1,0 +1,201 @@
+<!doctype html>
+<html ng-app>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/bootstrap.css"/>
+        <script src="scripts/angular.js"></script>
+        <script type="text/javascript" src="scripts/jquery-1.7.js"></script>
+        <script>
+            function BindState($scope, $http ) {
+                $scope.doAll = function() {
+                    var url = "work?action=listroles&t=" + new Date().getTime();
+                    //console.dir(url);
+                    $http.get(url, {params: {t: "all"}}).success(function(data) {
+                        if(data && data.length > 0) {
+                            $scope.roles = data;
+                        }
+                    });
+                };
+
+                $scope.initAreas = function(){
+                    $scope.areas = [{name:"building1",selected:false},{name:"building2",selected:false} ,{name:"factory",selected:false}];
+                };
+
+                $scope.setRole = function(role) {
+                    $scope.selectRole = role;
+                    var areaArray = $scope.selectRole.areas.split(',');
+                    if( areaArray && areaArray.length <= 0){
+                       return;
+                    }
+                    //区域选择全都恢复成未选状态
+                    $scope.initAreas();
+                    $scope.selectedAreas.length = 0;
+
+                    for (var i = 0 ;i < areaArray.length ; i++){
+                        var  areaName =  areaArray[i];
+                        for (var j = 0 ;j < $scope.areas.length ; j++){
+                              var areaObject = $scope.areas[j];
+                            if(areaObject.name === areaName){
+                                areaObject.selected = true;
+                                $scope.selectedAreas.push(areaName);
+                            }
+                        }
+
+                    }
+
+//                    areaArray.forEach(function( areaName ){
+//                        $scope.areas.forEach(function(areaObject){
+//                            if(areaObject.name === areaName){
+//                                areaObject.selected = true;
+//                                $scope.selectedAreas.push(areaName);
+//                            }
+//                        });
+//                    });
+                };
+
+
+                $scope.kk = "role";
+                $scope.selectedAreas = [];
+                $scope.roles = [];
+                $scope.initAreas();
+                $scope.doAll();
+
+                $scope.doUpdate = function() {
+                    if( !$scope.selectRole ) {
+                        return;
+                    }
+                    for( var i = 0 ; i < $scope.roles ;i++ ){
+                        var roleObject =  $scope.roles[i];
+                        if( roleObject.name === $scope.selectRole.name) {
+                            $scope.selectRole.id = roleObject.id;
+                        }
+                    }
+
+//                    $scope.roles.forEach(function(roleObject){
+//                         if( roleObject.name === $scope.selectRole.name){
+//                             $scope.selectRole.id = roleObject.id;
+//                         }
+//                    });
+
+                    var url = "work?action=setrole";
+                    $http.get(url, {params: {id: $scope.selectRole.id, name: encodeURI($scope.selectRole.name), areas: $scope.selectedAreas.join(","), color: $scope.selectRole.color,icon:$scope.selectRole.icon,roleType:$scope.selectRole.roleType,status:$scope.selectRole.status}}).success(function(data) {
+                        if(data.error){
+                            alert(data.error);
+                            return;
+                        }
+                        $scope.selectedAreas.length = 0;
+                        $scope.initAreas();
+                        $scope.doAll();
+                        $scope.selectRole = null;
+                    });
+
+                };
+
+
+                $scope.pushAreas = function (areaName){
+                    var index = $.inArray( areaName ,$scope.selectedAreas);
+                    if( index < 0 ){
+                        $scope.selectedAreas.push(areaName);
+                        for(var i = 0 ; i<$scope.areas ;i++){
+                            var  areaObject = $scope.areas[i];
+                            if(areaObject.name === areaName){
+                                areaObject.selected = true;
+                            }
+                        }
+
+
+
+//                        $scope.areas.forEach(function(areaObject){
+//                            if(areaObject.name === areaName){
+//                                areaObject.selected = true;
+//                            }
+//                        });
+                    } else {
+                        $scope.selectedAreas.splice(index,1);
+                        for(var i = 0 ; i<$scope.selectedAreas ;i++){
+                            var  areaObject = $scope.selectedAreas[i];
+                            if(areaObject.name === areaName){
+                                areaObject.selected = false;
+                            }
+                        }
+
+
+//                        $scope.areas.forEach(function(areaObject){
+//                            if(areaObject.name === areaName){
+//                                areaObject.selected = false;
+//                            }
+//                        });
+                    }
+                };
+            }
+        </script>
+    </head>
+    <body>
+         <div style="margin-top: 20px"></div>
+        <div class="container-fluid" ng-controller="BindState">
+            <div class="row-fluid">
+                <div class="span9">
+                    <pre>Display:<select ng-model="displayDeactive">
+                        <option value=''>All item</option>
+                        <option value='true'>Only active item</option>
+                        <option value='false'>Only deactive item</option>
+                    </select>  Search: <input ng-model="searchText"></pre>
+                <table class="table table-bordered">
+                    <tr>
+                        <th><a href="" ng-click="kk = 'id'; reverse=!reverse">id</a></th>
+                        <th><a href="" ng-click="kk = 'name'; reverse=!reverse">name</a></th>
+                        <th><a href="" ng-click="kk = 'areas'; reverse=!reverse">areas</a></th>
+                        <th><a href="" ng-click="kk = 'color'; reverse=!reverse">color</a></th>
+                        <th><a href="" ng-click="kk = 'icon'; reverse=!reverse">icon</a></th>
+                        <th><a href="" ng-click="kk = 'roleType'; reverse=!reverse">roleType</a></th>
+                        <th><a href="" ng-click="kk = 'status'; reverse=!reverse">active</a></th>
+                    </tr>
+                    <tr ng-repeat="role in roles | filter:searchText | filter:displayDeactive | orderBy:kk:reverse" ng-click="setRole(role)">
+                        <td>{{role.id}}</td>
+                        <td>{{role.name}}</td>
+                        <td>{{role.areas}}</td>
+                        <td ng-style="{color:role.color}">{{role.color}}</td>
+                        <td><img src="{{role.icon}}"/></td>
+                        <td><span ng-show="role.roleType == 0 ">访客</span>&nbsp;&nbsp;<span ng-hide="role.roleType==0">员工</span></td>
+                        <td><span ng-show="role.status == 1 " >true</span>&nbsp;&nbsp;<span ng-hide="role.status == 1 ">false</span></td>
+                    </tr>
+                </table>
+                </div>
+                <div class="span3" style="width: 258px;">
+                    <form ng-submit="doUpdate()" style="position:fixed;right:20px;top:15px;background: white; ">
+                        name:<input ng-model="selectRole.name" /><br>
+                        areas&nbsp;&nbsp;&nbsp;:
+                        <span ng-repeat="area in areas">
+                            <input type="checkbox"  ng-click="pushAreas(area.name)" ng-model="area.selected"> {{area.name}}
+                        </span>
+                       <br>
+                        color&nbsp;&nbsp;&nbsp;:
+                        <select ng-model="selectRole.color">
+                            <option value="#ff1405" style="background-color:#ff1405;color: #ffffff;">红卡</option>
+                            <option value="#0b0aff" style="background-color:#0b0aff;color: #ffffff;">蓝卡</option>
+                            <option value="#ffff00" style="background-color:#ffff00;color: #ffffff;">金卡</option>
+                            <option value="#11ff02" style="background-color:#11ff02;color: #ffffff;">绿卡</option>
+                            <option value="#c606ff" style="background-color:#c606ff;color: #ffffff;">紫卡</option>
+                            <option value="#aaaaaa" style="background-color:#aaaaaa;color: #ffffff;">灰卡</option>
+                        </select><br>
+                        icon&nbsp;&nbsp;&nbsp;:
+                        <input type="radio" ng-model="selectRole.icon" value="images/Worker1.png"><img src="images/Worker1.png"/>
+                        <input type="radio" ng-model="selectRole.icon" value="images/Officer1.png" ><img src="images/Officer1.png"/>
+                        <input type="radio" ng-model="selectRole.icon" value="images/Facility1.png" ><img src="images/Facility1.png"/>
+                        <input type="radio" ng-model="selectRole.icon" value="images/VIP1.png" ><img src="images/VIP1.png"/>
+                        <br>
+                        type&nbsp;&nbsp;&nbsp;:
+                        <input type="radio" ng-model="selectRole.roleType" ng-value="0"> 访客
+                        <input type="radio" ng-model="selectRole.roleType" ng-value="1"> 员工 <br>
+                        isActived&nbsp;&nbsp;&nbsp;:
+                        <input type="radio" ng-model="selectRole.status" ng-value="1"> true
+                        <input type="radio" ng-model="selectRole.status" ng-value="0"> false <br>
+                        date&nbsp;&nbsp;:{{ selectRole.createTime | date:'yyyy-MM-dd HH:mm:ss' }} <br>
+                        <input type="submit" value="新增/更新"/>
+                    </form>
+                    <p><p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

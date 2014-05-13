@@ -20,17 +20,7 @@ import com.inesazt.visitors.manager.pojo.TblCard;
 
 public class CardGroup {
 	private Map<String, Card> cards = new HashMap<String, Card>();
-	private boolean isGuestUpdated = false;
 	
-
-	public boolean isGuestUpdated() {
-		return isGuestUpdated;
-	}
-
-	public void setGuestUpdated(boolean isGuestUpdated) {
-		this.isGuestUpdated = isGuestUpdated;
-	}
-
 	public Map<String, Card> getGroup() {
 		return cards;
 	}

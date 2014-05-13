@@ -1667,6 +1667,7 @@ input.placeholder,textarea.placeholder {
 .ellipsis {
 	white-space: nowrap;
 	overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .ellipsis.multiline {
@@ -2239,7 +2240,7 @@ input#searchSubmit {
 
 .public-listings .listings .listing .main .info {
 	float: left;
-	width: 197px;
+	width: 200px;
 }
 
 .public-listings .listing .mypost_tag {
@@ -2387,9 +2388,11 @@ position: relative;
 
 .public-listings .listings .listing .main ul.meta-three-block {
     display: inline-block;
-	float: right;
+	/*float: right;*/
 	margin: 0 8px;
 	width: 150px;
+    position: absolute;
+    right: 0;
 }
 
 .public-listings .listings .listing .main ul.meta-three-block li.price {

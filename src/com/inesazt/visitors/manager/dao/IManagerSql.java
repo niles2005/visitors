@@ -1,16 +1,21 @@
 package com.inesazt.visitors.manager.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.inesazt.visitors.manager.pojo.TblCard;
 import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 import com.inesazt.visitors.manager.pojo.TblGuestInfo;
+import com.inesazt.visitors.manager.pojo.TblRole;
 
 public interface IManagerSql {    
 
     public void insertTblGuestInfo(TblGuestInfo e);
+    
+    //更新访客表
+    public void updateTblGuestInfoByEntity(TblGuestInfo e);
     
     public List<TblGuestInfo> getGuestInfoBySqNumAndPassId(TblGuestInfo info);
     
@@ -24,6 +29,9 @@ public interface IManagerSql {
     
     //RFID不变更,更新卡表各列
     public void updateTblCardByRfid(TblCard param);
+    
+    //更新卡表的角色名称
+    public void updateTblCardRoleName(Map param);
     
     //插入新卡
     public void insertTblCard(TblCard param);
@@ -46,7 +54,13 @@ public interface IManagerSql {
     public List<TblFacilityInfo> getFacilityInfoByCard(String cardNo);
     
     
+    /***************************权限API*****************************/
+    //返回权限列表
+    public List<TblRole> getRoleList(TblRole role);
     
+    //插入新的角色
+    public void insertTblRole(TblRole role);
     
-    
+    //更新角色
+    public void updateTblRole(TblRole role);
 }

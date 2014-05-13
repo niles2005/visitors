@@ -13,24 +13,56 @@
         this._selectRole = null;
         this._fromIndex = -999;
         this._regIndex = -999;
+        this._guestUpdateTimes = -999;
+        this._roleUpdateTimes = 0;
 //        this._timer = null;
         this._updateTime = 0;
         this._connecting = false;
+        this._roleIconMap;
+        this._loopTask;
     }
     
     VisitorManager.prototype = {
         init: function() {
             this._sideBar = new visitors.SideBarPage(this);
             this._sideBar.init();
-            this.taskDataQuery();
+            this.initRoles();
+
         },
-                
-        doInit: function() {
-            this.init();
+
+        initRoles: function(){
+            var url = "work?action=listroles&t=" + new Date().getTime();
+//            var roles = [{abb:'W',name:'Worker',css:'worker',icon:'images/Worker1.png'},{abb:'O',name:'Officer',css:'worker',icon:'images/Officer1.png'},{abb:'F',name:'Facility',css:'worker',icon:'images/Facility1.png'},{abb:'V',name:'VIP',css:'worker',icon:'images/VIP1.png'}];
+            var roles = [];
+            var self = this;
+            $.ajax({
+                url: url,
+                dataType: "json",
+                cache: false,
+                success: function(data) {
+                    if(data && data.length > 0){
+                        roles.length = 0;
+                        self._roleIconMap = {};
+                        for( var i= 0 ;i < data.length ;i++){
+                            if( data[i].status > 0 ){
+                                roles.push(data[i]);
+                                self._roleIconMap[data[i].name] = data[i].icon;
+                            }
+                        }
+                        self.assignRoleOnPage(roles);
+                        self.taskDataQuery();   //循环请求必须在所有角色加载完毕后进行
+                    }
+
+                }
+
+            });
+        },
+
+        assignRoleOnPage:function( roles ){
             var locations = [{name:"building1",top:"40px",left:"170px"},{name:"building2",top:"140px",left:"415px"},{name:"factory",top:"380px",left:"320px"},{name:"outside",top:"430px",left:"660px"}];
-            var roles = [{abb:'W',name:'Worker',css:'worker',icon:'images/Worker1.png'},{abb:'O',name:'Officer',css:'worker',icon:'images/Officer1.png'},{abb:'F',name:'Facility',css:'worker',icon:'images/Facility1.png'},{abb:'V',name:'VIP',css:'worker',icon:'images/VIP1.png'}];
             var jMainStageDiv = $(".viewcontainer");
-            for(var row in locations){
+            jMainStageDiv.empty();
+            for(var row in locations) {
                 var jPosition = $('<div id='+locations[row].name+' style="position:absolute;z-index:50;white-space:nowrap;top:'+locations[row].top+';left:'+locations[row].left+';"><ul class="roleRow"></ul></div>');
                 var jUl =  jPosition.find('.roleRow');
                 jMainStageDiv.append(jPosition);
@@ -45,40 +77,52 @@
                     jLi.append(jIconDiv);
                     jUl.append(jLi);
                     roleItem.setSidebar(this._sideBar);
-                    roleItem._id = role.abb + '_' + locations[row].name;
+                    roleItem._id = role.name + '_' + locations[row].name;
                     roleItem._name = role.name;
+                    if( role.areas.indexOf(locations[row].name) < 0 && locations[row].name !== 'outside'){
+                        roleItem._needWarn = true;
+                    }
                     this._roles[roleItem._id] = roleItem;
                 }
             }
 
         },
-
-        buildRoleItem: function(json, index) {
-            var roleItem = new visitors.RoleItem(this, index);
-            roleItem.setJsonData(json);
-            roleItem.setSidebar(this._sideBar);
-            roleItem.setIcon("images/" + json.name + "1.png");
-            roleItem._id = json.id;
-            roleItem._name = json.name;
-            roleItem.setZIndex(100 - parseInt(index));
-            roleItem.setOffsetPos([11, 31]);
-            if (json.pos) {
-                var ePos = new visitors.EarthPos(json.pos.lat, json.pos.lon, true);
-                roleItem.setEarthPos(ePos);
-            }
-            this._roles[roleItem._id] = roleItem;
-            return roleItem;
+                
+        doInit: function() {
+            this.init();
         },
+
+//        buildRoleItem: function(json, index) {
+//            var roleItem = new visitors.RoleItem(this, index);
+//            roleItem.setJsonData(json);
+//            roleItem.setSidebar(this._sideBar);
+//            roleItem.setIcon("images/" + json.name + "1.png");
+//            roleItem._id = json.id;
+//            roleItem._name = json.name;
+//            roleItem.setZIndex(100 - parseInt(index));
+//            roleItem.setOffsetPos([11, 31]);
+//            if (json.pos) {
+//                var ePos = new visitors.EarthPos(json.pos.lat, json.pos.lon, true);
+//                roleItem.setEarthPos(ePos);
+//            }
+//            this._roles[roleItem._id] = roleItem;
+//            return roleItem;
+//        },
+
+
         taskDataQuery: function() {
             var self = this;
-            self.doTaskWork();
-            setInterval(function(){
+            this.doTaskWork();
+            clearInterval( this._loopTask );
+            this._loopTask = setInterval(function(){
                 self.doTaskWork();
             },5000);
+
+
         },
         doTaskWork: function() {
         	var self = this;
-            var url = "work?action=doUpdate&fromindex="+ this._fromIndex + "&regIndex=" + this._regIndex + "&date=" + visitors.today + "&callNum=" + callIndex;
+            var url = "work?action=doUpdate&fromindex="+ this._fromIndex + "&regIndex=" + this._regIndex + "&date=" + visitors.today + "&callNum=" + callIndex +"&guestUpdateTimes="+this._guestUpdateTimes+"&roleUpdateTimes="+this._roleUpdateTimes;
             callIndex++;
             $.ajax({
                 url: url,
@@ -101,6 +145,7 @@
         },
 
         updateDatas:function(json) {
+
             this._updateTime = new Date().getTime();
         	if(!this._connecting) {
                 $('#connectSign').text('网络已连接');
@@ -112,10 +157,26 @@
             if (json) {
                 if(json.fromIndex){
                     this._fromIndex = json.fromIndex;
-               }
-               if(json.regIndex){
+                }
+                if( json.guestUpdateTimes ){
+                    this._guestUpdateTimes = json.guestUpdateTimes;
+                    this._fromIndex = -999;
+                    this._roles = {};
+                    this._cards = {};
+                    this.doInit();
+//                    return;
+                }
+                if (json.roleUpdateTimes){
+                    this._roleUpdateTimes = json.roleUpdateTimes;
+                    this._fromIndex = -999;
+                    this._roles = {};
+                    this._cards = {};
+                    this.doInit();
+//                    return;
+                }
+                if(json.regIndex){
                     this._regIndex = json.regIndex;
-               }
+                }
                 if(json.today) {
                     visitors.today = json.today;
                     var today = visitors.utils.date8ToDate10(visitors.today,'-');
@@ -137,15 +198,17 @@
                         var card = cards[i];
                         var cardItem = this._cards[card.id];
                         if(!cardItem) {
-                            cardItem = this.buildCardItem(card, i);
+                            if (this._roleIconMap[card.role]) {
+                                cardItem = this.buildCardItem(card, i);
+                            }
                             if (cardItem) {
                                 this._cards[cardItem._id] = cardItem;
                             }
                         }
                         if(cardItem) {
-                            if(card.guest){
+                            if(card.guest && typeof card.guest === 'object'){
                                 cardItem.setGuestInfo(card.guest);
-                            } else if(card.facility){
+                            } else if(card.facility && typeof card.facility === 'object'){
                                 cardItem.setFacilityInfo(card.facility);
                             } else {
                             	cardItem.clearInfo();
@@ -153,10 +216,10 @@
                             var strRole = cardItem._json.role;
                             if(strRole) {
                                 cardItem.setLastEvent(card);
-                                var roleId = strRole.substring(0,1) + "_" + card.lastLocate;
-                                var role = this._roles[roleId];
-                                if(role) {
-                                    cardItem.setRole(role);
+                                var roleId = strRole + "_" + card.lastLocate;
+                                var roleItem = this._roles[roleId];
+                                if(roleItem) {
+                                    cardItem.setRole(roleItem);
                                 }
                             }
                         }
@@ -218,32 +281,34 @@
                 }
             }
         },
-        resetRoles: function() {
-            for(var k in this._roles) {
-                var role = this._roles[k];
-                role.reset();
-            }
-        },
-        updateCardInfo: function(cards) {
-            if (cards) {
-                this.resetRoles();
-                for (var i in cards) {
-                    var row = cards[i];
-                    var cardItem = this.buildCardItem(row, i);
-                    if(cardItem) {
-                        this._cards[cardItem._id] = cardItem;
-                        var strRole = cardItem._json.role;
-                        if(strRole) {
-                            var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
-                            var role = this._roles[roleId];
-                            if(role) {
-                                cardItem.setRole(role);
-                            }
-                        }
-                    }
-                }
-            }
-        },
+//        resetRoles: function() {
+//            for(var k in this._roles) {
+//                var roleItem = this._roles[k];
+//                roleItem.reset();
+//            }
+//        },
+
+
+//        updateCardInfo: function(cards) {
+//            if (cards) {
+//                this.resetRoles();
+//                for (var i in cards) {
+//                    var row = cards[i];
+//                    var cardItem = this.buildCardItem(row, i);
+//                    if(cardItem) {
+//                        this._cards[cardItem._id] = cardItem;
+//                        var strRole = cardItem._json.role;
+//                        if(strRole) {
+//                            var roleId = strRole.substring(0,1) + "_" + cardItem._json.lastLocate;
+//                            var role = this._roles[roleId];
+//                            if(role) {
+//                                cardItem.setRole(role);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        },
                 
         findCards: function(name) {
             if(this._selectRole) {
@@ -298,7 +363,8 @@
 
                 cardItem._id = json.id;
                 cardItem._name = json.name;
-                cardItem.setIcon("images/" + json.role + "2.png");
+
+                cardItem.setIcon( this._roleIconMap[json.role].replace('1.png','2.png') );
                 cardItem.setZIndex(100 - parseInt(index));
                 cardItem.setOffsetPos([11, 31]);
             }

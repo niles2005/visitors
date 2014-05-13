@@ -6,11 +6,11 @@
     var sidebarContentHtml = '<div  class="listing"> '
             + ' <div class="main viewed on">'
             + '<div class="row">'
-            + '<div class="info span4">'
+            + '<div class="info span4" style="margin-left: 12px;">'
             + '<div class="first_photo_imagebox thumbnail lazy"> <img id="cardImage"></img></div>'
             + '<div id="cardName" class="title ellipsis" style="Color:blue;"></div>'
-            + '<div id="cardInfo" class="title ellipsis multiline"></div>'
-            + '<div id="attendNo" class="title ellipsis multiline"></div>'
+            + '<div id="cardInfo" class="title ellipsis"></div>'
+            + '<div id="attendNo" class="title ellipsis"></div>'
             + '</div>'
             + '<ul class="meta-three-block">'
             + '<li><span>最新位置</span>&nbsp;&nbsp;<span id="cardLocate"  class="locate"></span></li>'
@@ -18,7 +18,7 @@
             + '</ul>'
             + '</div>'
             + '<div class="row list_footer">'
-            + '<div class="span list-footer-left">'
+            + '<div class="span list-footer-left"  style="margin-left: 12px;">'
             + '<span id="cardRole" class="follower-count"></span>'
             + '</div>'
             + '<div class="" style="right:0;position:absolute;">'
@@ -139,12 +139,16 @@
             return "";
         },
         setGuestInfo: function(guestJson){
-            this._$SidebarContent.find("#cardInfo").html(guestJson.visitorName);
-            this._$SidebarContent.find("#attendNo").html("陪同人工号:"+guestJson.attendant);
+            this._$SidebarContent.find("#cardInfo").attr('title','所属公司: '+ guestJson.agentName ).html(guestJson.visitorName +' ('+ guestJson.agentName+')');
+            this._$SidebarContent.find("#attendNo").attr('title','陪同人工号: '+ guestJson.attendant );
+
+            if (guestJson.escortName) {
+                this._$SidebarContent.find("#attendNo").html("陪同人:" + guestJson.escortName);
+            }
         },
         setFacilityInfo: function(facilityJson){
-            this._$SidebarContent.find("#cardInfo").html(facilityJson.name);
-            this._$SidebarContent.find("#attendNo").html("工号:"+facilityJson.number);
+            this._$SidebarContent.find("#cardInfo").attr('title',facilityJson.name ).html(facilityJson.name);
+            this._$SidebarContent.find("#attendNo").attr('title','工号: '+ facilityJson.number).html("工号:"+facilityJson.number);
         },
         clearInfo: function(){
             this._$SidebarContent.find("#cardInfo").html("");
@@ -173,13 +177,17 @@
         getSidebarContent: function() {
             this._$detailPage = this._$SidebarContent.find(".popuplist-main");
             this._$SidebarContent.find("#cardImage").attr("src", this.getIcon()).attr("title", "ID:" + this._json.id);
-            this._$SidebarContent.find("#cardName").html("卡号:"+this._json.name).attr("title", "ID:" + this._json.id);
+            this._$SidebarContent.find("#cardName").html("卡号:"+this._json.name).attr("title", this._json.name);
             if (this._json.guest) {
-                this._$SidebarContent.find("#cardInfo").html(this._json.guest.visitorName);
-                this._$SidebarContent.find("#attendNo").html("陪同人工号:"+this._json.guest.attendant);
+                this._$SidebarContent.find("#cardInfo").attr('title','所属公司: '+ this._json.guest.agentName ).html(this._json.guest.visitorName  +' ('+ this._json.guest.agentName +')');
+                this._$SidebarContent.find("#attendNo").attr('title','陪同人工号: '+ this._json.guest.attendant);
+                if (this._json.guest.escortName) {
+                    this._$SidebarContent.find("#attendNo").html("陪同人:" + this._json.guest.escortName);
+                }
+
             }else if(this._json.facility){
-                this._$SidebarContent.find("#cardInfo").html(this._json.facility.name);
-                this._$SidebarContent.find("#attendNo").html("工号:"+this._json.facility.number);
+                this._$SidebarContent.find("#cardInfo").attr('title',this._json.facility.name ).html(this._json.facility.name);
+                this._$SidebarContent.find("#attendNo").attr('title','工号: '+ this._json.facility.number).html("工号:"+this._json.facility.number);
             }
             this._$SidebarContent.find("#cardLocate").html(this._json.lastLocate).attr('title', this._json.lastDeviceId);
             this._$SidebarContent.find("#cardTime").html(visitors.utils.formatDate(new Date(this._json.lastTime), 'time'))

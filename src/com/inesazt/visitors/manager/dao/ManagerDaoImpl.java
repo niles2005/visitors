@@ -4,23 +4,37 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import com.inesazt.visitors.Card;
-import com.inesazt.visitors.Global;
 import com.inesazt.visitors.ServerConfig;
 import com.inesazt.visitors.manager.pojo.TblCard;
 import com.inesazt.visitors.manager.pojo.TblFacilityInfo;
 import com.inesazt.visitors.manager.pojo.TblGuestInfo;
+import com.inesazt.visitors.manager.pojo.TblRole;
+import com.inesazt.visitors.util.MyLogUtil;
 
+/**
+ * @author Dell
+ *
+ */
+/**
+ * @author Dell
+ *
+ */
 public class ManagerDaoImpl {
+	
+	private static Log log = LogFactory.getLog(ManagerDaoImpl.class);
 
 	private SqlSessionFactory m_sqlSessionFactory = null;
 	
@@ -53,7 +67,7 @@ public class ManagerDaoImpl {
 	/**
 	 * 保存访客名单List，并将数据库最新信息刷回List中返回给调用处
 	 * 1.遍历List，根据sqNum和passId查找是否已存在此条记录
-	 * 2.如果存在，则直接刷回List中,如果不存在，则插入数据库，再重新查找改记录以得到主键ID，最后刷回List中
+	 * 2.如果存在，则直接刷回List中,如果不存在，则插入数据库，再重新查找该记录以得到主键ID，最后刷回List中
 	 * @param guestInfoList
 	 */
 	public void saveGuestInfoList(List<TblGuestInfo> guestInfoList){
@@ -70,14 +84,20 @@ public class ManagerDaoImpl {
 					e = managerSql.getGuestInfoBySqNumAndPassId(e).get(0);
 					guestInfoList.set(i, e);
 				}else{
-					guestInfoList.set(i, savedList.get(0));
+					managerSql.updateTblGuestInfoByEntity(e);
+					TblGuestInfo savedEntity = managerSql.getGuestInfoBySqNumAndPassId(e).get(0);
+					e.setId(savedEntity.getId());//为主键赋值
+					e.setCardStatus(savedEntity.getCardStatus());
+					e.setCardNo(savedEntity.getCardNo());
+					guestInfoList.set(i, e);
 					//System.out.println(infos.get(0).getId() + ", " + infos.get(0).getSqNum() + ", " + infos.get(0).getPassId());
 				}
 			}
 			session.commit();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -94,13 +114,13 @@ public class ManagerDaoImpl {
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
 			return managerSql.getCardList(card);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		return null;
 	}
 	
 	//根据卡号获取访客信息
@@ -112,13 +132,13 @@ public class ManagerDaoImpl {
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
 			return managerSql.getGuestInfoByCard(cardNo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		return null;
 	}
 	
 	//根据rfid获取卡
@@ -130,13 +150,13 @@ public class ManagerDaoImpl {
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
 			return managerSql.getCardByRfid(tblCard);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		return null;
 	}
 	
 	//更新卡
@@ -150,13 +170,13 @@ public class ManagerDaoImpl {
 			session.commit();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		return false;
 	}
 	
 	//插入新卡
@@ -170,13 +190,13 @@ public class ManagerDaoImpl {
 			session.commit();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		return false;
 	}
 	
 	//更新绑定关系
@@ -211,7 +231,9 @@ public class ManagerDaoImpl {
 			session.commit();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("更新绑定关系[updateBind]发生错误: " + "绑定关系： [" + binds + "]" + "绑定状态： " + status);
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
@@ -231,13 +253,13 @@ public class ManagerDaoImpl {
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
 			return managerSql.queryFacilitys(info);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		return null;
 	}
 	
 	
@@ -250,14 +272,92 @@ public class ManagerDaoImpl {
 			IManagerSql managerSql = session.getMapper(IManagerSql.class);
 			return managerSql.getFacilityInfoByCard(cardNo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
 		} finally {
 			if (session != null) {
 				session.close();
 			}
 		}
-		return null;
 	}
 	
+
+	/**
+	 * 获取权限列表
+	 * @return
+	 */
+	public List<TblRole> getRoleList(TblRole role){
+		
+		SqlSession session = null;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			return managerSql.getRoleList(role);
+		} catch (Exception e) {
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+	}
+	
+	/**
+	 * 插入新的角色
+	 * @param role
+	 * @return
+	 */
+	public boolean insertTblRole(TblRole role){
+		SqlSession session = null;
+		boolean isSuccess = true;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			managerSql.insertTblRole(role);
+			session.commit();
+		} catch (Exception e) {
+			isSuccess = false;
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return isSuccess;
+	}
+	
+	/**
+	 * 更新角色
+	 * @param role
+	 * @return
+	 */
+	public boolean updateTblRole(TblRole role ,String oldRoleName) {
+		SqlSession session = null;
+		boolean isSuccess = true;
+		try {
+			session = m_sqlSessionFactory.openSession();
+			IManagerSql managerSql = session.getMapper(IManagerSql.class);
+			managerSql.updateTblRole(role);
+			if( !role.getName().equals(oldRoleName)){
+				Map<String, String> param = new HashMap<String, String>();
+				param.put("oldRoleName", oldRoleName);
+				param.put("roleName", role.getName());
+				managerSql.updateTblCardRoleName(param);
+			}
+			session.commit();
+		} catch (Exception e) {
+			isSuccess = false;
+			log.error(MyLogUtil.getExceptionStr(e));
+			throw new RuntimeException(e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return isSuccess;
+		
+	}
 	
 }

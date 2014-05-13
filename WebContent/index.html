@@ -20,6 +20,35 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 new visitors.VisitorPage("cc");
+
+                $('div.map_link a').hide();
+                $('#feedbackPage').show();
+                $('#logout').show();
+
+                var url = "work?action=getSession&t=" + new Date().getTime();
+                $.ajax({
+                    url: url,
+                    dataType: "json", //这里的dataType就是返回回来的数据格式了html,xml,json
+                    cache: false, //设置是否缓存，默认设置成为true，当需要每次刷新都需要执行数据库操作的话，需要设置成为false
+                    success: function (data){
+                        if (data) {
+                            $('div.map_link a').hide();
+                            $('#feedbackPage').show();
+                            $('#logout').show();
+                            var userSession = data;
+                            $('#username').html(userSession.username);
+                            if( userSession.authority === "operator" ){
+                                $('#mgManager').show();
+                            } else if( userSession.authority === "admin" ){
+                                $('#mgManager').show();
+                                $('#rolePage').show();
+                                $('#cardPage').show();
+                                $('#devicePage').show();
+                            }
+                        }
+                    }
+                });
+
             });
         </script>
     </head>
@@ -27,7 +56,9 @@
         <div id="container" style="position: relative;">
             <div id="n">
                 <div class="map_link" style="cursor: pointer">
-                	<span><a href="mg/cardbind.html" target="_blank" title="进入后台管理">后台管理</a></span>
+                   欢迎您！<span id="username"></span>
+                	<span><a id = "mgManager" href="mg/cardbind.html" target="_blank" title="进入后台管理">后台管理</a></span>
+                	<span><a id = "rolePage" href="role.html" target="_blank" title="进入后台管理">角色设置</a></span>
                     <a id="cardPage"  title="">卡设置(<span id="cardReg" title="active cards,has role" style="color:#0F0;padding-right: 1px">0</span> /
                         <span id="cardUnreg"  title="active cards,no role" style="color:orange;padding-right: 1px">0</span> /
                         <span id="cardDeactive" title="deactive cards" style="color:#df8505;padding-right: 1px">0</span>)</a>
@@ -35,7 +66,7 @@
                         <span id="deviceUnreg" title="active devices,no location"  style="color:orange;padding-right: 1px">0</span> /
                         <span id="deviceDeactive" title="deactive devices"  style="color:#df8505;padding-right: 1px">0</span>)</a>
                     <span><a id="feedbackPage" title="">意见反馈</a></span>
-                    <span><a href="logout" title="">退出</a></span>
+                    <span><a id="logout" href="logout" title="">退出</a></span>
                 </div>
                 <div class="mh_main">
                     <div class="map_logo"><img src="images/logo.gif"></div>
